@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>우리 반 간식 지도</title>
+<style>
+  :root{
+    --ink:#1F2937; --paper:#FFFDF6; --frame:#1F2A44; --yellow:#FFC83D; --yellow-soft:#FFF3C9;
+    --done:#16A34A; --done-soft:#DCFCE7; --muted:#9CA3AF; --line:#E5E7EB;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none}
+  html,body{height:100%;background:var(--paper);color:var(--ink);font-family:"Pretendard","Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;overflow:hidden}
+  header{height:11vh;display:flex;align-items:center;justify-content:center;gap:2vw;position:relative}
+  h1{font-size:5.2vh;font-weight:900;letter-spacing:-.02em}
+  .progress{display:flex;gap:.8vw}
+  .progress span{width:3.2vh;height:3.2vh;border-radius:50%;border:.5vh solid var(--frame);background:#fff}
+  .progress span.on{background:var(--done);border-color:var(--done)}
+  #corner{position:absolute;left:0;top:0;width:9vh;height:9vh}
+  #fs{position:absolute;right:1.5vw;top:3vh;font-size:2vh;padding:1vh 1.4vw;border-radius:1.2vh;border:.3vh solid var(--line);background:#fff;color:#4B5563}
+  main{height:89vh;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:6.5vh 2vw;padding:3vh 2.5vw 3vh}
+  .house{position:relative;background:#fff;border:.7vh solid var(--frame);border-radius:3vh;display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;padding:1.5vh 1vw;transition:background .4s,border-color .4s,transform .2s}
+  .house:active{transform:scale(.985)}
+  .house::before{content:"";position:absolute;top:-4.2vh;left:50%;transform:translateX(-50%);width:0;height:0;border-left:6vh solid transparent;border-right:6vh solid transparent;border-bottom:4.2vh solid var(--frame);transition:border-bottom-color .4s}
+  .house.done{background:var(--done-soft);border-color:var(--done)}
+  .house.done::before{border-bottom-color:var(--done)}
+  .who{display:flex;align-items:center;gap:1vw;font-size:4vh;font-weight:800}
+  .who .emo{font-size:6vh;line-height:1}
+  .order{display:flex;align-items:center;gap:1.4vw;min-height:9vh}
+  .order .num{font-size:8vh;font-weight:900;line-height:1;min-width:6vh;text-align:center}
+  .order .num.empty{color:var(--muted);font-size:4vh;font-weight:700}
+  .frame{display:grid;grid-template-columns:repeat(5,1fr);border:.55vh solid var(--frame);border-radius:1.2vh;overflow:hidden;width:90%;max-width:30vw;background:#fff}
+  .frame i{aspect-ratio:1;border-right:.35vh solid var(--frame);display:flex;align-items:center;justify-content:center}
+  .frame i:last-child{border-right:0}
+  .frame i.lock{background:repeating-linear-gradient(45deg,#F3F4F6 0 1vh,#E5E7EB 1vh 2vh)}
+  .frame i.fill::after{content:"";width:62%;height:62%;border-radius:50%;background:var(--yellow);border:.35vh solid #B7791F}
+  .badge{position:absolute;right:1.2vw;top:1.2vh;font-size:2.4vh;font-weight:800;color:#fff;background:var(--done);padding:.6vh 1vw;border-radius:99px;opacity:0;transition:opacity .4s}
+  .house.done .badge{opacity:1}
+  /* all done */
+  #party{position:fixed;inset:0;background:rgba(255,253,246,.96);display:none;flex-direction:column;align-items:center;justify-content:center;gap:4vh;z-index:5}
+  #party.show{display:flex}
+  #party h2{font-size:10vh;font-weight:900}
+  #party .row{display:flex;gap:2vw}
+  #party .row div{font-size:9vh}
+  #party button{font-size:3vh;padding:1.6vh 3vw;border-radius:2vh;border:.4vh solid var(--frame);background:#fff;font-weight:800}
+  /* number picker (teacher) */
+  #picker{position:fixed;inset:0;background:rgba(17,24,39,.55);display:none;align-items:center;justify-content:center;z-index:6}
+  #picker.show{display:flex}
+  #picker .box{background:#fff;border-radius:3vh;padding:4vh 3vw;display:flex;flex-direction:column;gap:3vh;align-items:center}
+  #picker .nums{display:flex;gap:1.5vw}
+  #picker button{font-size:5vh;font-weight:900;width:12vh;height:12vh;border-radius:2vh;border:.5vh solid var(--frame);background:#fff}
+  #picker .act{display:flex;gap:1.5vw}
+  #picker .act button{width:auto;height:auto;font-size:2.8vh;padding:1.6vh 2.4vw}
+  #picker .act .ok{background:var(--done);color:#fff;border-color:var(--done)}
+  #picker input{font-size:3vh;padding:1vh 1vw;border:.3vh solid var(--line);border-radius:1vh;width:20vw;text-align:center}
+  .hint{font-size:2vh;color:#6B7280}
+</style>
+</head>
+<body>
+<header>
+  <div id="corner" aria-hidden="true"></div>
+  <h1>우리 반 간식 지도</h1>
+  <div class="progress" id="progress"></div>
+  <button id="fs">전체화면</button>
+</header>
+<main id="map"></main>
+
+<div id="party"><h2>다 같이 먹어요!</h2><div class="row" id="partyRow"></div><button id="again">처음부터</button></div>
+
+<div id="picker">
+  <div class="box">
+    <input id="nameIn" maxlength="8" aria-label="이름">
+    <div class="hint">주문 숫자를 고르세요</div>
+    <div class="nums" id="nums"></div>
+    <div class="act">
+      <button id="clearBtn">비우기</button>
+      <button class="ok" id="doneBtn">배달 완료 ✔</button>
+      <button id="closeBtn">닫기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  const KEY = 'ddingdong-board-v1';
+  const EMOJI = ['🐶','🐱','🐰','🐻','🐼','🦊'];
+  const COUNT_WORD = ['', '한', '두', '세', '네', '다섯'];
+  let state;
+  try { state = JSON.parse(localStorage.getItem(KEY)); } catch (e) { state = null; }
+  if (!state || !Array.isArray(state.kids) || state.kids.length !== 6) {
+    state = { kids: EMOJI.map((e, i) => ({ name: '친구' + (i + 1), emoji: e, n: 0, done: false })) };
+  }
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
+
+  // 소리: 딩동 하나만 (완성)
+  let ac;
+  function dingdong() {
+    try {
+      ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+      [[880, 0], [698.5, .28]].forEach(([f, t]) => {
+        const o = ac.createOscillator(), g = ac.createGain();
+        o.type = 'sine'; o.frequency.value = f;
+        g.gain.setValueAtTime(.0001, ac.currentTime + t);
+        g.gain.exponentialRampToValueAtTime(.35, ac.currentTime + t + .02);
+        g.gain.exponentialRampToValueAtTime(.0001, ac.currentTime + t + .6);
+        o.connect(g).connect(ac.destination); o.start(ac.currentTime + t); o.stop(ac.currentTime + t + .65);
+      });
+    } catch (e) {}
+  }
+  function say(text) {
+    try {
+      if (!('speechSynthesis' in window)) return;
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'ko-KR'; u.rate = .85;
+      const v = speechSynthesis.getVoices().find(v => /ko/i.test(v.lang));
+      if (v) u.voice = v;
+      speechSynthesis.speak(u);
+    } catch (e) {}
+  }
+
+  const map = document.getElementById('map');
+  const progress = document.getElementById('progress');
+  function render() {
+    map.innerHTML = '';
+    progress.innerHTML = '';
+    state.kids.forEach((k, i) => {
+      const h = document.createElement('div');
+      h.className = 'house' + (k.done ? ' done' : '');
+      h.dataset.i = i;
+      const cells = Array.from({ length: 5 }, (_, c) =>
+        `<i class="${k.n === 0 ? '' : (c < k.n ? (k.done ? 'fill' : '') : 'lock')}"></i>`).join('');
+      h.innerHTML = `<span class="badge">배달 완료</span>
+        <div class="who"><span class="emo">${k.emoji}</span><span>${escapeHtml(k.name)}</span></div>
+        <div class="order"><span class="num ${k.n ? '' : 'empty'}">${k.n || '주문 전'}</span></div>
+        <div class="frame">${cells}</div>`;
+      h.addEventListener('click', () => openPicker(i));
+      map.appendChild(h);
+      const dot = document.createElement('span');
+      if (k.done) dot.className = 'on';
+      progress.appendChild(dot);
+    });
+    const all = state.kids.every(k => k.done);
+    const party = document.getElementById('party');
+    if (all && !party.classList.contains('show')) {
+      document.getElementById('partyRow').innerHTML = state.kids.map(k => `<div>${k.emoji}</div>`).join('');
+      party.classList.add('show');
+      setTimeout(() => say('다 같이 먹어요'), 600);
+    }
+  }
+  function escapeHtml(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+
+  // 교사용 선택창
+  let cur = -1;
+  const picker = document.getElementById('picker');
+  const nums = document.getElementById('nums');
+  for (let n = 1; n <= 5; n++) {
+    const b = document.createElement('button');
+    b.textContent = n;
+    b.addEventListener('click', () => { state.kids[cur].n = n; state.kids[cur].done = false; save(); render(); highlight(); });
+    nums.appendChild(b);
+  }
+  function highlight() {
+    [...nums.children].forEach((b, idx) => {
+      b.style.background = state.kids[cur].n === idx + 1 ? 'var(--yellow-soft)' : '#fff';
+    });
+  }
+  function openPicker(i) {
+    cur = i;
+    document.getElementById('nameIn').value = state.kids[i].name;
+    highlight();
+    picker.classList.add('show');
+  }
+  document.getElementById('nameIn').addEventListener('change', e => {
+    state.kids[cur].name = e.target.value.trim() || ('친구' + (cur + 1)); save(); render();
+  });
+  document.getElementById('clearBtn').addEventListener('click', () => { state.kids[cur].n = 0; state.kids[cur].done = false; save(); render(); highlight(); });
+  document.getElementById('doneBtn').addEventListener('click', () => {
+    const k = state.kids[cur];
+    if (!k.n) return;
+    k.done = true; save(); picker.classList.remove('show'); render(); dingdong();
+    setTimeout(() => say(`${k.name}, ${k.n === 1 ? '한' : COUNT_WORD[k.n]} 개 배달 완료`), 700);
+  });
+  document.getElementById('closeBtn').addEventListener('click', () => picker.classList.remove('show'));
+  picker.addEventListener('click', e => { if (e.target === picker) picker.classList.remove('show'); });
+  document.getElementById('again').addEventListener('click', () => {
+    state.kids.forEach(k => { k.n = 0; k.done = false; }); save();
+    document.getElementById('party').classList.remove('show'); render();
+  });
+  document.getElementById('fs').addEventListener('click', () => {
+    const d = document.documentElement;
+    (d.requestFullscreen || d.webkitRequestFullscreen || (() => {})).call(d);
+  });
+  render();
+})();
+</script>
+</body>
+</html>
