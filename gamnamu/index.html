@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>우리 반 감나무 갤러리 - 도입·활동1</title>
+<title>우리 반 감나무 갤러리 - 도입·활동1 v2</title>
 <style>
 :root{--ink:#1F2A44;--paper:#F6F1E7;--gold:#E0A800}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -48,9 +48,9 @@ svg{display:block}
 
 /* ---------- 활동1 ---------- */
 #activity1{display:grid;grid-template-columns:25% 75%;background:#DDE6F2}
-.panel{background:#EDF0F7;padding:calc(var(--u)*1.1);display:flex;flex-direction:column;gap:calc(var(--u)*1);border-right:calc(var(--u)*.25) solid #C9D2E4;min-height:0}
-#numcard{height:calc(var(--u)*14.5);background:#fff;border-radius:calc(var(--u)*1.6);border:calc(var(--u)*.45) solid #CFC5AE;
-  display:flex;align-items:center;justify-content:center;font-size:calc(var(--u)*11);font-weight:900;position:relative;
+.panel{background:#EDF0F7;padding:calc(var(--u)*1) calc(var(--u)*1.1);display:flex;flex-direction:column;gap:calc(var(--u)*.85);border-right:calc(var(--u)*.25) solid #C9D2E4;min-height:0}
+#numcard{height:calc(var(--u)*12.5);background:#fff;border-radius:calc(var(--u)*1.6);border:calc(var(--u)*.45) solid #CFC5AE;
+  display:flex;align-items:center;justify-content:center;font-size:calc(var(--u)*9.5);font-weight:900;position:relative;
   box-shadow:0 calc(var(--u)*.4) calc(var(--u)*1) rgba(0,0,0,.18);flex:none}
 #numcard .ph{font-size:calc(var(--u)*2.6);color:#9AA3B5;font-weight:800;text-align:center;line-height:1.3}
 #numcard.gold{animation:gold 1.2s ease-out both}
@@ -65,7 +65,7 @@ svg{display:block}
 .col.sel{border:calc(var(--u)*.75) solid #fff;box-shadow:0 0 0 calc(var(--u)*.22) #1F2A44,0 calc(var(--u)*.3) calc(var(--u)*.8) rgba(0,0,0,.35);transform:scale(1.08)}
 .col .ck{display:none;position:absolute;inset:0;align-items:center;justify-content:center}
 .col.sel .ck{display:flex}
-#endBtn{background:#D32F2F;color:#fff;font-size:calc(var(--u)*4.4);min-height:calc(var(--u)*8);border-radius:calc(var(--u)*1.6);
+#endBtn{background:#D32F2F;color:#fff;font-size:calc(var(--u)*4.4);min-height:calc(var(--u)*7);border-radius:calc(var(--u)*1.6);
   box-shadow:0 calc(var(--u)*.5) 0 #8E1B1B;flex:none}
 #drawBtn{background:#2E5E9E;color:#fff;font-size:calc(var(--u)*2.7);flex:none}
 #drawBtn.hl{animation:hl 1.6s ease-in-out infinite;background:#2E7D32;box-shadow:0 calc(var(--u)*.3) 0 #1B5E20}
@@ -74,6 +74,18 @@ svg{display:block}
 .row2{display:flex;gap:calc(var(--u)*1);flex:none}
 #listenBtn{width:calc(var(--u)*5.6);background:#fff;border:calc(var(--u)*.25) solid #C9D2E4}
 #undoBtn{flex:1;background:#fff;border:calc(var(--u)*.25) solid #C9D2E4;font-size:calc(var(--u)*2.2)}
+#helpBtn{flex:1;background:#F9A825;color:#3A2A00;font-size:calc(var(--u)*2.7);box-shadow:0 calc(var(--u)*.3) 0 #A66F00}
+#helpBtn[aria-pressed=true]{background:#FFE082;outline:calc(var(--u)*.4) solid #3A2A00;outline-offset:calc(var(--u)*-.4)}
+#homeBtn{width:calc(var(--u)*8.6);background:#fff;border:calc(var(--u)*.25) solid #C9D2E4;font-size:calc(var(--u)*1.9);color:#4A5470;gap:calc(var(--u)*.3)}
+#homeBtn svg{width:calc(var(--u)*2.4);height:calc(var(--u)*2.4)}
+#confirm{position:absolute;inset:0;z-index:55;background:rgba(20,25,40,.6);display:none;align-items:center;justify-content:center}
+#confirm.open{display:flex}
+#confirm .box{background:#fff;border-radius:calc(var(--u)*2);padding:calc(var(--u)*3) calc(var(--u)*4);text-align:center;box-shadow:0 calc(var(--u)*1) calc(var(--u)*3) rgba(0,0,0,.4)}
+#confirm .q{font-size:calc(var(--u)*4);font-weight:900;margin-bottom:calc(var(--u)*2.4)}
+#confirm .bs{display:flex;gap:calc(var(--u)*2);justify-content:center}
+#confirm .bs .btn{min-width:calc(var(--u)*14);min-height:calc(var(--u)*7);font-size:calc(var(--u)*3.4)}
+#confirmYes{background:#D32F2F;color:#fff}#confirmNo{background:#E9ECF3}
+#help .cell{fill:#fff;stroke:#8A7B5A;stroke-width:4}
 .btn svg{width:calc(var(--u)*3);height:calc(var(--u)*3)}
 .main{position:relative;display:flex;flex-direction:column;min-height:0;padding:calc(var(--u)*1.2)}
 #canvasWrap{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
@@ -134,7 +146,8 @@ const state = {
        level: '가'|'나'|'다' // 수준 (수 범위: 가 3~5, 나 1~3, 다 1~2)
      } */
   students: [],
-  a1: { current: null, last: null, bag: [], dots: [], color: '#FDD835', phase: 'idle', fruits: 0 }
+  a1: { current: null, last: null, bag: [], dots: [], color: '#FDD835', phase: 'idle', fruits: 0, helpOpen: false },
+  log: { helpCount: 0 }   // 활동 기록용(화면 노출 없음): 도움 버튼 누른 횟수
 };
 
 /* ---------- 설정 (localStorage, 실패해도 동작) ---------- */
@@ -298,6 +311,7 @@ const Router = {
 const ICON = {
   speaker: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12"/></svg>',
   undo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7L4 12l5 5"/><path d="M4 12h10a6 6 0 010 8"/></svg>',
+  home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5.5 9.5V20h13V9.5" fill="currentColor" fill-opacity=".2"/><path d="M10 20v-6h4v6"/></svg>',
   check: '<svg viewBox="0 0 24 24" width="55%" height="55%" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 2px #000)"><path d="M5 12.5l4.5 4.5L19 7"/></svg>'
 };
 
@@ -340,7 +354,7 @@ Screens.activity1 = {
   timers: [], pointers: new Map(), lastDotAt: 0, svg: null,
   mount(root) {
     const a = state.a1;
-    Object.assign(a, { current: null, dots: [], phase: 'idle', fruits: 0 });
+    Object.assign(a, { current: null, dots: [], phase: 'idle', fruits: 0, helpOpen: false });
     root.innerHTML = `
       <div class="panel">
         <div id="numcard"><div class="ph">숫자 뽑기를<br>눌러요</div></div>
@@ -351,13 +365,20 @@ Screens.activity1 = {
           <button class="btn" id="listenBtn" aria-label="숫자 다시 듣기">${ICON.speaker}</button>
           <button class="btn" id="undoBtn">${ICON.undo}되돌리기</button>
         </div>
+        <div class="row2">
+          <button class="btn" id="helpBtn" aria-pressed="false">도움</button>
+          <button class="btn" id="homeBtn" aria-label="처음으로">${ICON.home}처음</button>
+        </div>
       </div>
       <div class="main">
         <div id="canvasWrap"><svg id="tree"></svg></div>
         <div id="caption">숫자 뽑기를 눌러 시작해요</div>
-      </div>`;
+      </div>
+      <div id="confirm"><div class="box"><div class="q">처음 화면으로 갈까요?</div>
+        <div class="bs"><button class="btn" id="confirmYes">네</button><button class="btn" id="confirmNo">아니요</button></div></div></div>`;
     this.svg = root.querySelector('#tree');
     buildTree(this.svg, 0);
+    this.helpG = el('g', { id: 'help', display: 'none' }, this.svg);
     this.dotsG = el('g', { id: 'dots', 'clip-path': 'url(#cclip)' }, this.svg);
     // 색 버튼
     const cw = root.querySelector('#colors');
@@ -369,6 +390,11 @@ Screens.activity1 = {
       cw.appendChild(b);
     });
     root.querySelector('#drawBtn').onclick = () => this.draw();
+    root.querySelector('#helpBtn').onclick = () => this.toggleHelp();
+    const cf = root.querySelector('#confirm');
+    root.querySelector('#homeBtn').onclick = () => cf.classList.add('open');
+    root.querySelector('#confirmNo').onclick = () => cf.classList.remove('open');
+    root.querySelector('#confirmYes').onclick = () => this.goHome();
     root.querySelector('#endBtn').onclick = () => this.finish();
     root.querySelector('#undoBtn').onclick = () => this.undo();
     root.querySelector('#listenBtn').onclick = () => { Sfx.unlock(); if (a.current) Speech.say(this.promptText(a.current)); else Speech.say('숫자 뽑기를 눌러요'); };
@@ -402,6 +428,37 @@ Screens.activity1 = {
     if (!this.dotsG) return;
     this.dotsG.classList.toggle('shownum', !!Settings.data.showNumbers);
   },
+  goHome() {
+    const a = state.a1;
+    this.timers.forEach(clearTimeout); this.timers = [];
+    Object.assign(a, { current: null, last: null, bag: [], dots: [], phase: 'idle', fruits: 0, helpOpen: false });
+    Router.go('intro');
+  },
+  /* 도움 띠: 뽑힌 숫자만큼 점이 찍힌 5칸 (캔버스 오른쪽 위, 나무를 가리지 않는 하늘 영역) */
+  renderHelp(open) {
+    const a = state.a1, g = this.helpG;
+    g.innerHTML = '';
+    a.helpOpen = !!open;
+    document.getElementById('helpBtn').setAttribute('aria-pressed', open ? 'true' : 'false');
+    if (!open) { g.setAttribute('display', 'none'); return; }
+    g.setAttribute('display', 'inline');
+    const C = 82, GAP = 6, X0 = 1000 - 12 - (5 * C + 4 * GAP), Y0 = 12;
+    el('rect', { x: X0 - 8, y: Y0 - 6, width: 5 * C + 4 * GAP + 16, height: C + 12, rx: 14, fill: 'rgba(255,255,255,.88)', stroke: '#8A7B5A', 'stroke-width': 3 }, g);
+    for (let i = 0; i < 5; i++) {
+      const x = X0 + i * (C + GAP);
+      el('rect', { class: 'cell', x, y: Y0, width: C, height: C, rx: 8 }, g);
+      if (i < a.current) el('circle', { class: 'hdot', cx: x + C / 2, cy: Y0 + C / 2, r: 28, fill: '#FB8C00', stroke: 'rgba(0,0,0,.35)', 'stroke-width': 3 }, g);
+    }
+  },
+  toggleHelp() {
+    Sfx.unlock(); Speech.unlock();
+    const a = state.a1;
+    if (a.phase === 'idle' || !a.current) { Speech.say('먼저 숫자를 뽑아요'); return; }
+    if (a.helpOpen) { this.renderHelp(false); return; }
+    state.log.helpCount++;
+    this.renderHelp(true);
+    Speech.say('이만큼 찍어요.');
+  },
   promptText(n) { return `${SINO_END[n]}. ${counterWord(n)} 콕 해 봐요.`; },
   toSvg(cx, cy) {
     const pt = this.svg.createSVGPoint(); pt.x = cx; pt.y = cy;
@@ -428,6 +485,7 @@ Screens.activity1 = {
     const n = this.nextNumber();
     a.current = n; a.last = n; a.phase = 'counting';
     this.clearDots();
+    this.renderHelp(false);   // 새 숫자: 도움 띠는 닫음
     const card = document.getElementById('numcard');
     card.className = ''; card.innerHTML = String(n);
     const db = document.getElementById('drawBtn'); db.textContent = '다음 숫자'; db.classList.remove('hl');
