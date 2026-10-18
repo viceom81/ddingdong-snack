@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>우리 반 감나무 갤러리 - 도입·활동1</title>
+<style>
+:root{--ink:#1F2A44;--paper:#F6F1E7;--gold:#E0A800}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#2b2b2b;overflow:hidden;
+  font-family:"Noto Sans CJK KR","Noto Sans KR","Malgun Gothic","Apple SD Gothic Neo",sans-serif;color:var(--ink);
+  user-select:none;-webkit-user-select:none;touch-action:manipulation}
+/* 1u = 화면 가로(16:9 기준)의 1% */
+#stage{--u:calc(min(100vw,177.7778vh)/100);position:absolute;left:50%;top:50%;
+  width:calc(var(--u)*100);height:calc(var(--u)*56.25);transform:translate(-50%,-50%);
+  background:var(--paper);overflow:hidden}
+.screen{position:absolute;inset:0}
+button{font-family:inherit;color:inherit;border:0;cursor:pointer}
+.btn{min-height:calc(var(--u)*4.6);border-radius:calc(var(--u)*1.2);font-weight:800;
+  display:flex;align-items:center;justify-content:center;gap:calc(var(--u)*.6);
+  box-shadow:0 calc(var(--u)*.3) 0 rgba(0,0,0,.22);transition:transform .08s}
+.btn:active{transform:translateY(calc(var(--u)*.2))}
+svg{display:block}
+
+/* ---------- 도입 ---------- */
+#intro{background:linear-gradient(#FBF6EA,#F2E9D5)}
+#intro h1{position:absolute;left:0;right:0;top:calc(var(--u)*2);margin:0;text-align:center;
+  font-size:calc(var(--u)*5.8);font-weight:900;letter-spacing:-.02em}
+#intro .tree{position:absolute;left:calc(var(--u)*5);top:calc(var(--u)*10.5);width:calc(var(--u)*35.5);height:calc(var(--u)*32);
+  border-radius:calc(var(--u)*1.2);overflow:hidden;box-shadow:0 calc(var(--u)*.5) calc(var(--u)*1.5) rgba(0,0,0,.25)}
+#intro .tree svg{width:100%;height:100%}
+#intro .right{position:absolute;left:calc(var(--u)*44);top:calc(var(--u)*9.5);width:calc(var(--u)*53);height:calc(var(--u)*34)}
+#intro .right h2{margin:0 0 calc(var(--u)*.8);font-size:calc(var(--u)*2.2);color:#6B5A3A}
+.steps{display:flex;gap:calc(var(--u)*1.2)}
+.step{flex:1;background:#fff;border-radius:calc(var(--u)*1.5);padding:calc(var(--u)*1) calc(var(--u)*.6) calc(var(--u)*1.1);
+  text-align:center;box-shadow:0 calc(var(--u)*.4) calc(var(--u)*1) rgba(0,0,0,.15);border:calc(var(--u)*.3) solid #E5DCCB}
+.step .no{display:inline-flex;width:calc(var(--u)*3.2);height:calc(var(--u)*3.2);border-radius:50%;background:var(--ink);color:#fff;
+  align-items:center;justify-content:center;font-size:calc(var(--u)*2.2);font-weight:900}
+.step svg{width:calc(var(--u)*6.2);height:calc(var(--u)*6.2);margin:calc(var(--u)*.3) auto}
+.step b{display:block;font-size:calc(var(--u)*2.3);line-height:1.25}
+.goal{margin-top:calc(var(--u)*1.4);background:#FFF4CF;border:calc(var(--u)*.3) solid #E8C766;border-radius:calc(var(--u)*1.5);
+  padding:calc(var(--u)*1.3) calc(var(--u)*1.5);display:flex;align-items:center;gap:calc(var(--u)*1.5)}
+.goal .t{flex:1;font-size:calc(var(--u)*3);font-weight:900;line-height:1.25}
+.goal .t small{display:block;font-size:calc(var(--u)*1.7);font-weight:700;color:#8A6D1D;margin-bottom:calc(var(--u)*.3)}
+#introListen{background:#2E5E9E;color:#fff;font-size:calc(var(--u)*2.4);padding:0 calc(var(--u)*2);min-height:calc(var(--u)*6.5)}
+#introStart{position:absolute;right:calc(var(--u)*3);bottom:calc(var(--u)*2.6);width:calc(var(--u)*30);min-height:calc(var(--u)*6.8);
+  background:#2E8B3D;color:#fff;font-size:calc(var(--u)*3.6);border-radius:calc(var(--u)*2)}
+
+/* ---------- 활동1 ---------- */
+#activity1{display:grid;grid-template-columns:25% 75%;background:#DDE6F2}
+.panel{background:#EDF0F7;padding:calc(var(--u)*1.1);display:flex;flex-direction:column;gap:calc(var(--u)*1);border-right:calc(var(--u)*.25) solid #C9D2E4;min-height:0}
+#numcard{height:calc(var(--u)*14.5);background:#fff;border-radius:calc(var(--u)*1.6);border:calc(var(--u)*.45) solid #CFC5AE;
+  display:flex;align-items:center;justify-content:center;font-size:calc(var(--u)*11);font-weight:900;position:relative;
+  box-shadow:0 calc(var(--u)*.4) calc(var(--u)*1) rgba(0,0,0,.18);flex:none}
+#numcard .ph{font-size:calc(var(--u)*2.6);color:#9AA3B5;font-weight:800;text-align:center;line-height:1.3}
+#numcard.gold{animation:gold 1.2s ease-out both}
+@keyframes gold{0%{border-color:#CFC5AE;box-shadow:0 0 0 0 rgba(224,168,0,0)}
+  25%,70%{border-color:#E0A800;box-shadow:0 0 calc(var(--u)*1.4) calc(var(--u)*.5) rgba(224,168,0,.55)}
+  100%{border-color:#E0A800;box-shadow:0 0 calc(var(--u)*.6) calc(var(--u)*.2) rgba(224,168,0,.35)}}
+#numcard.shake{animation:shake .55s ease-in-out}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(calc(var(--u)*-.9))}40%{transform:translateX(calc(var(--u)*.9))}
+  60%{transform:translateX(calc(var(--u)*-.6))}80%{transform:translateX(calc(var(--u)*.6))}}
+#colors{display:grid;grid-template-columns:repeat(3,calc(var(--u)*5.9));gap:calc(var(--u)*1.1);justify-content:center;flex:none}
+.col{width:calc(var(--u)*5.9);height:calc(var(--u)*5.9);border-radius:50%;border:calc(var(--u)*.35) solid rgba(0,0,0,.18);position:relative;padding:0}
+.col.sel{border:calc(var(--u)*.75) solid #fff;box-shadow:0 0 0 calc(var(--u)*.22) #1F2A44,0 calc(var(--u)*.3) calc(var(--u)*.8) rgba(0,0,0,.35);transform:scale(1.08)}
+.col .ck{display:none;position:absolute;inset:0;align-items:center;justify-content:center}
+.col.sel .ck{display:flex}
+#endBtn{background:#D32F2F;color:#fff;font-size:calc(var(--u)*4.4);min-height:calc(var(--u)*8);border-radius:calc(var(--u)*1.6);
+  box-shadow:0 calc(var(--u)*.5) 0 #8E1B1B;flex:none}
+#drawBtn{background:#2E5E9E;color:#fff;font-size:calc(var(--u)*2.7);flex:none}
+#drawBtn.hl{animation:hl 1.6s ease-in-out infinite;background:#2E7D32;box-shadow:0 calc(var(--u)*.3) 0 #1B5E20}
+@keyframes hl{0%,100%{outline:calc(var(--u)*.0) solid rgba(224,168,0,0);outline-offset:calc(var(--u)*.2)}
+  50%{outline:calc(var(--u)*.6) solid rgba(224,168,0,.9);outline-offset:calc(var(--u)*.2)}}
+.row2{display:flex;gap:calc(var(--u)*1);flex:none}
+#listenBtn{width:calc(var(--u)*5.6);background:#fff;border:calc(var(--u)*.25) solid #C9D2E4}
+#undoBtn{flex:1;background:#fff;border:calc(var(--u)*.25) solid #C9D2E4;font-size:calc(var(--u)*2.2)}
+.btn svg{width:calc(var(--u)*3);height:calc(var(--u)*3)}
+.main{position:relative;display:flex;flex-direction:column;min-height:0;padding:calc(var(--u)*1.2)}
+#canvasWrap{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
+#canvasWrap svg{height:100%;width:auto;max-width:100%;aspect-ratio:1000/900;border-radius:calc(var(--u)*.6);
+  box-shadow:0 calc(var(--u)*.5) calc(var(--u)*1.4) rgba(0,0,0,.28);border:calc(var(--u)*.35) solid #fff;touch-action:none;background:#fff}
+#caption{flex:none;height:calc(var(--u)*5);margin-top:calc(var(--u)*1);display:flex;align-items:center;justify-content:center;
+  font-size:calc(var(--u)*2.6);font-weight:800;color:#2B3A5A;background:rgba(255,255,255,.75);border-radius:calc(var(--u)*1.2);padding:0 calc(var(--u)*2);text-align:center}
+#caption.mute{background:#FFF4CF;border:calc(var(--u)*.2) solid #E8C766}
+.dot{animation:pop .14s ease-out both;transform-box:fill-box;transform-origin:center}
+@keyframes pop{from{transform:scale(.55)}to{transform:scale(1)}}
+#dots.fading .dot{transition:opacity .8s ease;opacity:0}
+.dnum{display:none;font-weight:900;fill:#fff;paint-order:stroke;stroke:rgba(0,0,0,.55);stroke-width:5px;text-anchor:middle;dominant-baseline:central}
+#dots.shownum .dnum{display:block}
+.fruitIn{animation:fruitIn 1.4s ease-out both;transform-box:fill-box;transform-origin:50% 0}
+@keyframes fruitIn{from{transform:scale(.2);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* ---------- 교사 숨은 설정 ---------- */
+#hotspot{position:absolute;left:0;top:0;width:calc(var(--u)*6);height:calc(var(--u)*6);z-index:50;background:transparent}
+#settings{position:absolute;inset:0;z-index:60;background:rgba(20,25,40,.6);display:none;align-items:center;justify-content:center}
+#settings.open{display:flex}
+#settings .card{width:calc(var(--u)*74);max-height:calc(var(--u)*53);overflow:auto;background:#fff;border-radius:calc(var(--u)*1.6);padding:calc(var(--u)*1.8) calc(var(--u)*2.4)}
+#settings h3{margin:0 0 calc(var(--u)*1);font-size:calc(var(--u)*2.8)}
+.srow{display:flex;align-items:center;justify-content:space-between;gap:calc(var(--u)*1.5);padding:calc(var(--u)*.7) 0;border-bottom:1px solid #E6E6E6;font-size:calc(var(--u)*2)}
+.srow>span{flex:none;width:calc(var(--u)*22);font-weight:800}
+.srow .ctl{flex:1;display:flex;gap:calc(var(--u)*.7);align-items:center;justify-content:flex-end;flex-wrap:wrap}
+.sb{min-height:calc(var(--u)*4.4);min-width:calc(var(--u)*6);padding:0 calc(var(--u)*1.2);border-radius:calc(var(--u)*1);background:#E9ECF3;font-size:calc(var(--u)*1.9);font-weight:800}
+.sb.on{background:#2E5E9E;color:#fff}
+.srow input[type=range]{flex:1;height:calc(var(--u)*4.4)}
+.srow output{width:calc(var(--u)*5);text-align:right;font-weight:800}
+.sfoot{display:flex;gap:calc(var(--u)*1.5);justify-content:space-between;margin-top:calc(var(--u)*1.2)}
+.sfoot .sb{min-height:calc(var(--u)*5)}
+#sReset.arm{background:#D32F2F;color:#fff}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="app"></div>
+  <div id="hotspot" aria-hidden="true"></div>
+  <div id="settings"><div class="card" id="settingsCard"></div></div>
+</div>
+
+<script>
+'use strict';
+/* =====================================================================
+   우리 반 감나무 갤러리 - 도입 + 활동1 (v1)
+   구조:  Store(state/settings) · Sfx(효과음) · Speech(음성) · Router(화면)
+          Screens.intro / Screens.activity1  ← 이후 activity2, activity3 ... 를 Screens에 추가
+   외부 의존성 0 (CDN/폰트/네트워크 없음)
+   ===================================================================== */
+
+/* ---------- 전역 상태 ---------- */
+const state = {
+  screen: 'intro',
+  /* 학생 등록용 (지금은 UI 없음). 각 항목 형태:
+     { id: Number|String,   // 좌석번호 또는 고유 id
+       name: String,        // 학생 이름 (칠판 기기에만 보관)
+       photo: String,       // 얼굴 사진 dataURL 또는 경로 (칠판 기기에만 보관)
+       level: '가'|'나'|'다' // 수준 (수 범위: 가 3~5, 나 1~3, 다 1~2)
+     } */
+  students: [],
+  a1: { current: null, last: null, bag: [], dots: [], color: '#FDD835', phase: 'idle', fruits: 0 }
+};
+
+/* ---------- 설정 (localStorage, 실패해도 동작) ---------- */
+const SETTINGS_KEY = 'gamnamu.settings.v1';
+const DEFAULTS = {
+  speakCount: true,   // 터치할 때마다 "하나, 둘…" 음성
+  showNumbers: false, // 점 위 숫자 표시
+  rate: 0.85,         // 음성 속도
+  volume: 1,          // 음성 볼륨
+  sfxVol: 0.35,       // 효과음 볼륨(작게)
+  dotPct: 0,          // 점 크기 증감(%) -40~+40
+  fixed: 0,           // 0=무작위, 1~5=숫자 고정
+  autoClear: true     // 오류 시 점 자동 지움
+};
+const Settings = {
+  data: Object.assign({}, DEFAULTS),
+  load() { try { const s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || 'null'); if (s && typeof s === 'object') Object.assign(this.data, s); } catch (e) {} },
+  save() { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(this.data)); } catch (e) {} },
+  set(k, v) { this.data[k] = v; this.save(); Router.applySettings(); },
+  reset() { this.data = Object.assign({}, DEFAULTS); try { localStorage.removeItem(SETTINGS_KEY); } catch (e) {} Router.applySettings(); }
+};
+
+/* ---------- 효과음 (WebAudio, 마림바풍) ---------- */
+const Sfx = {
+  ctx: null,
+  unlock() {
+    try {
+      if (!this.ctx) { const AC = window.AudioContext || window.webkitAudioContext; if (AC) this.ctx = new AC(); }
+      if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+    } catch (e) {}
+  },
+  tone(freq, t0, dur, gain, type, over) {
+    const c = this.ctx; if (!c) return;
+    const vol = Settings.data.sfxVol * gain; if (vol <= 0) return;
+    const mk = (f, g, d) => {
+      const o = c.createOscillator(), a = c.createGain();
+      o.type = type || 'sine'; o.frequency.value = f;
+      a.gain.setValueAtTime(0.0001, t0);
+      a.gain.exponentialRampToValueAtTime(Math.max(g, 0.0002), t0 + 0.008);
+      a.gain.exponentialRampToValueAtTime(0.0001, t0 + d);
+      o.connect(a); a.connect(c.destination); o.start(t0); o.stop(t0 + d + 0.05);
+    };
+    mk(freq, vol, dur);
+    if (over) mk(freq * 3.98, vol * 0.35, dur * 0.25); // 마림바의 짧은 배음
+  },
+  kok() { this.unlock(); if (!this.ctx) return; const t = this.ctx.currentTime; this.tone(523.25, t, 0.22, 0.9, 'sine', true); },
+  dingdong() { this.unlock(); if (!this.ctx) return; const t = this.ctx.currentTime;
+    this.tone(880, t, 0.7, 0.8, 'sine', true); this.tone(659.25, t + 0.42, 0.9, 0.8, 'sine', true); },
+  error() { this.unlock(); if (!this.ctx) return; const t = this.ctx.currentTime;
+    this.tone(220, t, 0.28, 0.7, 'sine', false); this.tone(164.8, t + 0.24, 0.4, 0.7, 'sine', false); }
+};
+
+/* ---------- 음성 (Web Speech API) ---------- */
+const Speech = {
+  voice: null, hasKo: null, log: [],
+  init() {
+    const ss = window.speechSynthesis; if (!ss) { this.hasKo = false; return; }
+    const pick = () => {
+      const vs = ss.getVoices() || [];
+      if (!vs.length) return;
+      this.voice = vs.find(v => /^ko([-_]|$)/i.test(v.lang)) || vs.find(v => /korean|한국/i.test(v.name)) || null;
+      this.hasKo = !!this.voice;
+    };
+    pick();
+    if (ss.addEventListener) ss.addEventListener('voiceschanged', pick); else ss.onvoiceschanged = pick;
+  },
+  unlock() { try { const ss = window.speechSynthesis; if (ss && !this._u) { this._u = 1; const u = new SpeechSynthesisUtterance(' '); u.volume = 0; ss.speak(u); } } catch (e) {} },
+  /* 항상 cancel 후 speak (겹침 방지). 자막은 항상 표시, 한국어 보이스가 없으면 자막만 강조 */
+  say(text, opts) {
+    opts = opts || {};
+    this.log.push(text);
+    if (opts.caption !== false) Router.caption(text, this.hasKo === false);
+    const ss = window.speechSynthesis; if (!ss || this.hasKo === false) return;
+    try {
+      ss.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'ko-KR'; u.rate = Settings.data.rate; u.volume = Settings.data.volume;
+      if (this.voice) u.voice = this.voice;
+      ss.speak(u);
+    } catch (e) {}
+  },
+  stop() { try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch (e) {} }
+};
+
+/* ---------- 한국어 숫자 말 ---------- */
+const NATIVE = ['', '하나', '둘', '셋', '넷', '다섯', '여섯', '일곱', '여덟', '아홉', '열'];
+const COUNTER = ['', '한 번', '두 번', '세 번', '네 번', '다섯 번']; // 목표(1~5)
+const SINO = ['', '일', '이', '삼', '사', '오'];
+const SINO_END = ['', '일이에요', '이예요', '삼이에요', '사예요', '오예요'];
+const countWord = n => NATIVE[n] || String(n);
+const counterWord = n => COUNTER[n] || (n + ' 번');
+
+/* ---------- 감나무 그림 (SVG, 좌표계 1000x900, 땅=아래 25%) ---------- */
+const NS = 'http://www.w3.org/2000/svg';
+const GROUND_Y = 675;
+function el(tag, attrs, parent) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+const LEAF = 'M0,-20 L5,-9 L14,-13 L11,-3 L19,1 L9,5 L11,14 L2,9 L0,20 L-2,9 L-11,14 L-9,5 L-19,1 L-11,-3 L-14,-13 L-5,-9 Z';
+const BR = [[150,335,150,195,12],[150,215,72,128,7],[150,205,230,118,7],[150,200,152,70,7],[150,250,58,190,6],[150,245,246,186,6],[100,165,70,95,4],[200,155,248,92,4],[152,120,120,72,3],[152,110,186,62,3]];
+const PERS = [[72,140],[228,132],[118,92],[188,80],[60,203],[246,200],[150,85],[95,165]];
+const LEAVES = [[96,118],[206,104],[138,60],[168,58],[72,100],[244,98],[52,176],[256,170],[110,150],[192,145],[80,214],[226,214]];
+const LC = ['#D7372B','#F2B705','#E8701A','#C62828','#F6C343'];
+const TS = 2.2, TX = 170, TY = 6;      // 나무 배치
+function persimmon(parent, x, y, cls) {
+  const wrap = el('g', { transform: `translate(${x * TS + TX},${(y + 10) * TS + TY})` }, parent);
+  const g = el('g', cls ? { class: cls } : {}, wrap);
+  const s = el('g', { transform: `scale(${TS * 1.05})` }, g);
+  el('circle', { r: 19.5, fill: '#fff' }, s);
+  el('circle', { r: 17, fill: '#F28C28' }, s);
+  el('circle', { r: 17, fill: 'none', stroke: '#D9661A', 'stroke-width': 2 }, s);
+  el('ellipse', { cx: -6, cy: -6, rx: 5, ry: 3.2, fill: '#FFD3A3', opacity: .85, transform: 'rotate(-30 -6 -6)' }, s);
+  for (const a of [0, 90, 180, 270]) el('ellipse', { cx: 0, cy: -13, rx: 3.4, ry: 7, fill: '#3E8E41', transform: `rotate(${a + 45} 0 -13) translate(0 -3)` }, s);
+  el('rect', { x: -1.5, y: -24, width: 3, height: 7, rx: 1.5, fill: '#5B3A1E' }, s);
+  return wrap;
+}
+function buildTree(svg, fruitCount) {
+  svg.setAttribute('viewBox', '0 0 1000 900');
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+  const defs = el('defs', {}, svg);
+  const lg = el('linearGradient', { id: 'sky', x1: 0, y1: 0, x2: 0, y2: 1 }, defs);
+  el('stop', { offset: 0, 'stop-color': '#A9D8F2' }, lg); el('stop', { offset: 1, 'stop-color': '#E3F3FB' }, lg);
+  const cp = el('clipPath', { id: 'cclip' }, defs); el('rect', { width: 1000, height: 900 }, cp);
+  el('rect', { width: 1000, height: 900, fill: 'url(#sky)' }, svg);
+  el('ellipse', { cx: 830, cy: 150, rx: 110, ry: 34, fill: '#fff', opacity: .7 }, svg);
+  el('ellipse', { cx: 150, cy: 230, rx: 90, ry: 28, fill: '#fff', opacity: .6 }, svg);
+  // 땅(아래 25%)
+  el('rect', { id: 'ground', x: 0, y: GROUND_Y, width: 1000, height: 900 - GROUND_Y, fill: '#A98266' }, svg);
+  el('rect', { x: 0, y: GROUND_Y, width: 1000, height: 9, fill: '#6F4B33' }, svg);
+  const t = el('g', { transform: `translate(${TX},${TY}) scale(${TS})` }, svg);
+  el('path', { d: 'M126,346 Q146,322 150,300 Q154,322 176,346 Z', fill: '#6B3E1F' }, t);
+  el('path', { d: 'M150,340 L150,215', stroke: '#6B3E1F', 'stroke-width': 26, 'stroke-linecap': 'round' }, t);
+  for (const b of BR) el('path', { d: `M${b[0]},${b[1]} L${b[2]},${b[3]}`, stroke: '#6B3E1F', 'stroke-width': b[4] * 1.15, fill: 'none', 'stroke-linecap': 'round' }, t);
+  LEAVES.forEach(([x, y], i) => {
+    const g = el('g', { transform: `translate(${x},${y}) rotate(${((i * 37) % 70) - 35}) scale(.95)` }, t);
+    el('path', { d: LEAF, fill: '#fff', transform: 'scale(1.18)' }, g);
+    el('path', { d: LEAF, fill: LC[i % LC.length] }, g);
+  });
+  const fg = el('g', { id: 'fruits' }, svg);
+  for (let i = 0; i < fruitCount; i++) persimmon(fg, PERS[i][0], PERS[i][1]);
+  return svg;
+}
+
+/* ---------- 라우터 ---------- */
+const Screens = {};   // 이름 → { mount(root), unmount(), applySettings() }
+const Router = {
+  cur: null, root: null,
+  init() { this.root = document.getElementById('app'); },
+  register(name, def) { Screens[name] = def; },
+  go(name) {
+    if (this.cur && Screens[this.cur].unmount) Screens[this.cur].unmount();
+    this.root.innerHTML = '';
+    const div = document.createElement('div'); div.className = 'screen'; div.id = name; this.root.appendChild(div);
+    this.cur = name; state.screen = name;
+    Screens[name].mount(div);
+    Screens[name].applySettings && Screens[name].applySettings();
+  },
+  applySettings() { this.cur && Screens[this.cur].applySettings && Screens[this.cur].applySettings(); },
+  caption(text, mute) { const c = document.getElementById('caption'); if (c) { c.textContent = (mute ? '(소리 없음) ' : '') + text; c.classList.toggle('mute', !!mute); } }
+};
+
+/* ---------- 아이콘 ---------- */
+const ICON = {
+  speaker: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12"/></svg>',
+  undo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7L4 12l5 5"/><path d="M4 12h10a6 6 0 010 8"/></svg>',
+  check: '<svg viewBox="0 0 24 24" width="55%" height="55%" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 2px #000)"><path d="M5 12.5l4.5 4.5L19 7"/></svg>'
+};
+
+/* ---------- 도입 화면 ---------- */
+Screens.intro = {
+  mount(root) {
+    root.innerHTML = `
+      <h1>우리 반 감나무 갤러리</h1>
+      <div class="tree"><svg id="introTree"></svg></div>
+      <div class="right">
+        <h2>오늘 순서</h2>
+        <div class="steps">
+          <div class="step"><span class="no">1</span>
+            <svg viewBox="0 0 100 100"><circle cx="50" cy="52" r="36" fill="#FB8C00"/><circle cx="50" cy="52" r="36" fill="none" stroke="#fff" stroke-width="4"/><circle cx="38" cy="40" r="7" fill="#fff" opacity=".5"/></svg>
+            <b>콕콕<br>점 찍기</b></div>
+          <div class="step"><span class="no">2</span>
+            <svg viewBox="0 0 100 100"><rect x="22" y="14" width="56" height="74" rx="8" fill="#fff" stroke="#1F2A44" stroke-width="5"/><rect x="38" y="8" width="24" height="14" rx="5" fill="#1F2A44"/><path d="M34 44h32M34 58h32M34 72h20" stroke="#1F2A44" stroke-width="6" stroke-linecap="round"/></svg>
+            <b>주문표<br>만들기</b></div>
+          <div class="step"><span class="no">3</span>
+            <svg viewBox="0 0 100 100"><path d="M22 70c0-26 10-40 28-40s28 14 28 40z" fill="#F2B705" stroke="#1F2A44" stroke-width="5" stroke-linejoin="round"/><rect x="14" y="70" width="72" height="12" rx="6" fill="#1F2A44"/><circle cx="50" cy="24" r="7" fill="#1F2A44"/></svg>
+            <b>띵동<br>배달</b></div>
+        </div>
+        <div class="goal">
+          <div class="t"><small>오늘의 목표</small>숫자만큼 콕콕 찍어 봐요</div>
+          <button class="btn" id="introListen">${ICON.speaker}소리 듣기</button>
+        </div>
+      </div>
+            <button class="btn" id="introStart">시작</button>
+      <div id="caption" style="position:absolute;left:calc(var(--u)*3);right:calc(var(--u)*36);bottom:calc(var(--u)*2.6);height:calc(var(--u)*6.8);margin:0">화면을 한 번 터치하면 소리가 켜져요</div>`;
+    buildTree(root.querySelector('#introTree'), 5);
+    const goal = '숫자만큼 콕콕 찍어 봐요';
+    root.querySelector('#introListen').onclick = () => { Sfx.unlock(); Speech.say(goal); };
+    root.querySelector('#introStart').onclick = () => { Sfx.unlock(); Speech.stop(); Router.go('activity1'); };
+  }
+};
+
+/* ---------- 활동1 화면 ---------- */
+const COLORS = [['빨강', '#E53935'], ['주황', '#FB8C00'], ['노랑', '#FDD835'], ['초록', '#43A047'], ['파랑', '#1E88E5'], ['분홍', '#EC407A']];
+Screens.activity1 = {
+  timers: [], pointers: new Map(), lastDotAt: 0, svg: null,
+  mount(root) {
+    const a = state.a1;
+    Object.assign(a, { current: null, dots: [], phase: 'idle', fruits: 0 });
+    root.innerHTML = `
+      <div class="panel">
+        <div id="numcard"><div class="ph">숫자 뽑기를<br>눌러요</div></div>
+        <div id="colors"></div>
+        <button class="btn" id="endBtn">끝!</button>
+        <button class="btn" id="drawBtn">숫자 뽑기</button>
+        <div class="row2">
+          <button class="btn" id="listenBtn" aria-label="숫자 다시 듣기">${ICON.speaker}</button>
+          <button class="btn" id="undoBtn">${ICON.undo}되돌리기</button>
+        </div>
+      </div>
+      <div class="main">
+        <div id="canvasWrap"><svg id="tree"></svg></div>
+        <div id="caption">숫자 뽑기를 눌러 시작해요</div>
+      </div>`;
+    this.svg = root.querySelector('#tree');
+    buildTree(this.svg, 0);
+    this.dotsG = el('g', { id: 'dots', 'clip-path': 'url(#cclip)' }, this.svg);
+    // 색 버튼
+    const cw = root.querySelector('#colors');
+    COLORS.forEach(([name, hex]) => {
+      const b = document.createElement('button'); b.className = 'col' + (hex === a.color ? ' sel' : '');
+      b.style.background = hex; b.setAttribute('aria-label', name + '색'); b.dataset.color = hex;
+      b.innerHTML = `<span class="ck">${ICON.check}</span>`;
+      b.onclick = () => { a.color = hex; cw.querySelectorAll('.col').forEach(x => x.classList.toggle('sel', x === b)); };
+      cw.appendChild(b);
+    });
+    root.querySelector('#drawBtn').onclick = () => this.draw();
+    root.querySelector('#endBtn').onclick = () => this.finish();
+    root.querySelector('#undoBtn').onclick = () => this.undo();
+    root.querySelector('#listenBtn').onclick = () => { Sfx.unlock(); if (a.current) Speech.say(this.promptText(a.current)); else Speech.say('숫자 뽑기를 눌러요'); };
+    // 터치: 한 번 짧게 눌렀다 떼는 것만 점 1개 (드래그/긁기/멀티터치 무시)
+    const s = this.svg;
+    s.addEventListener('pointerdown', e => {
+      const bad = this.pointers.size > 0;
+      this.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY, t: performance.now(), ok: !bad });
+      if (bad) this.pointers.forEach(p => p.ok = false);
+    });
+    s.addEventListener('pointermove', e => {
+      const p = this.pointers.get(e.pointerId); if (!p) return;
+      const lim = this.u() * 2.2;
+      if (Math.hypot(e.clientX - p.x, e.clientY - p.y) > lim) p.ok = false;
+    });
+    s.addEventListener('pointerup', e => {
+      const p = this.pointers.get(e.pointerId); this.pointers.delete(e.pointerId); if (!p) return;
+      const dur = performance.now() - p.t;
+      const lim = this.u() * 2.2;
+      if (!p.ok || dur > 1200 || Math.hypot(e.clientX - p.x, e.clientY - p.y) > lim) return;
+      this.tap(e.clientX, e.clientY, p.x, p.y);
+    });
+    s.addEventListener('pointercancel', e => this.pointers.delete(e.pointerId));
+    s.addEventListener('contextmenu', e => e.preventDefault());
+    this.pointers.clear();
+  },
+  unmount() { this.timers.forEach(clearTimeout); this.timers = []; Speech.stop(); },
+  u() { return document.getElementById('stage').getBoundingClientRect().width / 100; },
+  later(fn, ms) { const id = setTimeout(() => { this.timers = this.timers.filter(x => x !== id); fn(); }, ms); this.timers.push(id); return id; },
+  applySettings() {
+    if (!this.dotsG) return;
+    this.dotsG.classList.toggle('shownum', !!Settings.data.showNumbers);
+  },
+  promptText(n) { return `${SINO_END[n]}. ${counterWord(n)} 콕 해 봐요.`; },
+  toSvg(cx, cy) {
+    const pt = this.svg.createSVGPoint(); pt.x = cx; pt.y = cy;
+    return pt.matrixTransform(this.svg.getScreenCTM().inverse());
+  },
+  dotR() { return (1000 / 9) * (1 + Settings.data.dotPct / 100) / 2; },
+  nextNumber() {
+    const a = state.a1, fx = Settings.data.fixed;
+    if (fx >= 1 && fx <= 5) return fx;
+    if (!a.bag.length) {                       // 5개가 한 바퀴 돌 때까지 반복 없음
+      const bag = [1, 2, 3, 4, 5];
+      for (let i = bag.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [bag[i], bag[j]] = [bag[j], bag[i]]; }
+      if (bag[bag.length - 1] === a.last) { const k = Math.floor(Math.random() * (bag.length - 1)); [bag[bag.length - 1], bag[k]] = [bag[k], bag[bag.length - 1]]; } // pop()으로 꺼내므로 마지막이 첫 숫자
+      a.bag = bag;
+    }
+    return a.bag.pop();
+  },
+  clearDots() { this.dotsG.classList.remove('fading'); this.dotsG.innerHTML = ''; state.a1.dots = []; },
+  draw() {
+    Sfx.unlock(); Speech.unlock();
+    const a = state.a1;
+    if (a.phase === 'error' && Settings.data.autoClear) return; // 지우는 중에는 무시
+    this.timers.forEach(clearTimeout); this.timers = [];
+    const n = this.nextNumber();
+    a.current = n; a.last = n; a.phase = 'counting';
+    this.clearDots();
+    const card = document.getElementById('numcard');
+    card.className = ''; card.innerHTML = String(n);
+    const db = document.getElementById('drawBtn'); db.textContent = '다음 숫자'; db.classList.remove('hl');
+    Speech.say(this.promptText(n));
+  },
+  tap(cx, cy, dx, dy) {
+    const a = state.a1;
+    const now = performance.now();
+    if (now - this.lastDotAt < 150) return;                 // 연속 입력 무시
+    const p = this.toSvg(cx, cy), p0 = this.toSvg(dx, dy);
+    if (p.y < GROUND_Y || p0.y < GROUND_Y) return;          // 땅 영역만
+    if (a.phase === 'idle') { Speech.say('먼저 숫자 뽑기를 눌러요'); return; }
+    if (a.phase !== 'counting') return;
+    this.lastDotAt = now;
+    const r = this.dotR();
+    const n = a.dots.length + 1;
+    const g = el('g', { class: 'dot' }, this.dotsG);
+    el('circle', { cx: p.x, cy: p.y, r, fill: a.color, stroke: 'rgba(0,0,0,.28)', 'stroke-width': 4 }, g);
+    const t = el('text', { x: p.x, y: p.y, class: 'dnum', 'font-size': r * 1.1 }, g); t.textContent = n;
+    a.dots.push({ x: p.x, y: p.y, color: a.color, node: g });
+    Sfx.kok();
+    if (Settings.data.speakCount) Speech.say(countWord(n), { caption: false });
+  },
+  undo() {
+    const a = state.a1; if (a.phase !== 'counting' || !a.dots.length) return;
+    const d = a.dots.pop(); d.node.remove();
+  },
+  finish() {
+    Sfx.unlock(); Speech.unlock();
+    const a = state.a1;
+    if (a.phase === 'idle') { Speech.say('먼저 숫자 뽑기를 눌러요'); return; }
+    if (a.phase !== 'counting') return;
+    const n = a.current, c = a.dots.length;
+    if (c === 0) { Speech.say('먼저 콕 해 봐요'); return; }
+    const card = document.getElementById('numcard');
+    if (c === n) {
+      a.phase = 'success';
+      card.className = ''; void card.offsetWidth; card.classList.add('gold');
+      Sfx.dingdong();
+      this.later(() => Speech.say(`맞아요! ${counterWord(n)} 찍었어요.`), 700);
+      this.later(() => this.addFruit(), 500);
+      this.later(() => document.getElementById('drawBtn').classList.add('hl'), 1200);
+    } else {
+      a.phase = 'error';
+      card.className = ''; void card.offsetWidth; card.classList.add('shake');
+      Sfx.error();
+      const auto = Settings.data.autoClear;
+      const hint = c < n ? '조금 더 콕 해 봐요' : (auto ? '다시 해 봐요' : '하나씩 지우고 다시 해 봐요');
+      this.later(() => Speech.say(`어, ${hint}. ${counterWord(n)}이에요.`), 450);
+      if (auto) {
+        this.later(() => this.dotsG.classList.add('fading'), 1500);
+        this.later(() => { this.clearDots(); a.phase = 'counting'; card.className = ''; }, 2400);
+      } else {
+        this.later(() => { a.phase = 'counting'; card.className = ''; }, 1000);
+      }
+    }
+  },
+  addFruit() {
+    const a = state.a1;
+    const i = Math.min(a.fruits, PERS.length - 1);
+    if (a.fruits < PERS.length) { persimmon(this.svg.querySelector('#fruits'), PERS[i][0], PERS[i][1], 'fruitIn'); }
+    a.fruits++;
+  }
+};
+Router.register('activity1', Screens.activity1);
+
+/* ---------- 교사 숨은 설정 (좌측 최상단 모서리 3초 길게 누르기) ---------- */
+const Teacher = {
+  timer: null, armed: false,
+  init() {
+    const hs = document.getElementById('hotspot');
+    const start = e => { clearTimeout(this.timer); this.timer = setTimeout(() => this.open(), 3000); };
+    const stop = () => clearTimeout(this.timer);
+    hs.addEventListener('pointerdown', start);
+    ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => hs.addEventListener(ev, stop));
+    hs.addEventListener('contextmenu', e => e.preventDefault());
+  },
+  open() { this.armed = false; this.render(); document.getElementById('settings').classList.add('open'); },
+  close() { document.getElementById('settings').classList.remove('open'); },
+  render() {
+    const d = Settings.data, card = document.getElementById('settingsCard');
+    const tg = (key, label) => `<button class="sb ${d[key] ? 'on' : ''}" data-tg="${key}">${d[key] ? 'ON' : 'OFF'}</button>`;
+    const rg = (key, min, max, step, fmt) => `<input type="range" data-rg="${key}" min="${min}" max="${max}" step="${step}" value="${d[key]}"><output>${fmt(d[key])}</output>`;
+    card.innerHTML = `<h3>교사 설정 (숨은 메뉴)</h3>
+      <div class="srow"><span>개수 음성 (하나, 둘…)</span><div class="ctl">${tg('speakCount')}</div></div>
+      <div class="srow"><span>점 위 숫자 표시</span><div class="ctl">${tg('showNumbers')}</div></div>
+      <div class="srow"><span>음성 속도</span><div class="ctl">${rg('rate', 0.5, 1.3, 0.05, v => Number(v).toFixed(2))}</div></div>
+      <div class="srow"><span>음성 볼륨</span><div class="ctl">${rg('volume', 0, 1, 0.05, v => Math.round(v * 100))}</div></div>
+      <div class="srow"><span>효과음 볼륨</span><div class="ctl">${rg('sfxVol', 0, 1, 0.05, v => Math.round(v * 100))}</div></div>
+      <div class="srow"><span>점 크기</span><div class="ctl">${[-40, -20, 0, 20, 40].map(v => `<button class="sb ${d.dotPct === v ? 'on' : ''}" data-dot="${v}">${v > 0 ? '+' : ''}${v}%</button>`).join('')}</div></div>
+      <div class="srow"><span>숫자 고정</span><div class="ctl"><button class="sb ${d.fixed === 0 ? 'on' : ''}" data-fix="0">무작위</button>${[1, 2, 3, 4, 5].map(v => `<button class="sb ${d.fixed === v ? 'on' : ''}" data-fix="${v}">${v}</button>`).join('')}</div></div>
+      <div class="srow"><span>오류 시 점 자동 지움</span><div class="ctl">${tg('autoClear')}</div></div>
+      <div class="sfoot"><button class="sb" id="sReset">전체 초기화</button><button class="sb on" id="sClose">닫기</button></div>`;
+    card.querySelectorAll('[data-tg]').forEach(b => b.onclick = () => { Settings.set(b.dataset.tg, !Settings.data[b.dataset.tg]); this.render(); });
+    card.querySelectorAll('[data-rg]').forEach(r => r.oninput = () => { const v = parseFloat(r.value); Settings.set(r.dataset.rg, v); r.nextElementSibling.textContent = r.dataset.rg === 'rate' ? v.toFixed(2) : Math.round(v * 100); });
+    card.querySelectorAll('[data-dot]').forEach(b => b.onclick = () => { Settings.set('dotPct', parseInt(b.dataset.dot, 10)); this.render(); });
+    card.querySelectorAll('[data-fix]').forEach(b => b.onclick = () => { Settings.set('fixed', parseInt(b.dataset.fix, 10)); this.render(); });
+    const rs = card.querySelector('#sReset');
+    rs.onclick = () => { if (!this.armed) { this.armed = true; rs.classList.add('arm'); rs.textContent = '한 번 더 누르면 초기화'; return; } Settings.reset(); this.armed = false; this.render(); };
+    card.querySelector('#sClose').onclick = () => this.close();
+  }
+};
+
+/* ---------- 시작 ---------- */
+Settings.load();
+Speech.init();
+Router.init();
+Teacher.init();
+// 첫 터치에서 오디오 잠금 해제 (브라우저 자동재생 정책)
+const unlockOnce = () => { Sfx.unlock(); Speech.unlock(); document.removeEventListener('pointerdown', unlockOnce, true); };
+document.addEventListener('pointerdown', unlockOnce, true);
+Router.go(new URLSearchParams(location.search).get('screen') === 'activity1' ? 'activity1' : 'intro');
+window.__app = { state, Settings, Sfx, Speech, Router, Screens, GROUND_Y }; // 테스트/확장용
+</script>
+</body>
+</html>
