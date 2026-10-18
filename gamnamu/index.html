@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>우리 반 감나무 갤러리 - 도입·활동1 v2</title>
+<title>우리 반 감나무 갤러리 - 도입·활동1 v3</title>
 <style>
 :root{--ink:#1F2A44;--paper:#F6F1E7;--gold:#E0A800}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -74,10 +74,11 @@ svg{display:block}
 .row2{display:flex;gap:calc(var(--u)*1);flex:none}
 #listenBtn{width:calc(var(--u)*5.6);background:#fff;border:calc(var(--u)*.25) solid #C9D2E4}
 #undoBtn{flex:1;background:#fff;border:calc(var(--u)*.25) solid #C9D2E4;font-size:calc(var(--u)*2.2)}
-#helpBtn{flex:1;background:#F9A825;color:#3A2A00;font-size:calc(var(--u)*2.7);box-shadow:0 calc(var(--u)*.3) 0 #A66F00}
+#helpBtn{flex:1;background:#F9A825;color:#3A2A00;font-size:calc(var(--u)*2.6);box-shadow:0 calc(var(--u)*.3) 0 #A66F00}
 #helpBtn[aria-pressed=true]{background:#FFE082;outline:calc(var(--u)*.4) solid #3A2A00;outline-offset:calc(var(--u)*-.4)}
-#homeBtn{width:calc(var(--u)*8.6);background:#fff;border:calc(var(--u)*.25) solid #C9D2E4;font-size:calc(var(--u)*1.9);color:#4A5470;gap:calc(var(--u)*.3)}
-#homeBtn svg{width:calc(var(--u)*2.4);height:calc(var(--u)*2.4)}
+#optBtn{width:calc(var(--u)*7.4);background:#E3EEFF;border:calc(var(--u)*.3) solid #2E5E9E;color:#1B3F73;font-size:calc(var(--u)*2.1)}
+#homeBtn{width:calc(var(--u)*6.6);background:#fff;border:calc(var(--u)*.25) solid #C9D2E4;font-size:calc(var(--u)*1.6);color:#4A5470;gap:calc(var(--u)*.1);padding:0}
+#homeBtn svg{width:calc(var(--u)*2);height:calc(var(--u)*2)}
 #confirm{position:absolute;inset:0;z-index:55;background:rgba(20,25,40,.6);display:none;align-items:center;justify-content:center}
 #confirm.open{display:flex}
 #confirm .box{background:#fff;border-radius:calc(var(--u)*2);padding:calc(var(--u)*3) calc(var(--u)*4);text-align:center;box-shadow:0 calc(var(--u)*1) calc(var(--u)*3) rgba(0,0,0,.4)}
@@ -106,7 +107,7 @@ svg{display:block}
 #hotspot{position:absolute;left:0;top:0;width:calc(var(--u)*6);height:calc(var(--u)*6);z-index:50;background:transparent}
 #settings{position:absolute;inset:0;z-index:60;background:rgba(20,25,40,.6);display:none;align-items:center;justify-content:center}
 #settings.open{display:flex}
-#settings .card{width:calc(var(--u)*74);max-height:calc(var(--u)*53);overflow:auto;background:#fff;border-radius:calc(var(--u)*1.6);padding:calc(var(--u)*1.8) calc(var(--u)*2.4)}
+#settings .card{width:calc(var(--u)*92);max-height:calc(var(--u)*53);overflow:auto;background:#fff;border-radius:calc(var(--u)*1.6);padding:calc(var(--u)*1.8) calc(var(--u)*2.4)}
 #settings h3{margin:0 0 calc(var(--u)*1);font-size:calc(var(--u)*2.8)}
 .srow{display:flex;align-items:center;justify-content:space-between;gap:calc(var(--u)*1.5);padding:calc(var(--u)*.7) 0;border-bottom:1px solid #E6E6E6;font-size:calc(var(--u)*2)}
 .srow>span{flex:none;width:calc(var(--u)*22);font-weight:800}
@@ -117,6 +118,22 @@ svg{display:block}
 .srow output{width:calc(var(--u)*5);text-align:right;font-weight:800}
 .sfoot{display:flex;gap:calc(var(--u)*1.5);justify-content:space-between;margin-top:calc(var(--u)*1.2)}
 .sfoot .sb{min-height:calc(var(--u)*5)}
+#settings .grid{display:grid;grid-template-columns:1fr 1fr;column-gap:calc(var(--u)*2.4)}
+#settings .srow>span{width:auto;flex:1;line-height:1.25}
+#settings .srow .ctl{flex:none}
+#settings .srow.wide{grid-column:1/-1}
+#settings .card.adv .srow{padding:calc(var(--u)*.25) 0}
+#settings .card.adv .sb{min-height:calc(var(--u)*3.8)}
+#settings .card.adv .sw{min-height:calc(var(--u)*4)}
+#settings .card.adv h3{margin-bottom:0}
+.sw{min-height:calc(var(--u)*5);min-width:calc(var(--u)*13);border-radius:calc(var(--u)*2.5);padding:0 calc(var(--u)*1.2) 0 calc(var(--u)*.6);display:flex;align-items:center;gap:calc(var(--u)*.8);
+  font-size:calc(var(--u)*2);font-weight:900;background:#D5D9E3;color:#4A5470;border:calc(var(--u)*.3) solid #9AA3B5}
+.sw i{display:block;width:calc(var(--u)*3.6);height:calc(var(--u)*3.6);border-radius:50%;background:#fff;box-shadow:0 0 0 calc(var(--u)*.2) rgba(0,0,0,.25)}
+.sw.on{background:#2E7D32;color:#fff;border-color:#1B5E20;flex-direction:row-reverse;padding:0 calc(var(--u)*.6) 0 calc(var(--u)*1.2)}
+#settings .sb.on{background:#2E5E9E;color:#fff;outline:calc(var(--u)*.25) solid #1B3F73}
+#settings h3 small{font-size:calc(var(--u)*1.7);color:#8A6D1D;margin-left:calc(var(--u)*1);font-weight:700}
+#circles .c{fill:rgba(255,255,255,.10);stroke:#fff;stroke-width:7;stroke-dasharray:18 14;stroke-linecap:round;transition:fill .4s,stroke-dasharray .4s}
+#circles .c.f{fill:rgba(255,236,170,.55);stroke:#FFF3C4;stroke-dasharray:none}
 #sReset.arm{background:#D32F2F;color:#fff}
 </style>
 </head>
@@ -160,7 +177,8 @@ const DEFAULTS = {
   sfxVol: 0.35,       // 효과음 볼륨(작게)
   dotPct: 0,          // 점 크기 증감(%) -40~+40
   fixed: 0,           // 0=무작위, 1~5=숫자 고정
-  autoClear: true     // 오류 시 점 자동 지움
+  autoClear: true,    // 오류 시 점 자동 지움
+  showCircles: false  // 땅에 점선 동그라미(숫자 개수만큼) 보이기
 };
 const Settings = {
   data: Object.assign({}, DEFAULTS),
@@ -367,6 +385,7 @@ Screens.activity1 = {
         </div>
         <div class="row2">
           <button class="btn" id="helpBtn" aria-pressed="false">도움</button>
+          <button class="btn" id="optBtn">옵션</button>
           <button class="btn" id="homeBtn" aria-label="처음으로">${ICON.home}처음</button>
         </div>
       </div>
@@ -379,6 +398,7 @@ Screens.activity1 = {
     this.svg = root.querySelector('#tree');
     buildTree(this.svg, 0);
     this.helpG = el('g', { id: 'help', display: 'none' }, this.svg);
+    this.circG = el('g', { id: 'circles' }, this.svg);
     this.dotsG = el('g', { id: 'dots', 'clip-path': 'url(#cclip)' }, this.svg);
     // 색 버튼
     const cw = root.querySelector('#colors');
@@ -391,6 +411,7 @@ Screens.activity1 = {
     });
     root.querySelector('#drawBtn').onclick = () => this.draw();
     root.querySelector('#helpBtn').onclick = () => this.toggleHelp();
+    root.querySelector('#optBtn').onclick = () => Options.open(false);
     const cf = root.querySelector('#confirm');
     root.querySelector('#homeBtn').onclick = () => cf.classList.add('open');
     root.querySelector('#confirmNo').onclick = () => cf.classList.remove('open');
@@ -427,6 +448,23 @@ Screens.activity1 = {
   applySettings() {
     if (!this.dotsG) return;
     this.dotsG.classList.toggle('shownum', !!Settings.data.showNumbers);
+    this.renderCircles();
+  },
+  /* 점선 동그라미: 숫자 개수만큼 땅에 나란히. 점 중심이 원 안이면 그 원이 채워짐(표시만, 판정과 무관) */
+  renderCircles() {
+    const a = state.a1, g = this.circG; if (!g) return;
+    g.innerHTML = '';
+    if (!Settings.data.showCircles || !a.current || a.phase === 'idle') return;
+    const n = a.current, r = this.dotR(), d = 2 * r;
+    const gap = n > 1 ? Math.min(d * 0.35, (920 - n * d) / (n - 1)) : 0;
+    const total = n * d + (n - 1) * gap, x0 = 500 - total / 2 + r, cy = 800;
+    const used = new Set();
+    a.dots.forEach(dt => {                      // 점 순서대로 가장 가까운 빈 원에 대응(그리디)
+      let best = -1, bd = 1e9;
+      for (let i = 0; i < n; i++) { if (used.has(i)) continue; const dd = Math.hypot(dt.x - (x0 + i * (d + gap)), dt.y - cy); if (dd <= r && dd < bd) { bd = dd; best = i; } }
+      if (best >= 0) used.add(best);
+    });
+    for (let i = 0; i < n; i++) el('circle', { class: 'c' + (used.has(i) ? ' f' : ''), cx: x0 + i * (d + gap), cy, r: r - 4 }, g);
   },
   goHome() {
     const a = state.a1;
@@ -476,7 +514,7 @@ Screens.activity1 = {
     }
     return a.bag.pop();
   },
-  clearDots() { this.dotsG.classList.remove('fading'); this.dotsG.innerHTML = ''; state.a1.dots = []; },
+  clearDots() { this.dotsG.classList.remove('fading'); this.dotsG.innerHTML = ''; state.a1.dots = []; this.renderCircles(); },
   draw() {
     Sfx.unlock(); Speech.unlock();
     const a = state.a1;
@@ -486,6 +524,7 @@ Screens.activity1 = {
     a.current = n; a.last = n; a.phase = 'counting';
     this.clearDots();
     this.renderHelp(false);   // 새 숫자: 도움 띠는 닫음
+    this.renderCircles();
     const card = document.getElementById('numcard');
     card.className = ''; card.innerHTML = String(n);
     const db = document.getElementById('drawBtn'); db.textContent = '다음 숫자'; db.classList.remove('hl');
@@ -507,11 +546,12 @@ Screens.activity1 = {
     const t = el('text', { x: p.x, y: p.y, class: 'dnum', 'font-size': r * 1.1 }, g); t.textContent = n;
     a.dots.push({ x: p.x, y: p.y, color: a.color, node: g });
     Sfx.kok();
+    this.renderCircles();
     if (Settings.data.speakCount) Speech.say(countWord(n), { caption: false });
   },
   undo() {
     const a = state.a1; if (a.phase !== 'counting' || !a.dots.length) return;
-    const d = a.dots.pop(); d.node.remove();
+    const d = a.dots.pop(); d.node.remove(); this.renderCircles();
   },
   finish() {
     Sfx.unlock(); Speech.unlock();
@@ -552,39 +592,49 @@ Screens.activity1 = {
 };
 Router.register('activity1', Screens.activity1);
 
-/* ---------- 교사 숨은 설정 (좌측 최상단 모서리 3초 길게 누르기) ---------- */
-const Teacher = {
-  timer: null, armed: false,
+/* ---------- 옵션 패널 (보이는 「옵션」 버튼 + 교사 숨은 설정 3초 길게 누르기, 같은 패널·같은 Settings 공유) ---------- */
+const Options = {
+  timer: null, armed: false, adv: false,
   init() {
     const hs = document.getElementById('hotspot');
-    const start = e => { clearTimeout(this.timer); this.timer = setTimeout(() => this.open(), 3000); };
+    const start = () => { clearTimeout(this.timer); this.timer = setTimeout(() => this.open(true), 3000); };
     const stop = () => clearTimeout(this.timer);
     hs.addEventListener('pointerdown', start);
     ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => hs.addEventListener(ev, stop));
     hs.addEventListener('contextmenu', e => e.preventDefault());
   },
-  open() { this.armed = false; this.render(); document.getElementById('settings').classList.add('open'); },
+  open(adv) { this.armed = false; this.adv = !!adv; this.render(); document.getElementById('settings').classList.add('open'); },
   close() { document.getElementById('settings').classList.remove('open'); },
   render() {
     const d = Settings.data, card = document.getElementById('settingsCard');
-    const tg = (key, label) => `<button class="sb ${d[key] ? 'on' : ''}" data-tg="${key}">${d[key] ? 'ON' : 'OFF'}</button>`;
-    const rg = (key, min, max, step, fmt) => `<input type="range" data-rg="${key}" min="${min}" max="${max}" step="${step}" value="${d[key]}"><output>${fmt(d[key])}</output>`;
-    card.innerHTML = `<h3>교사 설정 (숨은 메뉴)</h3>
-      <div class="srow"><span>개수 음성 (하나, 둘…)</span><div class="ctl">${tg('speakCount')}</div></div>
-      <div class="srow"><span>점 위 숫자 표시</span><div class="ctl">${tg('showNumbers')}</div></div>
-      <div class="srow"><span>음성 속도</span><div class="ctl">${rg('rate', 0.5, 1.3, 0.05, v => Number(v).toFixed(2))}</div></div>
-      <div class="srow"><span>음성 볼륨</span><div class="ctl">${rg('volume', 0, 1, 0.05, v => Math.round(v * 100))}</div></div>
-      <div class="srow"><span>효과음 볼륨</span><div class="ctl">${rg('sfxVol', 0, 1, 0.05, v => Math.round(v * 100))}</div></div>
-      <div class="srow"><span>점 크기</span><div class="ctl">${[-40, -20, 0, 20, 40].map(v => `<button class="sb ${d.dotPct === v ? 'on' : ''}" data-dot="${v}">${v > 0 ? '+' : ''}${v}%</button>`).join('')}</div></div>
-      <div class="srow"><span>숫자 고정</span><div class="ctl"><button class="sb ${d.fixed === 0 ? 'on' : ''}" data-fix="0">무작위</button>${[1, 2, 3, 4, 5].map(v => `<button class="sb ${d.fixed === v ? 'on' : ''}" data-fix="${v}">${v}</button>`).join('')}</div></div>
-      <div class="srow"><span>오류 시 점 자동 지움</span><div class="ctl">${tg('autoClear')}</div></div>
-      <div class="sfoot"><button class="sb" id="sReset">전체 초기화</button><button class="sb on" id="sClose">닫기</button></div>`;
+    const sw = key => `<button class="sw ${d[key] ? 'on' : ''}" data-tg="${key}" aria-pressed="${!!d[key]}"><i></i>${d[key] ? '켜짐' : '꺼짐'}</button>`;
+    const steps = (key, list) => list.map(([v, l]) => `<button class="sb ${Math.abs(d[key] - v) < 1e-9 ? 'on' : ''}" data-step="${key}" data-v="${v}">${l}</button>`).join('');
+    const row = (label, ctl, cls) => `<div class="srow ${cls || ''}"><span>${label}</span><div class="ctl">${ctl}</div></div>`;
+    let h = `<h3>옵션${this.adv ? '<small>교사 고급 설정</small>' : ''}</h3><div class="grid">`
+      + row('콕콕 찍을 때 하나·둘·셋 말하기', sw('speakCount'))
+      + row('땅에 점선 동그라미 보이기', sw('showCircles'))
+      + row('점 위에 숫자 보이기', sw('showNumbers'))
+      + row('틀리면 점 자동 지우기', sw('autoClear'))
+      + row('음성 속도', steps('rate', [[0.7, '느리게'], [0.85, '보통'], [1.0, '빠르게']]))
+      + row('효과음 크기', steps('sfxVol', [[0.15, '작게'], [0.35, '보통'], [0.6, '크게']]))
+      + row('점 크기', steps('dotPct', [[-20, '작게'], [0, '보통'], [20, '크게']]))
+      + row('숫자 고정', steps('fixed', [[0, '무작위'], [1, '1'], [2, '2'], [3, '3'], [4, '4'], [5, '5']]), 'wide')
+      + '</div>';
+    if (this.adv) {
+      h += '<div class="grid">'
+        + row('음성 볼륨', `<input type="range" data-rg="volume" min="0" max="1" step="0.05" value="${d.volume}"><output>${Math.round(d.volume * 100)}</output>`)
+        + row('음성 속도(세밀)', `<input type="range" data-rg="rate" min="0.5" max="1.3" step="0.05" value="${d.rate}"><output>${Number(d.rate).toFixed(2)}</output>`)
+        + row('점 크기(세밀)', steps('dotPct', [[-40, '-40%'], [-20, '-20%'], [0, '0'], [20, '+20%'], [40, '+40%']]), 'wide')
+        + '</div>';
+    }
+    h += '<div class="sfoot"><button class="sb" id="sReset">기본값으로</button><button class="sb on" id="sClose" style="min-width:calc(var(--u)*20);font-size:calc(var(--u)*2.6)">닫기</button></div>';
+    card.classList.toggle('adv', this.adv);
+    card.innerHTML = h;
     card.querySelectorAll('[data-tg]').forEach(b => b.onclick = () => { Settings.set(b.dataset.tg, !Settings.data[b.dataset.tg]); this.render(); });
+    card.querySelectorAll('[data-step]').forEach(b => b.onclick = () => { Settings.set(b.dataset.step, parseFloat(b.dataset.v)); this.render(); });
     card.querySelectorAll('[data-rg]').forEach(r => r.oninput = () => { const v = parseFloat(r.value); Settings.set(r.dataset.rg, v); r.nextElementSibling.textContent = r.dataset.rg === 'rate' ? v.toFixed(2) : Math.round(v * 100); });
-    card.querySelectorAll('[data-dot]').forEach(b => b.onclick = () => { Settings.set('dotPct', parseInt(b.dataset.dot, 10)); this.render(); });
-    card.querySelectorAll('[data-fix]').forEach(b => b.onclick = () => { Settings.set('fixed', parseInt(b.dataset.fix, 10)); this.render(); });
     const rs = card.querySelector('#sReset');
-    rs.onclick = () => { if (!this.armed) { this.armed = true; rs.classList.add('arm'); rs.textContent = '한 번 더 누르면 초기화'; return; } Settings.reset(); this.armed = false; this.render(); };
+    rs.onclick = () => { if (!this.armed) { this.armed = true; rs.classList.add('arm'); rs.textContent = '한 번 더 누르면 기본값'; return; } Settings.reset(); this.armed = false; this.render(); };
     card.querySelector('#sClose').onclick = () => this.close();
   }
 };
@@ -593,7 +643,7 @@ const Teacher = {
 Settings.load();
 Speech.init();
 Router.init();
-Teacher.init();
+Options.init();
 // 첫 터치에서 오디오 잠금 해제 (브라우저 자동재생 정책)
 const unlockOnce = () => { Sfx.unlock(); Speech.unlock(); document.removeEventListener('pointerdown', unlockOnce, true); };
 document.addEventListener('pointerdown', unlockOnce, true);
