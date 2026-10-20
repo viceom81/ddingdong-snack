@@ -385,6 +385,12 @@ display:flex;flex-direction:column;align-items:center;justify-content:center;gap
 #studentModal.modalOverlay{background:rgba(20,25,40,.4)}
 .stuChoiceBtns{flex-wrap:nowrap}
 .stuChoiceBtns .btn{min-width:0!important;flex:1;min-height:calc(var(--u)*8)!important;font-size:calc(var(--u)*2.2)!important;padding:0 calc(var(--u)*.8)}
+#act2 .a2askov{position:absolute;left:calc(var(--u)*17.05);top:calc(var(--u)*7.2);width:calc(var(--u)*65.9);height:calc(var(--u)*39.2);background:rgba(20,25,40,.5);border-radius:calc(var(--u)*1.4);display:flex;align-items:center;justify-content:center;z-index:6}
+#act2 .a2askbox{background:#fff;border:calc(var(--u)*.5) solid #1F2A44;border-radius:calc(var(--u)*2.2);padding:calc(var(--u)*2.2) calc(var(--u)*2.6);text-align:center;box-shadow:0 calc(var(--u)*.6) 0 rgba(0,0,0,.25)}
+#act2 .a2askbox h2{margin:0;font-size:calc(var(--u)*4.2);font-weight:900}
+#act2 .a2askbox .sub{font-size:calc(var(--u)*2.4);font-weight:800;color:#1B3F73;margin:calc(var(--u)*.6) 0 calc(var(--u)*1.8)}
+#act2 .a2askbox .a2nums{position:static;display:flex;justify-content:center;gap:calc(var(--u)*1.2)}
+#act2 .a2askbox .a2nb{width:calc(var(--u)*9.4);min-height:calc(var(--u)*10)}
 </style>
 </head>
 <body>
@@ -2118,6 +2124,8 @@ return `<path d="${LEAF}" fill="#fff" transform="scale(1.18)"/><path d="${LEAF}"
 }
 const a2G = (kind, x, y, s, i, extra) => `<g transform="translate(${x},${y}) scale(${s})" ${extra || ''}>${a2Glyph(kind, i)}</g>`;
 const A2_TREE = [[130, 110], [230, 70], [330, 110], [90, 185], [180, 145], [280, 145], [370, 190], [140, 240], [230, 205], [320, 250]];
+const A2_BSLOT = i => [478 + (i % 5) * 46, 352 - Math.floor(i / 5) * 46];
+const A2_BASKET = { x: 440, y: 240, w: 260, h: 170 };
 function a2Items() { const m = Settings.data.a2Item; return m === 'persimmon' || m === 'leaf' ? [m] : ['persimmon', 'leaf']; }
 const a2Say = (item, n) => `${A2_ITEM[item].name} ${A2_CNT[n]} ${A2_ITEM[item].unit}`;
 function a2Shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
@@ -2141,7 +2149,7 @@ const its = a2Items(), st = its[Math.floor(Math.random() * its.length)];
 a2.items = a2.queue.map((_, i) => its.length === 1 ? its[0] : (i % 2 === 0 ? st : (st === 'leaf' ? 'persimmon' : 'leaf')));
 this.setRound();
 },
-setRound() { a2.n = a2.queue[a2.idx]; a2.item = a2.items[a2.idx]; a2.tries = 0; this.showAsk(true); },
+setRound() { a2.n = a2.queue[a2.idx]; a2.item = a2.items[a2.idx]; a2.tries = 0; this.showHarvest(true); },
 shell(title, hideNav) {
 const lv = a2Level(), r = A2_LEVELS[lv];
 this.root.innerHTML = `<div class="a2nav"><button class="btn a2back" id="a2Back">처음으로</button>${hideNav ? '' : '<button class="btn a2back" id="a2Restart">활동2 처음으로</button>'}</div><h1 class="a2title">${title}</h1><div class="a2lv">수준 ${lv} · ${r[0]}~${r[1]}</div><div id="caption">화면을 한 번 터치하면 소리가 켜져요</div>`;
@@ -2199,17 +2207,69 @@ h += '</g>';
 if (practice) h += '<text x="560" y="150" text-anchor="middle" font-size="26" font-weight="900" fill="#7A5128">하나씩 눌러서</text><text x="560" y="186" text-anchor="middle" font-size="26" font-weight="900" fill="#7A5128">표시하며 세어 봐요</text>';
 svg.innerHTML = h;
 },
-/* ---- 라운드: 세어 보고 숫자 고르기 ---- */
-showAsk(speak) {
+/* ---- ①② 나무에 달린 n개를 전부 따서 바구니에 담기 → ③ 자동으로 숫자 고르는 창 ---- */
+showHarvest(speak) {
+const it = A2_ITEM[a2.item];
+a2.phase = 'harvest'; this.lock = false; this.drag = null;
+this.shell(`${it.name}을 모두 따요`);
+this.layout(); a2.moved = [];
+const svg = this.scene(); this.drawHarvest();
+svg.addEventListener('pointerdown', e => this.hdown(e));
+svg.addEventListener('pointermove', e => this.hmove(e));
+svg.addEventListener('pointerup', e => this.hup(e));
+svg.addEventListener('pointercancel', () => { this.drag = null; if (a2.phase === 'harvest') this.drawHarvest(); });
+const m = `${it.name}을 모두 따서 바구니에 담아요`;
+if (speak) Speech.say(m); else Router.caption(m);
+},
+drawHarvest() {
+const kind = a2.item, svg = this.svg, B = A2_BASKET;
+let h = '<defs><linearGradient id="a2sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A9D8F2"/><stop offset="1" stop-color="#E3F3FB"/></linearGradient></defs><rect width="740" height="440" fill="url(#a2sky)"/><rect y="385" width="740" height="55" fill="#A98266"/><rect y="385" width="740" height="6" fill="#6F4B33"/>';
+h += '<path d="M205,392 Q222,350 226,310 L234,310 Q238,350 255,392 Z" fill="#6B3E1F"/><path d="M230,330 L230,230" stroke="#6B3E1F" stroke-width="30" stroke-linecap="round"/>';
+for (const p of A2_TREE) h += `<path d="M230,250 L${p[0]},${p[1] + 12}" stroke="#6B3E1F" stroke-width="9" stroke-linecap="round" fill="none"/>`;
+h += '<g opacity=".4" fill="#5FA85A"><circle cx="230" cy="130" r="95"/><circle cx="120" cy="170" r="70"/><circle cx="340" cy="175" r="75"/><circle cx="230" cy="215" r="70"/></g><g id="a2Items">';
+a2.slots.forEach((si, k) => { if (a2.moved.includes(k)) return; const p = A2_TREE[si]; h += `<g data-i="${k}" class="a2obj" style="cursor:pointer">` + a2G(kind, p[0], p[1], 1.9, si) + `<circle cx="${p[0]}" cy="${p[1]}" r="42" fill="transparent"/></g>`; });
+h += '</g>';
+h += `<path d="M${B.x + 10},${B.y + 90} L${B.x + B.w - 10},${B.y + 90} L${B.x + B.w - 30},${B.y + B.h - 8} Q${B.x + B.w / 2},${B.y + B.h + 4} ${B.x + 30},${B.y + B.h - 8} Z" fill="#C8924B" stroke="#7A5128" stroke-width="5" stroke-linejoin="round"/><g id="a2Bsk">`;
+a2.moved.forEach((k, j) => { const [x, y] = A2_BSLOT(j); h += `<g data-b="${j}" style="cursor:pointer">` + a2G(kind, x, y - 45, 1.15, a2.slots[k]) + '</g>'; });
+h += '</g>';
+h += `<path d="M${B.x + 6},${B.y + 92} L${B.x + B.w - 6},${B.y + 92} L${B.x + B.w - 24},${B.y + 150} L${B.x + 24},${B.y + 150} Z" fill="#B07B3A" stroke="#7A5128" stroke-width="5" stroke-linejoin="round" pointer-events="none"/>`;
+h += `<text x="${B.x + B.w / 2}" y="${B.y + 132}" text-anchor="middle" font-size="26" font-weight="900" fill="#FFF3DC" pointer-events="none">바구니</text><g id="a2Ghost"></g>`;
+svg.innerHTML = h;
+this.stat(`바구니에 ${a2.moved.length}${A2_ITEM[kind].unit}`);
+},
+pt(e) { const m = this.svg.getScreenCTM().inverse(); return new DOMPoint(e.clientX, e.clientY).matrixTransform(m); },
+hdown(e) {
+if (a2.phase !== 'harvest') return; const t = e.target;
+const bi = t.closest && t.closest('[data-b]');
+if (bi) { a2.moved.splice(Number(bi.getAttribute('data-b')), 1); Sfx.kok(); this.drawHarvest(); return; }
+const it = t.closest && t.closest('[data-i]'); if (!it) return;
+const p = this.pt(e); this.drag = { k: Number(it.getAttribute('data-i')), sx: p.x, sy: p.y, moved: false };
+try { this.svg.setPointerCapture(e.pointerId); } catch (er) {}
+},
+hmove(e) {
+const d = this.drag; if (!d) return; const p = this.pt(e);
+if (!d.moved && Math.hypot(p.x - d.sx, p.y - d.sy) > 10) d.moved = true;
+if (d.moved) this.svg.querySelector('#a2Ghost').innerHTML = a2G(a2.item, p.x, p.y, 2.2, a2.slots[d.k]);
+},
+hup(e) {
+const d = this.drag; if (!d) return; this.drag = null;
+const p = this.pt(e), B = A2_BASKET;
+const inB = p.x > B.x - 10 && p.x < B.x + B.w + 10 && p.y > B.y - 10 && p.y < B.y + B.h + 10;
+if ((!d.moved || inB) && !a2.moved.includes(d.k)) { a2.moved.push(d.k); Sfx.kok(); }
+this.drawHarvest();
+if (a2.moved.length === a2.n && a2.phase === 'harvest') { a2.phase = 'harvested'; this.later(() => this.showAsk(), 700); }
+},
+/* ③ 숫자 고르는 창 */
+showAsk() {
 const it = A2_ITEM[a2.item];
 a2.phase = 'ask'; this.lock = false;
-this.shell(`${it.name}이 몇 ${it.unit}일까요?`);
-this.layout(); this.scene(); this.drawScene(false);
-const bar = this.numBar();
+const ov = document.createElement('div'); ov.className = 'a2askov'; ov.id = 'a2Ask';
+ov.innerHTML = `<div class="a2askbox"><h2>${it.name}이 모두 몇 ${it.unit}일까요?</h2><div class="sub">숫자를 골라요</div></div>`;
+this.root.appendChild(ov);
+const bar = this.numBar(); ov.querySelector('.a2askbox').appendChild(bar);
 bar.onclick = e => { const b = e.target.closest('.a2nb'); if (b) this.answer(Number(b.dataset.k), b); };
-this.stat('세어 보고 숫자를 눌러요');
-const m = `${it.name}이 몇 ${it.unit}일까요? 세어 보고 숫자를 골라요`;
-if (speak) Speech.say(m); else Router.caption(m);
+this.stat('숫자를 골라요');
+Speech.say(`${it.name}이 모두 몇 ${it.unit}일까요? 숫자를 골라요`);
 },
 answer(k, btn) {
 if (a2.phase !== 'ask' || this.lock) return; this.lock = true; Sfx.unlock();
@@ -2244,7 +2304,7 @@ practiceAnswer(k, btn) {
 if (a2.phase !== 'practice' || this.lock) return; Sfx.unlock();
 if (k === a2.n) {
 this.lock = true; a2.phase = 'pok'; btn.classList.add('ok'); Sfx.dingdong(); this.pulse(); Speech.say('딩동! 잘했어요! 다시 해 봐요');
-this.later(() => this.showAsk(true), 2000);
+this.later(() => this.showHarvest(true), 2000);
 } else {
 btn.classList.add('no'); setTimeout(() => btn.classList.remove('no'), 700); Sfx.error(); Speech.say('괜찮아요. 처음부터 다시 세어 봐요');
 a2.marks = []; this.drawScene(true); this.updPractice();
