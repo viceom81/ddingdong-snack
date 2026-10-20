@@ -128,9 +128,13 @@ display:flex;align-items:center;justify-content:center;font-size:calc(var(--u)*9
 box-shadow:0 calc(var(--u)*.4) calc(var(--u)*1) rgba(0,0,0,.18);flex:none}
 #numcard .ph{font-size:calc(var(--u)*2.5);color:#9AA3B5;font-weight:800;text-align:center;line-height:1.25}
 #numcard.hasProg .ph{padding-top:calc(var(--u)*2.1);font-size:calc(var(--u)*2.3)}
-#progBadge{position:absolute;left:calc(var(--u)*.7);top:calc(var(--u)*.55);font-size:calc(var(--u)*1.45);font-weight:900;
+#progBadge{position:absolute;left:calc(var(--u)*.7);right:calc(var(--u)*.7);text-align:center;top:calc(var(--u)*.55);font-size:calc(var(--u)*1.5);font-weight:900;
 background:#E3EEFF;color:#1B3F73;border:calc(var(--u)*.18) solid #2E5E9E;border-radius:calc(var(--u)*.7);
 padding:calc(var(--u)*.1) calc(var(--u)*.55);line-height:1.15;display:none;z-index:2;pointer-events:none}
+#progBadge b{font-size:calc(var(--u)*2.1);line-height:1.1}
+#progBadge span{font-size:calc(var(--u)*1.5);margin-left:calc(var(--u)*.6)}
+#numcard.hasProg{padding-top:calc(var(--u)*3.2);font-size:calc(var(--u)*8.2)}
+#numcard.hasProg .ph{padding-top:calc(var(--u)*.6);font-size:calc(var(--u)*2.1)}
 #numcard.gold{animation:gold 1.2s ease-out both}
 @keyframes gold{0%{border-color:#CFC5AE;box-shadow:0 0 0 0 rgba(224,168,0,0)}
 25%,70%{border-color:#E0A800;box-shadow:0 0 calc(var(--u)*1.4) calc(var(--u)*.5) rgba(224,168,0,.55)}
@@ -417,6 +421,9 @@ QR에는 ?mode=practice&s=<id> 만 포함.
 
 /* ---------- 전역 상태 ---------- */
 const MAX_PROBLEMS = 10;
+const TOTAL_CHOICES = [3, 5, 7, 10];
+function a1Total() { const v = Number(Settings.data.a1Total); return TOTAL_CHOICES.includes(v) ? v : 10; }
+function a2TotalOpt() { const v = Number(Settings.data.a2Total); return TOTAL_CHOICES.includes(v) ? v : 5; }
 const MAX_STUDENTS = 6;
 const state = {
 screen: 'intro',
@@ -939,7 +946,7 @@ dotPct: 0, // 점 크기 증감(%) -40~+40
 fixed: 0, // 0=무작위, 1~5=숫자 고정
 autoClear: true, // 오류 시 점 자동 지움
 showCircles: false, // 땅에 점선
-a2Level: '가', a2Item: 'both', a2Hint: 'num', a2Levels: {}
+a1Total: 10, a2Total: 5, a2Level: '가', a2Item: 'both', a2Hint: 'num', a2Levels: {}
 };
 const Settings = {
 data: Object.assign({}, DEFAULTS),
@@ -1466,7 +1473,7 @@ card.querySelector('#rosterCloseBtn').onclick = () => this.close();
 const COLORS = [['빨강', '#E53935'], ['주황', '#FB8C00'], ['노랑', '#FDD835'], ['초록', '#43A047'], ['파랑', '#1E88E5'], ['분홍', '#EC407A']];
 Screens.activity1 = {
 timers: [], pointers: new Map(), lastDotAt: 0, svg: null, toastTimer: null,
-isStudentMode() { return state.mode === 'board' || state.mode === 'practice'; },
+isStudentMode() { return true; /* 그냥 입장도 정답마다 감이 열림 */ },
 mount(root) {
 const a = state.a1;
 Object.assign(a, { current: null, dots: [], phase: 'idle', fruits: 0, helpOpen: false });
@@ -1631,8 +1638,8 @@ return;
 b.style.display = 'block';
 if (card) card.classList.add('hasProg');
 const a = state.a1;
-const step = Math.min(MAX_PROBLEMS, a.fruits + (a.phase === 'success' ? 0 : 1));
-b.textContent = `${step} / ${MAX_PROBLEMS}`;
+const T = a1Total(), step = Math.min(T, a.fruits + (a.phase === 'success' ? 0 : 1));
+b.innerHTML = `<b>${step} / ${T}</b><span>남은 문제 ${Math.max(0, T - step)}</span>`;
 },
 applySettings() {
 if (!this.dotsG) return;
@@ -1789,7 +1796,7 @@ if (this.isStudentMode() && a.phase === 'counting' && a.current) {
 Speech.say(this.promptText(a.current));
 return;
 }
-if (this.isStudentMode() && a.fruits >= MAX_PROBLEMS) {
+if (this.isStudentMode() && a.fruits >= a1Total()) {
 Router.go('complete');
 return;
 }
@@ -1871,7 +1878,7 @@ this.later(() => Speech.say(`맞아요! ${counterWord(n)} 찍었어요.`), 700);
 if (this.isStudentMode()) {
 this.later(() => this.addFruit(), 450);
 this.later(() => {
-if (a.fruits >= MAX_PROBLEMS) {
+if (a.fruits >= a1Total()) {
 Router.go('complete');
 } else {
 const db = document.getElementById('drawBtn');
@@ -2068,14 +2075,15 @@ root.innerHTML = `
 <div class="compInfo">
 <div class="compAvatar"><img alt="" src="${photoSrc}"></div>
 <div class="compName"></div>
-<div class="compPraise">감 10개를 모두 열었어요!</div>
+<div class="compPraise">감 ${a1Total()}개를 모두 열었어요!</div>
 <button class="btn" id="compHomeBtn">첫 화면으로</button>
 </div>
 </div>`;
-root.querySelector('.compName').textContent = nameTxt;
-buildTree(root.querySelector('#compTree'), MAX_PROBLEMS);
+root.querySelector('.compName').textContent = (state.mode === 'free') ? '수고했어요' : nameTxt;
+if (state.mode === 'free') { const av = root.querySelector('.compAvatar'); if (av) av.style.display = 'none'; }
+buildTree(root.querySelector('#compTree'), a1Total());
 Sfx.dingdong();
-Speech.say('오늘 활동 끝! 감 열 개를 모두 열었어요. 참 잘했어요!');
+Speech.say(`오늘 활동 끝! 감 ${a1Total()}개를 모두 열었어요. 참 잘했어요!`);
 root.querySelector('#compHomeBtn').onclick = () => {
 Sfx.unlock(); Speech.stop();
 if (state.mode === 'practice') {
@@ -2131,11 +2139,11 @@ const A2_BASKET = { x: 440, y: 240, w: 260, h: 170 };
 function a2Items() { const m = Settings.data.a2Item; return m === 'persimmon' || m === 'leaf' ? [m] : ['persimmon', 'leaf']; }
 const a2Say = (item, n) => `${A2_ITEM[item].name} ${A2_CNT[n]} ${A2_ITEM[item].unit}`;
 function a2Shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
-function a2Queue(lo, hi) {
+function a2Queue(lo, hi, T) {
 const nums = []; for (let i = lo; i <= hi; i++) nums.push(i);
-if (nums.length >= A2_ROUNDS) return a2Shuffle(nums).slice(0, A2_ROUNDS);
-const q = []; while (q.length < A2_ROUNDS) { let b = a2Shuffle(nums); if (q.length && b[0] === q[q.length - 1] && b.length > 1) b.push(b.shift()); q.push(...b); }
-return q.slice(0, A2_ROUNDS);
+if (nums.length >= T) return a2Shuffle(nums).slice(0, T);
+const q = []; while (q.length < T) { let b = a2Shuffle(nums); if (q.length && b[0] === q[q.length - 1] && b.length > 1) b.push(b.shift()); q.push(...b); }
+return q.slice(0, T);
 }
 
 Screens.act2 = {
@@ -2146,7 +2154,7 @@ mount(root) { this.root = root; this.startSession(); },
 startSession() {
 this.timers.forEach(clearTimeout); this.timers = [];
 const [lo, hi] = A2_LEVELS[a2Level()];
-a2.queue = a2Queue(lo, hi); a2.total = A2_ROUNDS; a2.idx = 0; a2.results = [];
+a2.total = a2TotalOpt(); a2.queue = a2Queue(lo, hi, a2.total); a2.idx = 0; a2.results = [];
 const its = a2Items(), st = its[Math.floor(Math.random() * its.length)];
 a2.items = a2.queue.map((_, i) => its.length === 1 ? its[0] : (i % 2 === 0 ? st : (st === 'leaf' ? 'persimmon' : 'leaf')));
 this.setRound();
@@ -2377,6 +2385,8 @@ let h = `<h3>옵션${this.adv ? '<small>교사 고급 설정</small>' : ''}</h3>
 + row('효과음 크기', steps('sfxVol', [[0.15, '작게'], [0.35, '보통'], [0.6, '크게']]))
 + row('점 크기', steps('dotPct', [[-20, '작게'], [0, '보통'], [20, '크게']]))
 + row('숫자 고정', steps('fixed', [[0, '무작위'], [1, '1'], [2, '2'], [3, '3'], [4, '4'], [5, '5']]), 'wide')
++ row('활동1 문제 수', steps('a1Total', [[3, '3'], [5, '5'], [7, '7'], [10, '10']]))
++ row('활동2 문제 수', steps('a2Total', [[3, '3'], [5, '5'], [7, '7'], [10, '10']]))
 + row('활동2 수준', ['가', '나', '다'].map(v => `<button class="sb ${d.a2Level === v ? 'on' : ''}" data-a2="a2Level" data-v="${v}">${v} (${A2_LEVELS[v][0]}~${A2_LEVELS[v][1]})</button>`).join(''))
 + row('활동2 힌트 도움', [['none', '없음'], ['num', '순서 번호 표시'], ['ans', '정답 숫자 강조']].map(([v, l]) => `<button class="sb ${d.a2Hint === v ? 'on' : ''}" data-a2="a2Hint" data-v="${v}">${l}</button>`).join(''), 'wide')
 + row('활동2 물건', [['both', '둘 다'], ['persimmon', '감만'], ['leaf', '나뭇잎만']].map(([v, l]) => `<button class="sb ${d.a2Item === v ? 'on' : ''}" data-a2="a2Item" data-v="${v}">${l}</button>`).join(''))
