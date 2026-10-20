@@ -320,7 +320,6 @@ grid-template-areas:"num end" "num draw" "col r1" "col r2";column-gap:calc(var(-
 }
 
 /* ---------- 활동 2 「감 채우기」 (v6) ---------- */
-#intro #caption{right:calc(var(--u)*60)!important}
 #introAct2{position:absolute;right:calc(var(--u)*33);bottom:calc(var(--u)*2.2);width:calc(var(--u)*25);min-height:calc(var(--u)*6.6);
 background:#E8701A;color:#fff;font-size:calc(var(--u)*2.4);border-radius:calc(var(--u)*1.8)}
 .stuChoiceBtns{flex-wrap:wrap}
@@ -352,6 +351,23 @@ display:flex;flex-direction:column;align-items:center;justify-content:center;gap
 #act2 .a2order .btns{display:flex;gap:calc(var(--u)*2)}
 .a2pop{animation:a2pop .28s ease-out}
 @keyframes a2pop{from{transform:scale(.4)}to{transform:scale(1)}}
+#intro #caption{right:calc(var(--u)*53)!important;font-size:calc(var(--u)*2.2)!important}
+#introAct2{right:calc(var(--u)*32)!important;width:calc(var(--u)*21)!important;font-size:calc(var(--u)*2.3)!important}
+#act2 .a2nav{position:absolute;left:calc(var(--u)*2);top:calc(var(--u)*1.4);display:flex;gap:calc(var(--u)*1);z-index:3}
+#act2 .a2nav .a2back{position:static;min-height:calc(var(--u)*4.4);padding:0 calc(var(--u)*1.4);background:#E9ECF3;font-size:calc(var(--u)*1.9);white-space:nowrap}
+#act2 .a2nav #a2Restart{background:#FFE7C2}
+#act2 .a2stat{position:absolute;left:calc(var(--u)*2);top:calc(var(--u)*38.4);width:calc(var(--u)*21);background:#fff;border:calc(var(--u)*.25) solid #1F2A44;border-radius:calc(var(--u)*1.2);padding:calc(var(--u)*.6) calc(var(--u)*.4);font-size:calc(var(--u)*1.5);font-weight:800;line-height:1.35;text-align:center}
+#act2 .a2stat b{font-size:calc(var(--u)*2.3);color:#E8701A}
+#act2 .a2stat span{color:#1B3F73}
+#act2 .a2face{position:absolute;right:calc(var(--u)*6.2);top:calc(var(--u)*8.2);width:calc(var(--u)*10.5);display:flex;flex-direction:column;align-items:center;z-index:4;transform-origin:center}
+#act2 .a2face img{width:calc(var(--u)*9);height:calc(var(--u)*9);border-radius:50%;object-fit:cover;border:calc(var(--u)*.45) solid #2E5E9E;background:#fff}
+#act2 .a2face span{margin-top:calc(var(--u)*.3);background:#1F2A44;color:#fff;font-size:calc(var(--u)*1.7);font-weight:900;padding:calc(var(--u)*.2) calc(var(--u)*1.1);border-radius:calc(var(--u)*1.5);max-width:calc(var(--u)*10.5);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#act2 .a2face.facePulse{animation:a2fp .85s ease-in-out}
+@keyframes a2fp{0%,100%{transform:scale(1)}25%{transform:scale(1.16)}55%{transform:scale(.96)}80%{transform:scale(1.08)}}
+#act2 .a2cnt{font-size:calc(var(--u)*2.2);font-weight:900;color:#8A6D3B}
+#rCam{display:none;margin:calc(var(--u)*.6) 0}
+#rCam.on{display:block}
+#rCam video{width:calc(var(--u)*20);height:calc(var(--u)*15);object-fit:cover;transform:scaleX(-1);border-radius:calc(var(--u)*1);background:#000;display:block}
 </style>
 </head>
 <body>
@@ -898,7 +914,7 @@ dotPct: 0, // 점 크기 증감(%) -40~+40
 fixed: 0, // 0=무작위, 1~5=숫자 고정
 autoClear: true, // 오류 시 점 자동 지움
 showCircles: false, // 땅에 점선
-a2Level: '가', a2Item: 'both', a2Levels: {}
+a2Level: '가', a2Item: 'both', a2Levels: {}, a2Practice: 'one', a2Cands: 8
 };
 const Settings = {
 data: Object.assign({}, DEFAULTS),
@@ -1205,7 +1221,7 @@ return;
 state.students.slice(0, MAX_STUDENTS).forEach(st => {
 const card = document.createElement('button');
 card.className = 'scard';
-const src = st.photo || defaultAvatarDataUrl(st.id);
+const src = st.photo || initialAvatar(st.name, st.id);
 card.innerHTML = `<div class="avatar"><img alt="" src="${src}"></div><div class="sname"></div>`;
 card.querySelector('.sname').textContent = st.name;
 card.onclick = () => this.openStudentModal(st);
@@ -1217,7 +1233,7 @@ Sfx.unlock();
 this.selectedStudent = st;
 const m = document.getElementById('studentModal');
 if (!m) return;
-document.getElementById('smAvatar').src = st.photo || defaultAvatarDataUrl(st.id);
+document.getElementById('smAvatar').src = st.photo || initialAvatar(st.name, st.id);
 document.getElementById('smName').textContent = st.name;
 document.getElementById('smChoiceWrap').style.display = 'flex';
 document.getElementById('smQrWrap').classList.remove('open');
@@ -1245,7 +1261,9 @@ this.draftPhoto = '';
 this.render();
 document.getElementById('rosterModal').classList.add('open');
 },
+stopCam() { try { this.camStream && this.camStream.getTracks().forEach(t => t.stop()); } catch (e) {} this.camStream = null; const b = document.getElementById('rCam'); if (b) { b.innerHTML = ''; b.classList.remove('on'); } },
 close() {
+this.stopCam();
 document.getElementById('rosterModal').classList.remove('open');
 if (state.screen === 'intro' && Screens.intro.renderStudents) Screens.intro.renderStudents();
 },
@@ -1280,6 +1298,8 @@ card.innerHTML = `
 <label>얼굴 사진 선택 (자동 리사이즈)
 <input type="file" id="rPhotoIn" accept="image/*">
 </label>
+<button class="btn sb" id="rCamBtn" type="button">카메라로 찍기</button>
+<div id="rCam"></div>
 <div class="rPreviewWrap">
 <div class="rPreview"><img id="rPreviewImg" alt="미리보기" src="${previewSrc}"></div>
 <div style="display:flex;gap:calc(var(--u)*.8);flex:1">
@@ -1303,7 +1323,7 @@ listWrap.innerHTML = `<div style="padding:calc(var(--u)*2);text-align:center;col
 state.students.forEach(st => {
 const row = document.createElement('div');
 row.className = 'rItem';
-const avSrc = st.photo || defaultAvatarDataUrl(st.id);
+const avSrc = st.photo || initialAvatar(st.name, st.id);
 row.innerHTML = `
 <div class="av"><img alt="" src="${avSrc}"></div>
 <div class="info"></div>
@@ -1325,6 +1345,26 @@ listWrap.appendChild(row);
 });
 }
 
+card.querySelector('#rCamBtn').onclick = async () => {
+const box = card.querySelector('#rCam'), msg = card.querySelector('#rMsg');
+this.stopCam();
+try {
+if (!window.isSecureContext || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error('nocam');
+const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } }, audio: false });
+this.camStream = stream;
+box.innerHTML = '<video id="rVid" autoplay playsinline muted></video><div style="display:flex;gap:calc(var(--u)*.8);margin-top:calc(var(--u)*.6)"><button class="btn sb on" id="rShot" type="button">찰칵</button><button class="btn sb" id="rCamX" type="button">취소</button></div>';
+box.classList.add('on'); const v = box.querySelector('#rVid'); v.srcObject = stream;
+box.querySelector('#rCamX').onclick = () => this.stopCam();
+box.querySelector('#rShot').onclick = () => {
+const w = v.videoWidth || 640, h = v.videoHeight || 480, side = Math.min(w, h), S = 400;
+const cv = document.createElement('canvas'); cv.width = S; cv.height = S;
+cv.getContext('2d').drawImage(v, (w - side) / 2, (h - side) / 2, side, side, 0, 0, S, S);
+this.draftPhoto = cv.toDataURL('image/jpeg', 0.82);
+const img = card.querySelector('#rPreviewImg'); if (img) img.src = this.draftPhoto;
+this.stopCam();
+};
+} catch (err) { if (msg) msg.textContent = '카메라를 쓸 수 없어요. 「사진 선택」이나 등록 파일을 이용해요.'; }
+};
 card.querySelector('#rPhotoIn').onchange = async e => {
 const f = e.target.files && e.target.files[0];
 if (!f) return;
@@ -1518,7 +1558,7 @@ x: 804, y: 154, width: 156, height: 156,
 preserveAspectRatio: 'xMidYMid slice',
 'clip-path': 'url(#faceClip)'
 }, wrap);
-img.setAttribute('href', st.photo || defaultAvatarDataUrl(st.id));
+img.setAttribute('href', st.photo || initialAvatar(st.name, st.id));
 el('circle', { cx: 882, cy: 232, r: 78, fill: 'none', stroke: '#fff', 'stroke-width': 6 }, wrap);
 el('rect', { x: 802, y: 320, width: 160, height: 42, rx: 21, fill: '#1F2A44', stroke: '#fff', 'stroke-width': 3 }, wrap);
 const nm = el('text', {
@@ -1994,7 +2034,7 @@ const isBoard = state.mode === 'board' && state.activeStudent;
 const mf = (state.mode === 'practice' && state.myFace && !state.myFace.skipped) ? state.myFace : null;
 const nameTxt = isBoard ? state.activeStudent.name : (mf && mf.name) ? mf.name : `${state.practiceStudentId || 1}번 학생`;
 const photoSrc = isBoard
-? (state.activeStudent.photo || defaultAvatarDataUrl(state.activeStudent.id))
+? (state.activeStudent.photo || initialAvatar(state.activeStudent.name, state.activeStudent.id))
 : (mf && mf.photo) || defaultAvatarDataUrl(state.practiceStudentId || 1);
 root.innerHTML = `
 <h1>오늘 활동 끝!</h1>
@@ -2027,21 +2067,28 @@ Router.go('intro');
 Router.register('complete', Screens.complete);
 
 /* =====================================================================
-활동 2 「감 채우기」 (v6) - 감/나뭇잎 n개 바구니에 담기 → 틀리면 연습 → 맞으면 주문 카드(활동3용, 기기 저장)
+활동 2 「감 채우기」 (v6) - 수준 범위의 숫자를 한 번씩: 감/나뭇잎 n개 바구니 담기 → 틀리면 연습 → 끝나면 AAC 주문 카드 2장(기기 저장)
 ===================================================================== */
 const A2_LEVELS = { '가': [1, 5], '나': [1, 3], '다': [1, 2] };
-const A2_ITEM = { persimmon: { name: '감', unit: '개', pn: '감' }, leaf: { name: '나뭇잎', unit: '장', pn: '나뭇잎' } };
+const A2_ITEM = { persimmon: { name: '감', unit: '개' }, leaf: { name: '나뭇잎', unit: '장' } };
 const A2_CNT = ['', '한', '두', '세', '네', '다섯'];
 const A2_ORDERS_KEY = 'gamnamu.orders.v1';
 const A2_LCOL = ['#D7372B', '#F2B705', '#E8701A', '#C62828', '#F6C343'];
-const a2 = { item: 'persimmon', n: 1, phase: 'pick', moved: [], slots: 0, round: 0, last: 0, order: null, startItem: null };
+const a2 = { item: 'persimmon', n: 1, phase: 'pick', moved: [], fill: [], cands: [], queue: [], items: [], idx: 0, total: 0, results: [], tries: 0, cards: [], cardIdx: 0 };
 const A2Orders = {
 list() { try { const a = JSON.parse(localStorage.getItem(A2_ORDERS_KEY) || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; } },
 add(o) { try { const a = this.list(); a.push(o); localStorage.setItem(A2_ORDERS_KEY, JSON.stringify(a.slice(-50))); return true; } catch (e) { return false; } }
 };
+function initialAvatar(name, id) {
+const ch = String(name || '').trim().charAt(0) || String(id || '?');
+const cols = ['#E57373', '#64B5F6', '#81C784', '#FFB74D', '#BA68C8', '#4DB6AC'];
+const c = cols[(Number(id) || 0) % cols.length];
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" fill="${c}"/><text x="60" y="62" text-anchor="middle" dominant-baseline="central" font-size="64" font-weight="900" font-family="sans-serif" fill="#fff"></text></svg>`.replace('</text>', ch.replace(/[<>&]/g, '') + '</text>');
+return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+}
+function a2Sid() { return state.mode === 'board' && state.activeStudent ? state.activeStudent.id : state.mode === 'practice' ? state.practiceStudentId : null; }
 function a2Level() {
-const d = Settings.data; let lv = d.a2Level;
-const sid = state.mode === 'board' && state.activeStudent ? state.activeStudent.id : state.mode === 'practice' ? state.practiceStudentId : null;
+const d = Settings.data; let lv = d.a2Level; const sid = a2Sid();
 if (sid != null && d.a2Levels && d.a2Levels[sid]) lv = d.a2Levels[sid];
 return A2_LEVELS[lv] ? lv : '가';
 }
@@ -2054,31 +2101,45 @@ const a2G = (kind, x, y, s, i, extra) => `<g transform="translate(${x},${y}) sca
 const A2_TREE = [[130, 110], [230, 70], [330, 110], [90, 185], [180, 145], [280, 145], [370, 190], [140, 240], [230, 205], [320, 250]];
 const A2_BSLOT = i => [478 + (i % 5) * 46, 352 - Math.floor(i / 5) * 46];
 const A2_BASKET = { x: 440, y: 240, w: 260, h: 170 };
-function a2Pick(range) { const [lo, hi] = range; let n; do { n = lo + Math.floor(Math.random() * (hi - lo + 1)); } while (hi > lo && n === a2.last); return n; }
 function a2Items() { const m = Settings.data.a2Item; return m === 'persimmon' || m === 'leaf' ? [m] : ['persimmon', 'leaf']; }
 const a2Say = (item, n) => `${A2_ITEM[item].name} ${A2_CNT[n]} ${A2_ITEM[item].unit}`;
+function a2Shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 
 Screens.act2 = {
 timers: [], root: null, svg: null, drag: null,
 later(fn, ms) { this.timers.push(setTimeout(fn, ms)); },
 unmount() { this.timers.forEach(clearTimeout); this.timers = []; Speech.stop(); this.root = null; },
-mount(root) {
-this.root = root;
-const items = a2Items();
-a2.round = 0; a2.startItem = items[Math.floor(Math.random() * items.length)];
-this.newRound(true);
+mount(root) { this.root = root; this.startSession(); },
+startSession() {
+this.timers.forEach(clearTimeout); this.timers = [];
+const [lo, hi] = A2_LEVELS[a2Level()];
+const nums = []; for (let i = lo; i <= hi; i++) nums.push(i);
+a2.queue = a2Shuffle(nums); a2.total = a2.queue.length; a2.idx = 0; a2.results = []; a2.tries = 0;
+const its = a2Items(), st = its[Math.floor(Math.random() * its.length)];
+a2.items = a2.queue.map((_, i) => its.length === 1 ? its[0] : (i % 2 === 0 ? st : (st === 'leaf' ? 'persimmon' : 'leaf')));
+this.setQuestion();
 },
-newRound(first) {
-const items = a2Items(), lv = a2Level();
-if (!first) a2.round++;
-a2.item = items.length === 1 ? items[0] : (a2.round % 2 === 0 ? a2.startItem : (a2.startItem === 'leaf' ? 'persimmon' : 'leaf'));
-a2.n = a2Pick(A2_LEVELS[lv]); a2.last = a2.n; a2.moved = []; a2.slots = 0;
-this.showPick(true);
-},
-shell(title) {
+setQuestion() { a2.n = a2.queue[a2.idx]; a2.item = a2.items[a2.idx]; a2.moved = []; a2.fill = []; a2.tries = 0; this.showPick(true); },
+shell(title, hideNav) {
 const lv = a2Level(), r = A2_LEVELS[lv];
-this.root.innerHTML = `<button class="btn a2back" id="a2Back">처음으로</button><h1 class="a2title">${title}</h1><div class="a2lv">수준 ${lv} · ${r[0]}~${r[1]}</div><div id="caption">화면을 한 번 터치하면 소리가 켜져요</div>`;
-this.root.querySelector('#a2Back').onclick = () => { Sfx.unlock(); Speech.stop(); if (state.mode !== 'board') { state.mode = state.mode === 'practice' ? 'practice' : 'free'; } Router.go('intro'); };
+this.root.innerHTML = `<div class="a2nav"><button class="btn a2back" id="a2Back">처음으로</button>${hideNav ? '' : '<button class="btn a2back" id="a2Restart">활동2 처음으로</button>'}</div><h1 class="a2title">${title}</h1><div class="a2lv">수준 ${lv} · ${r[0]}~${r[1]}</div><div id="caption">화면을 한 번 터치하면 소리가 켜져요</div>`;
+this.root.querySelector('#a2Back').onclick = () => { Sfx.unlock(); Speech.stop(); if (state.mode === 'board' || state.mode === 'practice') { /* 모드 유지 */ } else state.mode = 'free'; Router.go('intro'); };
+const rs = this.root.querySelector('#a2Restart'); if (rs) rs.onclick = () => { Sfx.unlock(); Speech.stop(); this.startSession(); };
+this.root.insertAdjacentHTML('beforeend', this.faceHtml());
+},
+faceHtml() {
+let src = null, nm = '';
+if (state.mode === 'board' && state.activeStudent) { const s = state.activeStudent; src = s.photo || initialAvatar(s.name, s.id); nm = s.name; }
+else if (state.mode === 'practice' && state.practiceStudentId != null) { const m = state.myFace && !state.myFace.skipped ? state.myFace : null; nm = (m && m.name) || (state.practiceStudentId + '번'); src = (m && m.photo) || initialAvatar(nm, state.practiceStudentId); }
+if (!src) return '';
+const d = document.createElement('div'); d.className = 'a2face'; d.id = 'a2Face';
+const im = document.createElement('img'); im.alt = ''; im.src = src; const sp = document.createElement('span'); sp.textContent = nm;
+d.appendChild(im); d.appendChild(sp); return d.outerHTML;
+},
+pulse() { const f = this.root && this.root.querySelector('#a2Face'); if (f) { f.classList.remove('facePulse'); void f.offsetWidth; f.classList.add('facePulse'); } },
+stat(line2) {
+let c = this.root.querySelector('#a2Stat'); if (!c) { c = document.createElement('div'); c.id = 'a2Stat'; c.className = 'a2stat'; this.root.appendChild(c); }
+c.innerHTML = `<b>${a2.idx + 1} / ${a2.total}</b> 번째 · 남은 문제 ${a2.total - a2.idx - 1}<br><span>${line2 || ''}</span>`;
 },
 numCard(withListen, text) {
 const it = A2_ITEM[a2.item];
@@ -2094,7 +2155,7 @@ this.root.appendChild(s); this.svg = s; return s;
 pt(e) { const m = this.svg.getScreenCTM().inverse(); return new DOMPoint(e.clientX, e.clientY).matrixTransform(m); },
 /* ---- 1단계: 담기 ---- */
 showPick(speak) {
-const it = A2_ITEM[a2.item], kind = a2.item;
+const it = A2_ITEM[a2.item];
 a2.phase = 'pick';
 this.shell(`${it.name} 채우기`);
 const text = `${it.name} ${A2_CNT[a2.n]} ${it.unit}를 바구니에 담아요`;
@@ -2129,20 +2190,21 @@ for (let k = 1; k < 5; k++) h += `<path d="M${B.x + 6 + k * 49},${B.y + 94} L${B
 h += `<text x="${B.x + B.w / 2}" y="${B.y + 132}" text-anchor="middle" font-size="26" font-weight="900" fill="#FFF3DC" pointer-events="none">바구니</text>`;
 h += '<g id="a2Ghost"></g>';
 svg.innerHTML = h;
+this.stat(`바구니에 ${a2.moved.length}${A2_ITEM[kind].unit} 담음`);
 },
 down(e) {
 const t = e.target; if (a2.phase !== 'pick') return;
 const bi = t.closest && t.closest('[data-b]');
 if (bi) { a2.moved.splice(Number(bi.getAttribute('data-b')), 1); Sfx.kok(); this.drawPick(); return; }
 const it = t.closest && t.closest('[data-i]'); if (!it) return;
-const i = Number(it.getAttribute('data-i')); const p = this.pt(e);
-this.drag = { i, sx: p.x, sy: p.y, moved: false };
+const p = this.pt(e);
+this.drag = { i: Number(it.getAttribute('data-i')), sx: p.x, sy: p.y, moved: false };
 try { this.svg.setPointerCapture(e.pointerId); } catch (er) {}
 },
 move(e) {
 const d = this.drag; if (!d) return; const p = this.pt(e);
-if (!d.moved && Math.hypot(p.x - d.sx, p.y - d.sy) > 10) { d.moved = true; const g = this.svg.querySelector(`#a2Tree [data-i="${d.i}"]`); }
-if (d.moved) { this.svg.querySelector('#a2Ghost').innerHTML = a2G(a2.item, p.x, p.y, 2.2, d.i); }
+if (!d.moved && Math.hypot(p.x - d.sx, p.y - d.sy) > 10) d.moved = true;
+if (d.moved) this.svg.querySelector('#a2Ghost').innerHTML = a2G(a2.item, p.x, p.y, 2.2, d.i);
 },
 up(e) {
 const d = this.drag; if (!d) return; this.drag = null;
@@ -2157,80 +2219,101 @@ if (a2.phase !== 'pick') return;
 Sfx.unlock();
 const it = A2_ITEM[a2.item];
 if (a2.moved.length === a2.n) {
-a2.phase = 'ok'; Sfx.dingdong(); Speech.say('딩동! 잘했어요!');
-this.later(() => this.showOrder(), 2000);
+a2.phase = 'ok'; a2.results.push({ item: a2.item, n: a2.n, tries: a2.tries }); Sfx.dingdong(); this.pulse(); Speech.say('딩동! 잘했어요!');
+this.later(() => { if (a2.idx + 1 < a2.total) { a2.idx++; this.setQuestion(); } else this.showCards(); }, 2000);
 } else {
-a2.phase = 'wrong'; Sfx.error();
-const m = `괜찮아요. ${it.name} ${a2.n} 연습을 해 봐요`; Speech.say(m);
+a2.phase = 'wrong'; a2.tries++; Sfx.error();
+Speech.say(`괜찮아요. ${it.name} ${a2.n} 연습을 해 봐요`);
 this.later(() => this.showPractice(), 2600);
 }
 },
 /* ---- 2단계: 연습 ---- */
 showPractice() {
-const it = A2_ITEM[a2.item], kind = a2.item;
-a2.phase = 'practice'; a2.slots = 0;
+const it = A2_ITEM[a2.item], d = Settings.data, multi = d.a2Practice === 'multi';
+a2.phase = 'practice'; a2.fill = [];
+const c = Math.min(10, Math.max(6, Number(d.a2Cands) || 8, a2.n + 1));
+a2.cands = Array.from({ length: c }, (_, i) => i);
 this.shell(`${it.name} ${a2.n} 연습`);
 this.numCard(false);
 const svg = this.scene();
 this.drawPractice();
 const foot = document.createElement('div'); foot.className = 'a2foot'; foot.innerHTML = '<button class="btn" id="a2Clear">지우기</button><button class="btn" id="a2End">끝</button>'; this.root.appendChild(foot);
-foot.querySelector('#a2Clear').onclick = () => { a2.slots = 0; Sfx.kok(); this.drawPractice(); };
+foot.querySelector('#a2Clear').onclick = () => { a2.fill = []; Sfx.kok(); this.drawPractice(); };
 foot.querySelector('#a2End').onclick = () => this.checkPractice();
 svg.addEventListener('pointerdown', e => {
-if (a2.phase !== 'practice') return;
-if (e.target.closest && e.target.closest('#a2Pile')) { if (a2.slots < a2.n) { a2.slots++; Sfx.kok(); this.drawPractice(a2.slots - 1); } else { Router.caption('칸이 다 찼어요. 「끝」을 눌러요'); } }
+if (a2.phase !== 'practice') return; const t = e.target;
+const f = t.closest && t.closest('[data-f]');
+if (f) { a2.fill.splice(Number(f.getAttribute('data-f')), 1); Sfx.kok(); this.drawPractice(); return; }
+const cd = t.closest && t.closest('[data-c]');
+if (cd) { if (a2.fill.length < a2.n) { a2.fill.push(Number(cd.getAttribute('data-c'))); Sfx.kok(); this.drawPractice(a2.fill.length - 1); } else Router.caption('칸이 다 찼어요. 「끝」을 눌러요'); return; }
+if (t.closest && t.closest('#a2Pile')) { if (a2.fill.length < a2.n) { a2.fill.push(a2.fill.length); Sfx.kok(); this.drawPractice(a2.fill.length - 1); } else Router.caption('칸이 다 찼어요. 「끝」을 눌러요'); }
 });
-const m = `${it.name}을 눌러서 칸을 채워 봐요`; Speech.say(m);
+Speech.say(multi ? `${it.name}이 여러 개 있어요. ${it.name} ${a2.n} ${it.unit}만 칸에 올려요` : `${it.name}을 눌러서 칸을 채워 봐요`);
 },
 drawPractice(popIdx) {
-const kind = a2.item, n = a2.n, svg = this.svg;
+const kind = a2.item, n = a2.n, svg = this.svg, it = A2_ITEM[kind], multi = Settings.data.a2Practice === 'multi';
 let h = '<rect width="740" height="440" fill="#FFF4DD"/>';
-h += '<rect x="30" y="50" width="680" height="170" rx="26" fill="#C8924B" stroke="#7A5128" stroke-width="6"/><rect x="48" y="66" width="644" height="138" rx="18" fill="#E7C48A"/>';
-const sp = 124, x0 = 370 - (n - 1) * sp / 2;
+h += '<rect x="30" y="50" width="510" height="170" rx="26" fill="#C8924B" stroke="#7A5128" stroke-width="6"/><rect x="48" y="66" width="474" height="138" rx="18" fill="#E7C48A"/>';
+const sp = 100, x0 = 285 - (n - 1) * sp / 2;
 for (let k = 0; k < n; k++) {
 const x = x0 + k * sp, y = 135;
-h += `<circle cx="${x}" cy="${y}" r="52" fill="#FFF8E8" stroke="#8A5A2B" stroke-width="5" stroke-dasharray="12 9"/>`;
-if (k < a2.slots) h += `<g class="${popIdx === k ? 'a2pop' : ''}" style="transform-box:fill-box;transform-origin:center">` + a2G(kind, x, y, 2.3, k) + '</g>';
+h += `<circle cx="${x}" cy="${y}" r="46" fill="#FFF8E8" stroke="#8A5A2B" stroke-width="5" stroke-dasharray="12 9"/>`;
+if (k < a2.fill.length) h += `<g class="${popIdx === k ? 'a2pop' : ''}" style="transform-box:fill-box;transform-origin:center" data-f="${k}" cursor="pointer">` + a2G(kind, x, y, 2.1, a2.fill[k]) + `<circle cx="${x}" cy="${y}" r="46" fill="transparent"/></g>`;
 }
-h += '<text x="370" y="250" text-anchor="middle" font-size="26" font-weight="900" fill="#7A5128">눌러서 칸을 채워요</text>';
+h += `<text x="285" y="252" text-anchor="middle" font-size="24" font-weight="900" fill="#7A5128">${multi ? `${it.name} 중에서 ${n}${it.unit}만 칸에 올려요` : '눌러서 칸을 채워요'}</text>`;
+if (multi) {
+const left = a2.cands.filter(i => !a2.fill.includes(i)), rows = left.length > 5 ? [left.slice(0, 5), left.slice(5)] : [left];
+rows.forEach((r, ri) => r.forEach((id, ci) => { const x = 370 + (ci - (r.length - 1) / 2) * 100, y = rows.length === 1 ? 335 : 300 + ri * 85; h += a2G(kind, x, y, 1.8, id, `data-c="${id}" class="a2cand" style="cursor:pointer"`) + `<circle cx="${x}" cy="${y}" r="40" fill="transparent" data-c="${id}"/>`; }));
+} else {
 h += `<g id="a2Pile" style="cursor:pointer"><ellipse cx="370" cy="392" rx="140" ry="40" fill="#A98266" opacity=".5"/><circle cx="370" cy="345" r="86" fill="transparent"/>` + a2G(kind, 370, 345, 3.2, 2) + '</g>';
+}
 svg.innerHTML = h;
+this.stat(`${n}칸 중 ${a2.fill.length}칸 채움 · 남은 칸 ${n - a2.fill.length}`);
 },
 checkPractice() {
 if (a2.phase !== 'practice') return;
 Sfx.unlock();
-if (a2.slots === a2.n) {
-a2.phase = 'pok'; Sfx.dingdong(); Speech.say('딩동! 잘했어요! 다시 해 봐요');
+if (a2.fill.length === a2.n) {
+a2.phase = 'pok'; Sfx.dingdong(); this.pulse(); Speech.say('딩동! 잘했어요! 다시 해 봐요');
 this.later(() => { a2.moved = []; this.showPick(true); }, 2200);
 } else {
 Sfx.error(); Speech.say('괜찮아요. 처음부터 다시 해 봐요');
-a2.slots = 0; this.drawPractice();
+a2.fill = []; this.drawPractice();
 }
 },
-/* ---- 3단계: 주문 카드 ---- */
-showOrder() {
-const items = a2Items(), lv = a2Level();
-const kind = items[Math.floor(Math.random() * items.length)], n = a2Pick(A2_LEVELS[lv]);
-a2.order = { item: kind, n, said: false }; a2.phase = 'order';
-const it = A2_ITEM[kind], text = `${a2Say(kind, n)} 주세요`;
-this.shell('주문 카드');
+/* ---- 3단계: 끝 → AAC 주문 카드 2장 ---- */
+showCards() {
+const R = a2.results, pick = k => { const l = R.filter(r => r.item === k); return l.length ? l[Math.floor(Math.random() * l.length)] : null; };
+let c = [pick('persimmon'), pick('leaf')].filter(Boolean);
+if (c.length < 2) { const rest = a2Shuffle(R.filter(r => !c.includes(r))); const diff = rest.find(r => !c.length || r.n !== c[0].n) || rest[0]; if (diff) c.push(diff); }
+a2.cards = a2Shuffle(c).map(r => ({ item: r.item, n: r.n })); a2.cardIdx = 0;
+this.showCard();
+},
+showCard() {
+const cd = a2.cards[a2.cardIdx], lv = a2Level(), tot = a2.cards.length;
+a2.phase = 'order';
+const it = A2_ITEM[cd.item], text = `${a2Say(cd.item, cd.n)} 주세요`;
+this.shell('주문 카드', true);
 const box = document.createElement('div'); box.className = 'a2order';
-box.innerHTML = `<div class="a2row">${Array.from({ length: n }, (_, i) => `<svg viewBox="-26 -28 52 56">${a2Glyph(kind, i)}</svg>`).join('')}</div><h2>${it.name} <em>${n}${it.unit}</em> 주세요</h2><div class="a2say" id="a2SayMsg">먼저 들어 보고, 따라 말해 봐요</div><div class="btns"><button class="btn" id="a2Hear">들어 보기</button><button class="btn go" id="a2Said">말했어요</button></div>`;
+box.innerHTML = `<div class="a2cnt">주문 카드 ${a2.cardIdx + 1} / ${tot}</div><div class="a2row">${Array.from({ length: cd.n }, (_, i) => `<svg viewBox="-26 -28 52 56">${a2Glyph(cd.item, i)}</svg>`).join('')}</div><h2>${it.name} <em>${cd.n}${it.unit}</em> 주세요</h2><div class="a2say" id="a2SayMsg">먼저 들어 보고, 따라 말해 봐요</div><div class="btns"><button class="btn" id="a2Hear">들어 보기</button><button class="btn go" id="a2Said">말했어요</button></div>`;
 this.root.appendChild(box);
+let said = false;
 box.querySelector('#a2Hear').onclick = () => { Sfx.unlock(); Speech.say(text); box.querySelector('#a2SayMsg').textContent = '따라 말해 봐요: ' + text; };
 box.querySelector('#a2Said').onclick = () => {
-if (a2.order.said) return; a2.order.said = true; Sfx.dingdong();
-const sid = state.mode === 'board' && state.activeStudent ? state.activeStudent.id : state.mode === 'practice' ? state.practiceStudentId : null;
-A2Orders.add({ item: kind, n, level: lv, studentId: sid, ts: Date.now() });
-Speech.say('참 잘했어요! 주문 카드를 저장했어요.');
+if (said) return; said = true; Sfx.dingdong(); this.pulse();
+A2Orders.add({ item: cd.item, n: cd.n, level: lv, studentId: a2Sid(), ts: Date.now() });
 box.querySelector('#a2SayMsg').textContent = '주문 카드를 저장했어요!';
-const b = document.createElement('div'); b.className = 'a2foot'; b.innerHTML = '<button class="btn" id="a2More">한 번 더</button>'; this.root.appendChild(b);
-b.querySelector('#a2More').onclick = () => { Sfx.unlock(); this.newRound(false); };
+const b = document.createElement('div'); b.className = 'a2foot';
+if (a2.cardIdx + 1 < tot) { Speech.say('참 잘했어요! 다음 카드예요.'); b.innerHTML = '<button class="btn" id="a2Next">다음 카드</button>'; this.root.appendChild(b); b.querySelector('#a2Next').onclick = () => { Sfx.unlock(); a2.cardIdx++; this.showCard(); }; }
+else { Speech.say('활동 2를 모두 마쳤어요. 참 잘했어요!'); box.querySelector('#a2SayMsg').textContent = '주문 카드를 저장했어요! 활동 2 끝!'; b.innerHTML = '<button class="btn" id="a2More">다시 하기</button>'; this.root.appendChild(b); b.querySelector('#a2More').onclick = () => { Sfx.unlock(); this.startSession(); }; }
 };
+this.stat(`카드 ${a2.cardIdx + 1} / ${tot}`);
+const c = this.root.querySelector('#a2Stat'); if (c) c.innerHTML = `활동 2 끝!<br><span>카드 ${a2.cardIdx + 1} / ${tot}</span>`;
 Speech.say(`주문 카드가 왔어요. ${text}`);
 }
 };
 Router.register('act2', Screens.act2);
+
 
 /* ---------- 옵션 패널 (보이는 「옵션」 버튼 + 교사 숨은 설정 3초 길게 누르기) ---------- */
 const Options = {
@@ -2262,7 +2345,9 @@ let h = `<h3>옵션${this.adv ? '<small>교사 고급 설정</small>' : ''}</h3>
 + row('점 크기', steps('dotPct', [[-20, '작게'], [0, '보통'], [20, '크게']]))
 + row('숫자 고정', steps('fixed', [[0, '무작위'], [1, '1'], [2, '2'], [3, '3'], [4, '4'], [5, '5']]), 'wide')
 + row('활동2 수준', ['가', '나', '다'].map(v => `<button class="sb ${d.a2Level === v ? 'on' : ''}" data-a2="a2Level" data-v="${v}">${v} (${A2_LEVELS[v][0]}~${A2_LEVELS[v][1]})</button>`).join(''))
-+ row('활동2 물건', [['both', '번갈아'], ['persimmon', '감'], ['leaf', '나뭇잎']].map(([v, l]) => `<button class="sb ${d.a2Item === v ? 'on' : ''}" data-a2="a2Item" data-v="${v}">${l}</button>`).join(''))
++ row('활동2 연습방식', [['one', '하나씩 눌러 채우기'], ['multi', '여러 개 중 n개 올리기']].map(([v, l]) => `<button class="sb ${d.a2Practice === v ? 'on' : ''}" data-a2="a2Practice" data-v="${v}">${l}</button>`).join(''), 'wide')
++ row('활동2 후보 개수', [6, 7, 8, 9, 10].map(v => `<button class="sb ${Number(d.a2Cands) === v ? 'on' : ''}" data-a2="a2Cands" data-v="${v}">${v}개</button>`).join(''))
++ row('활동2 물건', [['both', '둘 다'], ['persimmon', '감만'], ['leaf', '나뭇잎만']].map(([v, l]) => `<button class="sb ${d.a2Item === v ? 'on' : ''}" data-a2="a2Item" data-v="${v}">${l}</button>`).join(''))
 + '</div>';
 if (this.adv) {
 h += '<div class="grid">'
@@ -2279,7 +2364,7 @@ card.innerHTML = h;
 card.querySelectorAll('[data-tg]').forEach(b => b.onclick = () => { Settings.set(b.dataset.tg, !Settings.data[b.dataset.tg]); this.render(); });
 card.querySelectorAll('[data-step]').forEach(b => b.onclick = () => { Settings.set(b.dataset.step, parseFloat(b.dataset.v)); this.render(); });
 card.querySelectorAll('[data-rg]').forEach(r => r.oninput = () => { const v = parseFloat(r.value); Settings.set(r.dataset.rg, v); r.nextElementSibling.textContent = r.dataset.rg === 'rate' ? v.toFixed(2) : Math.round(v * 100); });
-card.querySelectorAll('[data-a2]').forEach(b => b.onclick = () => { Settings.set(b.dataset.a2, b.dataset.v); this.render(); });
+card.querySelectorAll('[data-a2]').forEach(b => b.onclick = () => { Settings.set(b.dataset.a2, b.dataset.a2 === 'a2Cands' ? Number(b.dataset.v) : b.dataset.v); this.render(); });
 card.querySelectorAll('[data-a2s]').forEach(b => b.onclick = () => { const k = b.dataset.a2s, m = Object.assign({}, Settings.data.a2Levels), o = ['', '가', '나', '다']; const c = o.indexOf(m[k] || ''); const nx = o[(c + 1) % 4]; if (nx) m[k] = nx; else delete m[k]; Settings.set('a2Levels', m); this.render(); });
 const roBtn = card.querySelector('#sOpenRoster');
 if (roBtn) roBtn.onclick = () => { this.close(); RosterManager.open(); };
