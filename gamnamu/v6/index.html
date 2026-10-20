@@ -391,6 +391,8 @@ display:flex;flex-direction:column;align-items:center;justify-content:center;gap
 #act2 .a2askbox .sub{font-size:calc(var(--u)*2.4);font-weight:800;color:#1B3F73;margin:calc(var(--u)*.6) 0 calc(var(--u)*1.8)}
 #act2 .a2askbox .a2nums{position:static;display:flex;justify-content:center;gap:calc(var(--u)*1.2)}
 #act2 .a2askbox .a2nb{width:calc(var(--u)*9.4);min-height:calc(var(--u)*10)}
+#act2 .a2nb.blink{animation:a2blink .8s ease-in-out infinite}
+@keyframes a2blink{0%,100%{background:#fff;transform:scale(1)}50%{background:#FFE082;transform:scale(1.08)}}
 </style>
 </head>
 <body>
@@ -937,7 +939,7 @@ dotPct: 0, // 점 크기 증감(%) -40~+40
 fixed: 0, // 0=무작위, 1~5=숫자 고정
 autoClear: true, // 오류 시 점 자동 지움
 showCircles: false, // 땅에 점선
-a2Level: '가', a2Item: 'both', a2Levels: {}
+a2Level: '가', a2Item: 'both', a2Hint: 'num', a2Levels: {}
 };
 const Settings = {
 data: Object.assign({}, DEFAULTS),
@@ -2195,15 +2197,16 @@ let h = '<defs><linearGradient id="a2sky" x1="0" y1="0" x2="0" y2="1"><stop offs
 h += '<path d="M205,392 Q222,350 226,310 L234,310 Q238,350 255,392 Z" fill="#6B3E1F"/><path d="M230,330 L230,230" stroke="#6B3E1F" stroke-width="30" stroke-linecap="round"/>';
 for (const p of A2_TREE) h += `<path d="M230,250 L${p[0]},${p[1] + 12}" stroke="#6B3E1F" stroke-width="9" stroke-linecap="round" fill="none"/>`;
 h += '<g opacity=".4" fill="#5FA85A"><circle cx="230" cy="130" r="95"/><circle cx="120" cy="170" r="70"/><circle cx="340" cy="175" r="75"/><circle cx="230" cy="215" r="70"/></g>';
+let bd = '';
 h += '<g id="a2Items">';
 a2.slots.forEach((si, k) => {
 const p = A2_TREE[si], on = a2.marks.includes(k);
 h += `<g ${practice ? `data-k="${k}" style="cursor:pointer"` : ''} class="a2obj">` + a2G(kind, p[0], p[1], 1.9, si);
-if (on) h += `<circle cx="${p[0]}" cy="${p[1]}" r="41" fill="rgba(46,139,61,.18)" stroke="#2E8B3D" stroke-width="6"/><path d="M${p[0] - 14},${p[1]} l10,11 l20,-22" stroke="#1E7A2E" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+if (on) { const ord = a2.marks.indexOf(k) + 1, num = Settings.data.a2Hint === 'num'; h += `<circle cx="${p[0]}" cy="${p[1]}" r="42" fill="none" stroke="#2E8B3D" stroke-width="4"/>`; bd += `<circle cx="${p[0] + 30}" cy="${p[1] - 32}" r="15" fill="#2E8B3D" stroke="#fff" stroke-width="2.5"/>` + (num ? `<text x="${p[0] + 30}" y="${p[1] - 31}" text-anchor="middle" dominant-baseline="central" font-size="19" font-weight="900" fill="#fff">${ord}</text>` : `<path d="M${p[0] + 23},${p[1] - 32} l5,6 l10,-12" stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`); }
 if (practice) h += `<circle cx="${p[0]}" cy="${p[1]}" r="42" fill="transparent"/>`;
 h += '</g>';
 });
-h += '</g>';
+h += '</g><g pointer-events="none">' + bd + '</g>';
 if (practice) h += '<text x="560" y="150" text-anchor="middle" font-size="26" font-weight="900" fill="#7A5128">하나씩 눌러서</text><text x="560" y="186" text-anchor="middle" font-size="26" font-weight="900" fill="#7A5128">표시하며 세어 봐요</text>';
 svg.innerHTML = h;
 },
@@ -2230,7 +2233,7 @@ h += '<g opacity=".4" fill="#5FA85A"><circle cx="230" cy="130" r="95"/><circle c
 a2.slots.forEach((si, k) => { if (a2.moved.includes(k)) return; const p = A2_TREE[si]; h += `<g data-i="${k}" class="a2obj" style="cursor:pointer">` + a2G(kind, p[0], p[1], 1.9, si) + `<circle cx="${p[0]}" cy="${p[1]}" r="42" fill="transparent"/></g>`; });
 h += '</g>';
 h += `<path d="M${B.x + 10},${B.y + 90} L${B.x + B.w - 10},${B.y + 90} L${B.x + B.w - 30},${B.y + B.h - 8} Q${B.x + B.w / 2},${B.y + B.h + 4} ${B.x + 30},${B.y + B.h - 8} Z" fill="#C8924B" stroke="#7A5128" stroke-width="5" stroke-linejoin="round"/><g id="a2Bsk">`;
-a2.moved.forEach((k, j) => { const [x, y] = A2_BSLOT(j); h += `<g data-b="${j}" style="cursor:pointer">` + a2G(kind, x, y - 45, 1.15, a2.slots[k]) + '</g>'; });
+a2.moved.forEach((k, j) => { const [x, y] = A2_BSLOT(j); h += `<g data-b="${j}" style="cursor:pointer">` + a2G(kind, x, y - 45, 1.15, a2.slots[k]) + (Settings.data.a2Hint === 'num' ? `<circle cx="${x + 17}" cy="${y - 64}" r="10" fill="#2E8B3D" stroke="#fff" stroke-width="2"/><text x="${x + 17}" y="${y - 63}" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="900" fill="#fff">${j + 1}</text>` : '') + '</g>'; });
 h += '</g>';
 h += `<path d="M${B.x + 6},${B.y + 92} L${B.x + B.w - 6},${B.y + 92} L${B.x + B.w - 24},${B.y + 150} L${B.x + 24},${B.y + 150} Z" fill="#B07B3A" stroke="#7A5128" stroke-width="5" stroke-linejoin="round" pointer-events="none"/>`;
 h += `<text x="${B.x + B.w / 2}" y="${B.y + 132}" text-anchor="middle" font-size="26" font-weight="900" fill="#FFF3DC" pointer-events="none">바구니</text><g id="a2Ghost"></g>`;
@@ -2259,17 +2262,16 @@ if ((!d.moved || inB) && !a2.moved.includes(d.k)) { a2.moved.push(d.k); Sfx.kok(
 this.drawHarvest();
 if (a2.moved.length === a2.n && a2.phase === 'harvest') { a2.phase = 'harvested'; this.later(() => this.showAsk(), 700); }
 },
-/* ③ 숫자 고르는 창 */
+/* ③ 숫자 고르는 줄: 감·바구니를 가리지 않게 화면 아래 띠에 배치 */
 showAsk() {
 const it = A2_ITEM[a2.item];
 a2.phase = 'ask'; this.lock = false;
-const ov = document.createElement('div'); ov.className = 'a2askov'; ov.id = 'a2Ask';
-ov.innerHTML = `<div class="a2askbox"><h2>${it.name}이 모두 몇 ${it.unit}일까요?</h2><div class="sub">숫자를 골라요</div></div>`;
-this.root.appendChild(ov);
-const bar = this.numBar(); ov.querySelector('.a2askbox').appendChild(bar);
+const bar = this.numBar();
 bar.onclick = e => { const b = e.target.closest('.a2nb'); if (b) this.answer(Number(b.dataset.k), b); };
-this.stat('숫자를 골라요');
-Speech.say(`${it.name}이 모두 몇 ${it.unit}일까요? 숫자를 골라요`);
+this.stat('바구니를 보고 숫자를 골라요');
+const m = `${it.name}이 모두 몇 ${it.unit}일까요? 숫자를 골라요`;
+const t = this.root.querySelector('.a2title'); if (t) t.textContent = `${it.name}이 모두 몇 ${it.unit}일까요?`;
+Speech.say(m);
 },
 answer(k, btn) {
 if (a2.phase !== 'ask' || this.lock) return; this.lock = true; Sfx.unlock();
@@ -2289,6 +2291,7 @@ this.shell(`${it.name} 세기 연습`);
 this.layout(); this.scene(); this.drawScene(true); this.updPractice();
 const bar = this.numBar();
 bar.onclick = e => { const b = e.target.closest('.a2nb'); if (b) this.practiceAnswer(Number(b.dataset.k), b); };
+if (Settings.data.a2Hint === 'ans') { const c = bar.querySelector(`[data-k="${a2.n}"]`); if (c) c.classList.add('blink'); }
 const foot = document.createElement('div'); foot.className = 'a2foot'; foot.innerHTML = '<button class="btn" id="a2Clear">표시 지우기</button>'; this.root.appendChild(foot);
 foot.querySelector('#a2Clear').onclick = () => { a2.marks = []; Sfx.kok(); this.drawScene(true); this.updPractice(); };
 this.svg.addEventListener('pointerdown', e => {
@@ -2375,6 +2378,7 @@ let h = `<h3>옵션${this.adv ? '<small>교사 고급 설정</small>' : ''}</h3>
 + row('점 크기', steps('dotPct', [[-20, '작게'], [0, '보통'], [20, '크게']]))
 + row('숫자 고정', steps('fixed', [[0, '무작위'], [1, '1'], [2, '2'], [3, '3'], [4, '4'], [5, '5']]), 'wide')
 + row('활동2 수준', ['가', '나', '다'].map(v => `<button class="sb ${d.a2Level === v ? 'on' : ''}" data-a2="a2Level" data-v="${v}">${v} (${A2_LEVELS[v][0]}~${A2_LEVELS[v][1]})</button>`).join(''))
++ row('활동2 힌트 도움', [['none', '없음'], ['num', '순서 번호 표시'], ['ans', '정답 숫자 강조']].map(([v, l]) => `<button class="sb ${d.a2Hint === v ? 'on' : ''}" data-a2="a2Hint" data-v="${v}">${l}</button>`).join(''), 'wide')
 + row('활동2 물건', [['both', '둘 다'], ['persimmon', '감만'], ['leaf', '나뭇잎만']].map(([v, l]) => `<button class="sb ${d.a2Item === v ? 'on' : ''}" data-a2="a2Item" data-v="${v}">${l}</button>`).join(''))
 + '</div>';
 if (this.adv) {
