@@ -397,6 +397,31 @@ display:flex;flex-direction:column;align-items:center;justify-content:center;gap
 #act2 .a2askbox .a2nb{width:calc(var(--u)*9.4);min-height:calc(var(--u)*10)}
 #act2 .a2nb.blink{animation:a2blink .8s ease-in-out infinite}
 @keyframes a2blink{0%,100%{background:#fff;transform:scale(1)}50%{background:#FFE082;transform:scale(1.08)}}
+.scan{outline:calc(var(--u)*.9) solid #1E88E5!important;box-shadow:0 0 0 calc(var(--u)*1.4) rgba(30,136,229,.35)!important}
+#act2 .daArea{position:absolute;left:calc(var(--u)*30);right:calc(var(--u)*14);top:calc(var(--u)*9);bottom:calc(var(--u)*9.5);display:flex;flex-direction:column;align-items:center;gap:calc(var(--u)*2)}
+#act2 .daTarget{width:calc(var(--u)*16);height:calc(var(--u)*13);background:#fff;border:calc(var(--u)*.5) solid #1F2A44;border-radius:calc(var(--u)*2);display:flex;align-items:center;justify-content:center;box-shadow:0 calc(var(--u)*.5) 0 rgba(0,0,0,.18);flex:none}
+#act2 .daTarget b{font-size:calc(var(--u)*10);color:#E8701A;line-height:1}
+#act2 .daChoices{display:flex;gap:calc(var(--u)*2.5);flex:1;width:100%;justify-content:center;align-items:stretch;min-height:0}
+#act2 .dab{position:relative;flex:1;max-width:calc(var(--u)*26);background:#fff;border:calc(var(--u)*.5) solid #1F2A44;border-radius:calc(var(--u)*2);padding:calc(var(--u)*1.2);color:#E8701A;font-size:calc(var(--u)*11);box-shadow:0 calc(var(--u)*.5) 0 rgba(0,0,0,.2)}
+#act2 .dab svg{width:100%;height:100%}
+#act2 .dab.dim{opacity:.22;pointer-events:none}
+#act2 .dab.ok{background:#C8E6C9;border-color:#2E8B3D}
+#act2 .dab.press{transform:scale(.95)}
+#act2 .dab.blink{animation:a2blink .8s ease-in-out infinite}
+#act2 .daHand{position:absolute;left:50%;top:calc(var(--u)*-3.8);transform:translateX(-50%);font-size:calc(var(--u)*2.4);font-weight:900;color:#C62828;background:#fff;border:calc(var(--u)*.25) solid #C62828;border-radius:calc(var(--u)*1);padding:0 calc(var(--u)*.8);animation:daBob .7s ease-in-out infinite;white-space:nowrap;z-index:5}
+@keyframes daBob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(calc(var(--u)*-.8))}}
+#act2 .daTogether{position:absolute;left:calc(var(--u)*2);bottom:calc(var(--u)*9.4);min-width:calc(var(--u)*9);min-height:calc(var(--u)*4);font-size:calc(var(--u)*1.8);background:#ECEFF4;color:#6B7A90;padding:0 calc(var(--u)*1.2);z-index:7;opacity:.85}
+#act2 .daFriend{position:absolute;left:calc(var(--u)*30);right:calc(var(--u)*14);top:calc(var(--u)*9);bottom:calc(var(--u)*9.5);background:rgba(255,255,255,.93);border-radius:calc(var(--u)*2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--u)*2);z-index:6}
+#act2 .daFriend span{font-size:calc(var(--u)*4);font-weight:900}
+#act2 .daFriend .btn{min-width:calc(var(--u)*16);min-height:calc(var(--u)*6);font-size:calc(var(--u)*2.6);background:#2E5E9E;color:#fff;padding:0 calc(var(--u)*2)}
+#act2 .daSlots{display:flex;gap:calc(var(--u)*3);flex:none}
+#act2 .daSlot{width:calc(var(--u)*12);height:calc(var(--u)*12);border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center}
+#act2 .daSlot.open{border:calc(var(--u)*.5) dashed #8A5A2B;background:#FFF8E8;cursor:pointer}
+#act2 .daSlot.cover{background:#B0B7C3;border:calc(var(--u)*.4) solid #7B8494}
+#act2 .daSlot i{width:76%;height:76%;border-radius:50%;background:#FDD835;border:calc(var(--u)*.35) solid #B8860B;display:block;animation:a2pop .25s ease-out}
+#act2 .daBig{width:calc(var(--u)*30);min-height:calc(var(--u)*12);font-size:calc(var(--u)*6);background:#2E8B3D;color:#fff;margin-top:calc(var(--u)*1)}
+#act2 .daBig.blink{animation:a2blink .8s ease-in-out infinite}
+#act2 .a1tree{position:absolute;left:calc(var(--u)*2);top:calc(var(--u)*21);width:calc(var(--u)*25);height:calc(var(--u)*20.5);border-radius:calc(var(--u)*1.2);overflow:hidden;box-shadow:0 calc(var(--u)*.4) calc(var(--u)*1.2) rgba(0,0,0,.2)}
 </style>
 </head>
 <body>
@@ -946,7 +971,7 @@ dotPct: 0, // 점 크기 증감(%) -40~+40
 fixed: 0, // 0=무작위, 1~5=숫자 고정
 autoClear: true, // 오류 시 점 자동 지움
 showCircles: false, // 땅에 점선
-a1Total: 10, a2Total: 5, a2Level: '가', a2Item: 'both', a2Hint: 'num', a2Levels: {}
+a1Total: 10, a2Total: 5, daOn: 'off', a2Sub: '다-1', a2Subs: {}, daScan: 'off', daScanMs: '1500', daChoices1: '2', daChoices2: '1', daHint: '6000', daFriend: 'off', a2Level: '가', a2Item: 'both', a2Hint: 'num', a2Levels: {}
 };
 const Settings = {
 data: Object.assign({}, DEFAULTS),
@@ -1096,13 +1121,14 @@ cur: null, root: null,
 init() { this.root = document.getElementById('app'); },
 register(name, def) { Screens[name] = def; },
 go(name) {
+if (name === 'activity1' && typeof daMode === 'function' && daMode()) name = 'a1da';
 if (this.cur && Screens[this.cur].unmount) Screens[this.cur].unmount();
 this.root.innerHTML = '';
 const div = document.createElement('div'); div.className = 'screen'; div.id = name; this.root.appendChild(div);
 this.cur = name; state.screen = name;
 try { document.getElementById('stage').classList.toggle('pm', state.mode === 'practice'); } catch (e) {}
 Screens[name].mount(div);
-if (name === 'activity1' || name === 'complete') BackGuard.arm();
+if (name === 'activity1' || name === 'a1da' || name === 'complete') BackGuard.arm();
 Screens[name].applySettings && Screens[name].applySettings();
 },
 applySettings() { this.cur && Screens[this.cur].applySettings && Screens[this.cur].applySettings(); },
@@ -2149,18 +2175,19 @@ return q.slice(0, T);
 Screens.act2 = {
 timers: [], root: null, svg: null, lock: false,
 later(fn, ms) { this.timers.push(setTimeout(fn, ms)); },
-unmount() { this.timers.forEach(clearTimeout); this.timers = []; Speech.stop(); this.root = null; },
+unmount() { this.timers.forEach(clearTimeout); this.timers = []; Scan.stop(); DaHint.stop(); Speech.stop(); this.root = null; },
 mount(root) { this.root = root; this.startSession(); },
 startSession() {
 this.timers.forEach(clearTimeout); this.timers = [];
-const [lo, hi] = A2_LEVELS[a2Level()];
+const [lo, hi] = daMode() ? [1, 2] : A2_LEVELS[a2Level()];
 a2.total = a2TotalOpt(); a2.queue = a2Queue(lo, hi, a2.total); a2.idx = 0; a2.results = [];
 const its = a2Items(), st = its[Math.floor(Math.random() * its.length)];
 a2.items = a2.queue.map((_, i) => its.length === 1 ? its[0] : (i % 2 === 0 ? st : (st === 'leaf' ? 'persimmon' : 'leaf')));
 this.setRound();
 },
-setRound() { a2.n = a2.queue[a2.idx]; a2.item = a2.items[a2.idx]; a2.tries = 0; this.showHarvest(true); },
+setRound() { a2.n = a2.queue[a2.idx]; a2.item = a2.items[a2.idx]; a2.tries = 0; if (daMode()) { this.daRound(); return; } this.showHarvest(true); },
 shell(title, hideNav) {
+Scan.stop(); DaHint.stop();
 const lv = a2Level(), r = A2_LEVELS[lv];
 this.root.innerHTML = `<div class="a2nav"><button class="btn a2back" id="a2Back">처음으로</button>${hideNav ? '' : '<button class="btn a2back" id="a2Restart">활동2 처음으로</button>'}</div><h1 class="a2title">${title}</h1><div class="a2lv">수준 ${lv} · ${r[0]}~${r[1]}</div><div id="caption">화면을 한 번 터치하면 소리가 켜져요</div>`;
 this.root.querySelector('#a2Back').onclick = () => { Sfx.unlock(); Speech.stop(); if (state.mode !== 'board' && state.mode !== 'practice') state.mode = 'free'; Router.go('intro'); };
@@ -2354,6 +2381,174 @@ Speech.say(`주문 카드가 왔어요. ${text}`);
 };
 Router.register('act2', Screens.act2);
 
+/* =====================================================================
+다 수준 활동(v6): 다-1(독립, 같은 것 찾기→짝짓기→만들기) / 다-2(함께, 단일 버튼·단계 힌트·교사 「함께」)
+스위치 1버튼 스캔, 독립/시각힌트/신체촉진 기록(학생 번호만, 이름 저장 없음)
+===================================================================== */
+const DaLog = {
+key: 'gamnamu.dalog.v1',
+list() { try { const a = JSON.parse(localStorage.getItem(this.key) || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; } },
+add(o) { try { const a = this.list(); a.push({ sid: o.sid == null ? null : Number(o.sid), act: o.act, sub: o.sub, stage: o.stage, ts: Date.now() }); localStorage.setItem(this.key, JSON.stringify(a.slice(-300))); return true; } catch (e) { return false; } }
+};
+function daSub() { const d = Settings.data, sid = a2Sid(); return (d.a2Subs && d.a2Subs[sid]) || d.a2Sub || '다-1'; }
+function daMode() {
+const d = Settings.data, sid = a2Sid();
+const assigned = sid != null && d.a2Subs && d.a2Subs[sid];
+if (!(assigned || (a2Level() === '다' && d.daOn === 'on'))) return null;
+return daSub() === '다-2' ? '다-2' : '다-1';
+}
+const daNum = (k, def) => { const v = Number(Settings.data[k]); return v > 0 ? v : def; };
+const Scan = {
+t: null, h: null, i: -1, getItems: null, onPick: null,
+on() { return Settings.data.daScan === 'on'; },
+start(getItems, onPick) {
+this.stop(); if (!this.on()) return;
+this.getItems = getItems; this.onPick = onPick; this.i = -1;
+const step = () => { const it = this.getItems(); this.clear(); if (!it.length) return; this.i = (this.i + 1) % it.length; it[this.i].classList.add('scan'); };
+step(); this.t = setInterval(step, Math.max(400, daNum('daScanMs', 1500)));
+this.h = e => { if (e.code === 'Space' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); const it = this.getItems(), c = it[this.i]; if (c) this.onPick(c); } };
+document.addEventListener('keydown', this.h);
+},
+clear() { document.querySelectorAll('.scan').forEach(e => e.classList.remove('scan')); },
+stop() { clearInterval(this.t); this.t = null; if (this.h) { document.removeEventListener('keydown', this.h); this.h = null; } this.clear(); }
+};
+/* 단계 힌트: 독립 → (지연) 시각힌트(깜빡임) → (2배 지연) 손 안내 → 교사 「함께」 = 신체촉진 */
+function daPicSvg(kind, k) { return `<svg viewBox="0 0 ${k * 66} 74" preserveAspectRatio="xMidYMid meet">` + Array.from({ length: k }, (_, i) => a2G(kind, 33 + i * 66, 37, 1.5, i)).join('') + '</svg>'; }
+const DaHint = {
+stage: '독립', timers: [],
+start(scr, target, hint) {
+this.stop(); this.stage = '독립';
+const d1 = daNum('daHint', 6000);
+this.timers.push(setTimeout(() => { this.stage = '시각힌트'; if (target) target.classList.add('blink'); }, d1));
+this.timers.push(setTimeout(() => { if (target) { const h = document.createElement('div'); h.className = 'daHand'; h.textContent = '▼ 여기'; target.appendChild(h); } if (hint) Speech.say(hint); }, d1 * 2));
+},
+stop() { this.timers.forEach(clearTimeout); this.timers = []; }
+};
+
+/* ---------- 활동2 다 수준 라운드 ---------- */
+Screens.act2.daRound = function () {
+const m = daMode(), it = A2_ITEM[a2.item], n = a2.n;
+a2.phase = 'da'; this.lock = false; Scan.stop(); DaHint.stop();
+this.shell(`${it.name} ${A2_CNT[n]} ${it.unit}`);
+const lv = this.root.querySelector('.a2lv'); if (lv) lv.textContent = `수준 다 · ${m}`;
+this.stat(m === '다-2' ? '함께 해요' : '같은 것을 골라요');
+const wrap = document.createElement('div'); wrap.className = 'daArea';
+let vals;
+if (m === '다-1') { const c = Math.min(3, Math.max(2, daNum('daChoices1', 2))); vals = a2Shuffle([1, 2, 3].filter(v => v !== n)).slice(0, c - 1).concat([n]); }
+else vals = daNum('daChoices2', 1) >= 2 ? [n, n === 1 ? 2 : 1] : [n];
+vals = a2Shuffle(vals);
+wrap.innerHTML = `<div class="daTarget"><b>${n}</b></div><div class="daChoices">${vals.map(v => `<button class="btn dab" data-v="${v}">${daPicSvg(a2.item, v)}</button>`).join('')}</div>`;
+this.root.appendChild(wrap);
+const btns = () => [...wrap.querySelectorAll('.dab:not(.dim)')];
+const tgt = wrap.querySelector(`.dab[data-v="${n}"]`);
+let wrong = 0, done = false;
+const finish = stage => {
+if (done) return; done = true; Scan.stop(); DaHint.stop();
+DaLog.add({ sid: a2Sid(), act: 2, sub: m, stage });
+a2.phase = 'ok'; a2.results.push({ item: a2.item, n, tries: wrong }); tgt.classList.remove('blink'); tgt.classList.add('ok');
+Sfx.dingdong(); this.pulse(); Speech.say('딩동! 잘했어요!');
+this.later(() => { if (a2.idx + 1 < a2.total) { a2.idx++; this.setRound(); } else this.showCards(); }, 1700);
+};
+const pick = b => {
+if (done) return; Sfx.unlock();
+if (Number(b.dataset.v) === n) { finish(m === '다-2' ? DaHint.stage : (wrong === 0 ? '독립' : '시각힌트')); return; }
+if (m === '다-1') { wrong++; b.classList.add('dim'); if (wrong >= 2 || btns().length <= 1) tgt.classList.add('blink'); }
+else { b.classList.add('dim'); setTimeout(() => b.classList.remove('dim'), 700); }
+};
+wrap.onclick = e => { const b = e.target.closest('.dab'); if (b) pick(b); };
+const begin = () => {
+if (m === '다-2') { DaHint.start(this, tgt, `${it.name} 그림을 눌러요`); }
+Scan.start(btns, pick);
+};
+if (m === '다-2') {
+const tg = document.createElement('button'); tg.className = 'btn daTogether'; tg.id = 'daTogether'; tg.textContent = '함께';
+tg.onclick = () => { if (done) return; DaHint.stage = '신체촉진'; tgt.classList.add('press'); finish('신체촉진'); };
+this.root.appendChild(tg);
+}
+if (m === '다-2' && Settings.data.daFriend === 'on') {
+const fr = document.createElement('div'); fr.className = 'daFriend'; fr.innerHTML = '<span>친구가 먼저 해 봐요</span><button class="btn" id="daFriendDone">시범 끝</button>';
+this.root.appendChild(fr); fr.querySelector('#daFriendDone').onclick = () => { fr.remove(); begin(); };
+} else begin();
+Speech.say(m === '다-2' ? `${it.name} ${A2_CNT[n]} ${it.unit}. 같이 눌러요` : `${it.name} ${A2_CNT[n]} ${it.unit}. 같은 그림을 찾아요`);
+};
+
+/* ---------- 활동1 다 수준 화면 ---------- */
+Screens.a1da = {
+timers: [], root: null, idx: 0, total: 0, queue: [], fruits: 0, n: 1, step: 'match', wrong: 0, filled: 0, done: false, mode: '다-1',
+later(fn, ms) { this.timers.push(setTimeout(fn, ms)); },
+unmount() { this.timers.forEach(clearTimeout); this.timers = []; Scan.stop(); DaHint.stop(); Speech.stop(); this.root = null; },
+mount(root) {
+root.id = 'act2'; this.root = root; this.total = a1Total(); this.queue = a2Queue(1, 2, this.total); this.idx = 0; this.fruits = 0;
+this.round();
+},
+round() {
+this.mode = daMode() || '다-1'; this.locked = false; this.n = this.queue[this.idx]; this.wrong = 0; this.filled = 0; this.done = false;
+this.step = this.mode === '다-2' ? 'place' : 'match';
+this.draw(true);
+},
+draw(speak) {
+Scan.stop(); DaHint.stop(); this.timers.forEach(clearTimeout); this.timers = [];
+const m = this.mode, n = this.n, T = this.total;
+const titles = { match: '같은 숫자를 찾아요', dots: '같은 점을 찾아요', place: '점을 콕 해요' };
+this.root.innerHTML = `<div class="a2nav"><button class="btn a2back" id="a2Back">처음으로</button></div><h1 class="a2title">${titles[this.step]}</h1><div class="a2lv">수준 다 · ${m}</div><div id="caption">화면을 한 번 터치하면 소리가 켜져요</div><div class="a2stat" id="a2Stat"><b>${this.idx + 1} / ${T}</b> 라운드<br>남은 라운드 ${T - this.idx - 1}<br><span>${m === '다-2' ? '함께 해요' : '같은 것을 골라요'}</span></div><svg class="a1tree" id="a1tree"></svg>`;
+this.root.insertAdjacentHTML('beforeend', Screens.act2.faceHtml());
+this.root.querySelector('#a2Back').onclick = () => { Sfx.unlock(); Speech.stop(); Router.go('intro'); };
+buildTree(this.root.querySelector('#a1tree'), this.fruits);
+const wrap = document.createElement('div'); wrap.className = 'daArea'; this.root.appendChild(wrap);
+const target = `<div class="daTarget"><b>${n}</b></div>`;
+const slots = () => { let h = '<div class="daSlots">'; for (let i = 0; i < 2; i++) { const open = i < n, on = i < this.filled; h += `<div class="daSlot ${open ? 'open' : 'cover'} ${on ? 'on' : ''}" data-i="${i}">${on ? '<i></i>' : ''}</div>`; } return h + '</div>'; };
+if (this.step === 'match') {
+const vals = a2Shuffle([1, 2]);
+wrap.innerHTML = target + `<div class="daChoices">${vals.map(v => `<button class="btn dab num" data-v="${v}">${v}</button>`).join('')}</div>`;
+} else if (this.step === 'dots') {
+const vals = a2Shuffle([1, 2]);
+wrap.innerHTML = target + `<div class="daChoices">${vals.map(v => `<button class="btn dab" data-v="${v}"><svg viewBox="0 0 ${v * 60} 70">${Array.from({ length: v }, (_, i) => `<circle cx="${30 + i * 60}" cy="35" r="22" fill="#FDD835" stroke="#B8860B" stroke-width="3"/>`).join('')}</svg></button>`).join('')}</div>`;
+} else if (m === '다-1') {
+wrap.innerHTML = target + slots();
+} else {
+wrap.innerHTML = target + slots() + '<button class="btn daBig" id="daBig">콕</button>';
+}
+const rec = stage => DaLog.add({ sid: a2Sid(), act: 1, sub: m, stage });
+const success = stage => {
+if (this.done) return; this.done = true; Scan.stop(); DaHint.stop(); rec(stage);
+this.fruits++; buildTree(this.root.querySelector('#a1tree'), this.fruits); Sfx.dingdong(); this.later(() => Sfx.fruit(), 450); Screens.act2.pulse.call({ root: this.root }); Speech.say('딩동! 잘했어요!');
+this.later(() => { if (this.idx + 1 < this.total) { this.idx++; this.round(); } else Router.go('complete'); }, 1800);
+};
+if (this.step === 'match' || this.step === 'dots') {
+const btns = () => [...wrap.querySelectorAll('.dab:not(.dim)')];
+const pick = b => {
+if (this.done || this.locked) return; Sfx.unlock();
+if (Number(b.dataset.v) === n) { this.step = this.step === 'match' ? 'dots' : 'place'; this.draw(true); return; }
+this.wrong++; b.classList.add('dim'); this.locked = true;
+this.later(() => { this.locked = false; this.draw(false); }, 900);
+};
+wrap.onclick = e => { const b = e.target.closest('.dab'); if (b) pick(b); };
+Scan.start(btns, pick);
+} else if (m === '다-1') {
+const open = () => [...wrap.querySelectorAll('.daSlot.open:not(.on)')];
+const put = s => { if (this.done || !s || s.classList.contains('on')) return; Sfx.kok(); this.filled++; s.classList.add('on'); s.innerHTML = '<i></i>'; if (this.filled >= n) success(this.wrong === 0 ? '독립' : '시각힌트'); };
+wrap.onclick = e => { const s = e.target.closest('.daSlot.open'); if (s) put(s); };
+Scan.start(open, put);
+} else {
+const big = wrap.querySelector('#daBig');
+const touch = stage => {
+if (this.done) return; Sfx.kok(); const s = wrap.querySelectorAll('.daSlot.open')[this.filled]; if (s) { s.classList.add('on'); s.innerHTML = '<i></i>'; } this.filled++;
+if (this.filled >= n) success(stage);
+};
+big.onclick = () => touch(DaHint.stage);
+const tg = document.createElement('button'); tg.className = 'btn daTogether'; tg.id = 'daTogether'; tg.textContent = '함께';
+tg.onclick = () => { DaHint.stage = '신체촉진'; while (!this.done) touch('신체촉진'); };
+this.root.appendChild(tg);
+DaHint.start(this, big, '큰 버튼을 눌러요');
+Scan.start(() => [big], () => touch(DaHint.stage));
+}
+const msg = { match: `${n}과 같은 숫자를 찾아요`, dots: `${n}과 같은 점을 찾아요`, place: m === '다-2' ? `큰 버튼을 눌러 점을 ${n}개 만들어요` : `점을 ${n}개 콕 해요` }[this.step];
+if (speak) Speech.say(msg); else Router.caption(msg);
+}
+};
+Router.register('a1da', Screens.a1da);
+
+
 
 
 /* ---------- 옵션 패널 (보이는 「옵션」 버튼 + 교사 숨은 설정 3초 길게 누르기) ---------- */
@@ -2387,6 +2582,14 @@ let h = `<h3>옵션${this.adv ? '<small>교사 고급 설정</small>' : ''}</h3>
 + row('숫자 고정', steps('fixed', [[0, '무작위'], [1, '1'], [2, '2'], [3, '3'], [4, '4'], [5, '5']]), 'wide')
 + row('활동1 문제 수', steps('a1Total', [[3, '3'], [5, '5'], [7, '7'], [10, '10']]))
 + row('활동2 문제 수', steps('a2Total', [[3, '3'], [5, '5'], [7, '7'], [10, '10']]))
++ row('다 수준 전용 활동(다 학생)', [['off', '끄기'], ['on', '켜기']].map(([v, l]) => `<button class="sb ${d.daOn === v ? 'on' : ''}" data-a2="daOn" data-v="${v}">${l}</button>`).join(''))
++ row('다 세분(기본)', [['다-1', '다-1 독립'], ['다-2', '다-2 함께']].map(([v, l]) => `<button class="sb ${d.a2Sub === v ? 'on' : ''}" data-a2="a2Sub" data-v="${v}">${l}</button>`).join(''))
++ row('스위치 스캔(Space/Enter)', [['off', '끄기'], ['on', '켜기']].map(([v, l]) => `<button class="sb ${d.daScan === v ? 'on' : ''}" data-a2="daScan" data-v="${v}">${l}</button>`).join(''))
++ row('스캔 속도', [['1000', '빠름 1초'], ['1500', '보통 1.5초'], ['2500', '느림 2.5초']].map(([v, l]) => `<button class="sb ${String(d.daScanMs) === v ? 'on' : ''}" data-a2="daScanMs" data-v="${v}">${l}</button>`).join(''), 'wide')
++ row('다-1 선택지 수', ['2', '3'].map(v => `<button class="sb ${String(d.daChoices1) === v ? 'on' : ''}" data-a2="daChoices1" data-v="${v}">${v}</button>`).join(''))
++ row('다-2 선택지 수', [['1', '1(정답만)'], ['2', '2']].map(([v, l]) => `<button class="sb ${String(d.daChoices2) === v ? 'on' : ''}" data-a2="daChoices2" data-v="${v}">${l}</button>`).join(''))
++ row('힌트 지연(다-2)', [['4000', '4초'], ['6000', '6초'], ['8000', '8초']].map(([v, l]) => `<button class="sb ${String(d.daHint) === v ? 'on' : ''}" data-a2="daHint" data-v="${v}">${l}</button>`).join(''))
++ row('친구 시범(다-2)', [['off', '끄기'], ['on', '켜기']].map(([v, l]) => `<button class="sb ${d.daFriend === v ? 'on' : ''}" data-a2="daFriend" data-v="${v}">${l}</button>`).join(''))
 + row('활동2 수준', ['가', '나', '다'].map(v => `<button class="sb ${d.a2Level === v ? 'on' : ''}" data-a2="a2Level" data-v="${v}">${v} (${A2_LEVELS[v][0]}~${A2_LEVELS[v][1]})</button>`).join(''))
 + row('활동2 힌트 도움', [['none', '없음'], ['num', '순서 번호 표시'], ['ans', '정답 숫자 강조']].map(([v, l]) => `<button class="sb ${d.a2Hint === v ? 'on' : ''}" data-a2="a2Hint" data-v="${v}">${l}</button>`).join(''), 'wide')
 + row('활동2 물건', [['both', '둘 다'], ['persimmon', '감만'], ['leaf', '나뭇잎만']].map(([v, l]) => `<button class="sb ${d.a2Item === v ? 'on' : ''}" data-a2="a2Item" data-v="${v}">${l}</button>`).join(''))
@@ -2397,6 +2600,7 @@ h += '<div class="grid">'
 + row('음성 속도(세밀)', `<input type="range" data-rg="rate" min="0.5" max="1.3" step="0.05" value="${d.rate}"><output>${Number(d.rate).toFixed(2)}</output>`)
 + row('점 크기(세밀)', steps('dotPct', [[-40, '-40%'], [-20, '-20%'], [0, '0'], [20, '+20%'], [40, '+40%']]), 'wide')
 + row('활동2 학생별 수준(눌러서 가→나→다)', [1, 2, 3, 4, 5, 6].map(i => `<button class="sb" data-a2s="${i}">${i}번 ${(d.a2Levels && d.a2Levels[i]) || '자동'}</button>`).join(''), 'wide')
++ row('다 세분 학생별(눌러서 자동→다-1→다-2)', [1, 2, 3, 4, 5, 6].map(i => `<button class="sb" data-a2sub="${i}">${i}번 ${(d.a2Subs && d.a2Subs[i]) || '자동'}</button>`).join(''), 'wide')
 + row('교사용 학생 관리', `<button class="sb on" id="sOpenRoster">학생 등록 화면 열기</button>`, 'wide')
 + '</div>';
 }
@@ -2408,6 +2612,7 @@ card.querySelectorAll('[data-step]').forEach(b => b.onclick = () => { Settings.s
 card.querySelectorAll('[data-rg]').forEach(r => r.oninput = () => { const v = parseFloat(r.value); Settings.set(r.dataset.rg, v); r.nextElementSibling.textContent = r.dataset.rg === 'rate' ? v.toFixed(2) : Math.round(v * 100); });
 card.querySelectorAll('[data-a2]').forEach(b => b.onclick = () => { Settings.set(b.dataset.a2, b.dataset.v); this.render(); });
 card.querySelectorAll('[data-a2s]').forEach(b => b.onclick = () => { const k = b.dataset.a2s, m = Object.assign({}, Settings.data.a2Levels), o = ['', '가', '나', '다']; const c = o.indexOf(m[k] || ''); const nx = o[(c + 1) % 4]; if (nx) m[k] = nx; else delete m[k]; Settings.set('a2Levels', m); this.render(); });
+card.querySelectorAll('[data-a2sub]').forEach(b => b.onclick = () => { const k = b.dataset.a2sub, m = Object.assign({}, Settings.data.a2Subs), o = ['', '다-1', '다-2']; const nx = o[(o.indexOf(m[k] || '') + 1) % 3]; if (nx) m[k] = nx; else delete m[k]; Settings.set('a2Subs', m); this.render(); });
 const roBtn = card.querySelector('#sOpenRoster');
 if (roBtn) roBtn.onclick = () => { this.close(); RosterManager.open(); };
 const rs = card.querySelector('#sReset');
@@ -2453,7 +2658,7 @@ Router.go('intro');
 }
 })();
 
-window.__app = { a2, A2Orders, A2_TREE, state, Settings, RosterDB, PracticeLog, MyFace, QRCode, Sfx, Speech, Router, Screens, GROUND_Y };
+window.__app = { Scan, DaLog, DaHint, daMode, a2, A2Orders, A2_TREE, state, Settings, RosterDB, PracticeLog, MyFace, QRCode, Sfx, Speech, Router, Screens, GROUND_Y };
 </script>
 </body>
 </html>
