@@ -428,6 +428,7 @@ display:flex;flex-direction:column;align-items:center;justify-content:center;gap
 #act2 .a1tree{position:absolute;left:calc(var(--u)*2);top:calc(var(--u)*21);width:calc(var(--u)*25);height:calc(var(--u)*20.5);border-radius:calc(var(--u)*1.2);overflow:hidden;box-shadow:0 calc(var(--u)*.4) calc(var(--u)*1.2) rgba(0,0,0,.2)}
 #optGear{position:absolute;right:calc(var(--u)*.6);top:calc(var(--u)*.5);z-index:49;height:calc(var(--u)*2.7);padding:0 calc(var(--u)*1);font-size:calc(var(--u)*1.4);font-weight:800;border-radius:calc(var(--u)*1.4);background:#fff;border:calc(var(--u)*.2) solid #2E5E9E;color:#1B3F73;opacity:.85;box-shadow:0 calc(var(--u)*.2) calc(var(--u)*.5) rgba(0,0,0,.2);line-height:1}
 #optGear.off{display:none}
+#liveDiag{position:absolute;display:none;left:calc(var(--u)*.6);bottom:calc(var(--u)*.3);z-index:46;font-size:calc(var(--u)*1.1);color:#1B3F73;background:rgba(255,255,255,.85);padding:0 calc(var(--u)*.6);border-radius:calc(var(--u)*.6);pointer-events:none;max-width:90%;overflow:hidden;white-space:nowrap}
 #stgBadge{position:absolute;display:none;right:calc(var(--u)*.6);top:calc(var(--u)*3.8);z-index:47;align-items:center;padding:0 calc(var(--u)*1.2);height:calc(var(--u)*3.2);border-radius:calc(var(--u)*1.6);font-size:calc(var(--u)*1.7);font-weight:900;border:calc(var(--u)*.25) solid #fff;box-shadow:0 calc(var(--u)*.2) calc(var(--u)*.6) rgba(0,0,0,.3);white-space:nowrap}
 #stage.hasStg #act2 .a2lv{display:none!important}
 #photoBtn{position:absolute;display:none;transform:translateX(-50%);z-index:48;gap:calc(var(--u)*.6);align-items:center}
@@ -474,6 +475,11 @@ display:flex;flex-direction:column;align-items:center;justify-content:center;gap
 #monitor .btns .btn{border:0;border-radius:calc(var(--u)*1.020);font-size:calc(var(--u)*1.913);font-weight:900;font-family:inherit;color:#fff;cursor:pointer;white-space:nowrap;min-height:0;padding:0}
 #monitor .btns .btn.mup{background:#d9480f;box-shadow:0 calc(var(--u)*0.319) 0 #8f2f06}#monitor .btns .btn.mdn{background:#2b6ca3;box-shadow:0 calc(var(--u)*0.319) 0 #184368}
 #monitor .btns .btn:disabled{background:#9c958b;box-shadow:0 calc(var(--u)*0.319) 0 #6f6a63;cursor:default}
+#monitor .hint.tap{cursor:pointer;outline:calc(var(--u)*.15) dashed #d9a441}
+#monitor .hpop{position:absolute;z-index:8;width:calc(var(--u)*29);background:#fff;border:calc(var(--u)*.35) solid #8a5a2b;border-radius:calc(var(--u)*1.4);padding:calc(var(--u)*1);box-shadow:0 calc(var(--u)*.5) calc(var(--u)*1.5) rgba(0,0,0,.4);display:flex;flex-direction:column;gap:calc(var(--u)*.7);font-size:calc(var(--u)*1.7);font-weight:800}
+#monitor .hpop .hpt{font-size:calc(var(--u)*2);font-weight:900;color:#5a3418}
+#monitor .hpop .hpr{display:flex;gap:calc(var(--u)*.6);align-items:center}
+#monitor .hpop .hb{flex:1;min-height:calc(var(--u)*4.2);font-size:calc(var(--u)*1.8);font-weight:900;background:#2b6ca3;color:#fff;border-radius:calc(var(--u)*1);padding:0 calc(var(--u)*.6)}
 #monitor .mnote{position:absolute;left:calc(var(--u)*1.2);right:calc(var(--u)*1.2);top:calc(var(--u)*5.4);bottom:calc(var(--u)*1.2);background:rgba(255,255,255,.96);z-index:3;border-radius:calc(var(--u)*1.4);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--u)*2);text-align:center}
 #monitor .mnote h2{font-size:calc(var(--u)*5);color:#C0392B;margin:0}#monitor .mnote p{font-size:calc(var(--u)*2.2);margin:0;color:#1B3F73}
 #monitor .mnote .btn{min-height:calc(var(--u)*6);font-size:calc(var(--u)*2.6);padding:0 calc(var(--u)*3);background:#2E5E9E;color:#fff}
@@ -1795,6 +1801,7 @@ b.innerHTML = `<b>${step} / ${T}</b><span>남은 문제 ${Math.max(0, T - step)}
 applySettings() {
 if (typeof daMode === 'function' && daMode('a1') && state.screen === 'activity1') { Router.go('activity1'); return; }
 if (!this.dotsG) return;
+try { const rg = a1RangeNow(), a = state.a1, fx = Settings.data.fixed; if (a.current && !(fx >= 1 && fx <= 5) && (a.current < rg[0] || a.current > rg[1]) && a.phase !== 'success') { a.bag = []; a.phase = 'idle'; this.clearDots(); this.draw(); } } catch (e) {}
 this.updateProgressBadge();
 this.dotsG.classList.toggle('shownum', !!Settings.data.showNumbers);
 this.renderCircles();
@@ -2334,7 +2341,13 @@ const its = a2Items(), st = its[Math.floor(Math.random() * its.length)];
 a2.items = a2.queue.map((_, i) => its.length === 1 ? its[0] : (i % 2 === 0 ? st : (st === 'leaf' ? 'persimmon' : 'leaf')));
 this.setRound();
 },
-setRound() { a2.n = a2.queue[a2.idx]; a2.item = a2.items[a2.idx]; a2.tries = 0; this._sig = this.sigNow(); this._fut = this.futNow(); if (matchStage()) { this.matchRound(); return; } if (daMode()) { this.daRound(); return; } this.showHarvest(true); },
+setRound() { this.ensure(); a2.n = a2.queue[a2.idx]; a2.item = a2.items[a2.idx]; a2.tries = 0; this._sig = this.sigNow(); this._fut = this.futNow(); this._rk = [matchStage(), daMode(), a2Range().join('-')].join('|'); if (matchStage()) { this.matchRound(); return; } if (daMode()) { this.daRound(); return; } this.showHarvest(true); },
+ensure() {
+/* 불변식: 현재 문제의 숫자 n은 항상 지금 범위 [lo,hi] 안, 숫자 고르기 선택지(lo..hi)에 포함 */
+const [lo, hi] = (daMode() || matchStage()) ? [1, 2] : a2Range(), pk = a2PeakNow();
+if (!(a2.queue[a2.idx] >= lo && a2.queue[a2.idx] <= hi)) a2.queue[a2.idx] = a2Queue(lo, hi, 1, pk)[0];
+for (let i = a2.idx + 1; i < a2.queue.length; i++) if (!(a2.queue[i] >= lo && a2.queue[i] <= hi)) a2.queue[i] = a2Queue(lo, hi, 1, pk)[0];
+},
 sigNow() { const d = Settings.data; return [matchStage(), daMode(), d.a2Hint, d.daChoices1, d.daChoices2, d.daHint, d.daScan, d.daScanMs].join('|'); },
 futNow() { const d = Settings.data, r = (daMode() || matchStage()) ? [1, 2] : a2Range(); return [a2TotalOpt(), r.join('-'), d.a2Item].join('|'); },
 redo() { if (a2.phase === 'order' || !this.root) return; this.setRound(); },
@@ -2342,6 +2355,13 @@ applySettings() {
 if (!this.root || this._sig === undefined) return;
 const live = ['da', 'harvest', 'harvested', 'ask', 'practice'].includes(a2.phase);
 if (a2.phase === 'harvest' && this.svg && !!document.getElementById('a2BCount') !== !!(Settings.data.a2ShowCount && a2.moved.length)) this.drawHarvest();
+const rk = [matchStage(), daMode(), a2Range().join('-')].join('|');
+if (this._rk !== undefined && this._rk !== rk && live) { /* 단계·수준·범위가 바뀌면 현재 라운드를 버리고 새 범위로 다시 만듦 */
+this._rk = rk; const [lo, hi] = (daMode() || matchStage()) ? [1, 2] : a2Range(), cur = a2.idx;
+a2.queue = a2.queue.slice(0, cur).concat(a2Queue(lo, hi, Math.max(1, a2.total - cur), a2PeakNow())); a2.queue.length = Math.max(a2.queue.length, cur + 1);
+this.setRound(); return;
+}
+this._rk = rk;
 if (live && this._sig !== this.sigNow()) { this.setRound(); return; }
 if (this._fut !== this.futNow()) {
 this._fut = this.futNow();
@@ -2901,18 +2921,19 @@ if (!app) app = fb.initializeApp(this.cfg, 'gamnamu');
 this.db = app.database(); this.ready = true; return true;
 } catch (e) { this.db = null; return false; }
 },
-fail(e) { const m = String((e && (e.code || e.message)) || e); this.errKind = /permission/i.test(m) ? 'perm' : 'conn'; try { if (Router.cur === 'monitor') Screens.monitor.note(); } catch (x) {} },
+fail(e) { const m = String((e && (e.code || e.message)) || e); this.errKind = /permission/i.test(m) ? 'perm' : 'conn'; try { this.diag(); } catch (x) {} try { if (Router.cur === 'monitor') Screens.monitor.note(); } catch (x) {} },
 write(path, v) { try { if (this.db && path.indexOf(FB_ROOT + '/') === 0) { const r = this.db.ref(path).set(v); if (r && r.catch) r.catch(e => this.fail(e)); } } catch (e) { this.fail(e); } },
 onv(path, cb) { if (path.indexOf(FB_ROOT + '/') !== 0) return; try { this.db.ref(path).on('value', cb, e => this.fail(e)); } catch (e) { this.fail(e); } },
 /* ----- 학생 기기 ----- */
 async startStudent(sid, cfg, room) {
-this.stopStudent(); this.sid = String(sid); this.room = room; this.hist = [];
-if (!(await this.connect())) return false;
+this.stopStudent(); this.sid = String(sid); this.room = room; this.hist = []; this.homeAct = this.homeAct || '1'; this.lastCmdAt = 0;
+this.diag();
+if (!(await this.connect())) { this.diag(); return false; }
 this.lastCmd = undefined; this.cmdPath = `${FB_ROOT}/${room}/cmd/${this.sid}`;
-this.cmdCb = snap => { const v = snap && snap.val ? snap.val() : null; if (!v) { if (this.lastCmd === undefined) this.lastCmd = 0; return; } if (this.lastCmd === undefined) { this.lastCmd = v.ts || 0; return; } if ((v.ts || 0) > this.lastCmd) { this.lastCmd = v.ts; this.applyLevel(v.level); } };
+this.cmdCb = snap => { const v = snap && snap.val ? snap.val() : null; if (!v) { if (this.lastCmd === undefined) this.lastCmd = 0; return; } if (this.lastCmd === undefined) { this.lastCmd = v.ts || 0; return; } if ((v.ts || 0) !== this.lastCmd) { this.lastCmd = v.ts || 0; this.lastCmdAt = Date.now(); try { this.applyCmd(v); } catch (e) { this.diagErr = String(e); } this.diag(); } };
 this.onv(this.cmdPath, this.cmdCb);
 
-this.timer = setInterval(() => this.push(), 5000); this.push(); return true;
+this.timer = setInterval(() => this.push(), 5000); this.push(); this.diag(); return true;
 },
 stopStudent() { clearInterval(this.timer); this.timer = null; try { if (this.db && this.cmdPath) this.db.ref(this.cmdPath).off('value', this.cmdCb); } catch (e) {} this.sid = null; this.cmdPath = null; },
 level() { const P = Router.cur === 'act2' ? 'a2' : 'a1'; return daMode(P) || (P === 'a2' ? a2Level() : a1Level()); },
@@ -2925,11 +2946,25 @@ return { act: a, level: stageOf(P), lv: this.level(), acc: n ? Math.round(ok * 1
 push() { if (!this.sid || !this.db) return; this.write(`${FB_ROOT}/${this.room}/students/${this.sid}`, this.status()); },
 setPrompt(p) { if (!this.sid) return; this.prompt = p; this.push(); },
 rec(act, ok, prompt) { if (!this.sid) return; this.act = act; this.hist.push(!!ok); if (this.hist.length > 10) this.hist.shift(); this.prompt = prompt || ''; this.push(); },
+applyCmd(v) {
+const P = this.actP();
+if (v.level != null) { this.lastCmdTxt = Number(v.level) >= 1 ? `${v.level}단계` : String(v.level); this.applyLevel(v.level); }
+if (v.hint && ['none', 'num', 'ans'].includes(v.hint)) { Settings.set('a2Hint', v.hint); this.lastCmdTxt = '힌트 ' + ({ none: '없음', num: '순서 번호', ans: '정답 강조' })[v.hint]; }
+if (v.dly && [4000, 6000, 8000].includes(Number(v.dly))) { Settings.set('daHint', String(v.dly)); this.lastCmdTxt = `시각힌트 ${v.dly / 1000}초`; }
+if (v.help === 'on' || v.help === 'off') { const sub = Object.assign({}, Settings.data[P + 'Subs']); if (v.help === 'on') sub[this.sid] = '다-2'; else delete sub[this.sid]; Settings.set(P + 'Subs', sub); this.lastCmdTxt = '도움 ' + v.help; }
+setTimeout(() => this.push(), 300);
+},
+actP() { return Router.cur === 'act2' ? 'a2' : (Router.cur === 'activity1' || Router.cur === 'a1da') ? 'a1' : (this.homeAct === '2' ? 'a2' : 'a1'); },
+diag() {
+const d = document.getElementById('liveDiag'); if (!d) return; if (!this.sid) { d.style.display = 'none'; return; }
+const t = this.lastCmdAt ? new Date(this.lastCmdAt) : null, hm = t ? `${String(t.getHours()).padStart(2, '0')}:${String(t.getMinutes()).padStart(2, '0')}` : '';
+d.style.display = 'block'; d.textContent = `${this.db ? '●' : '○'} ${this.db ? '연결' : '연결 안 됨'} 방${this.room} · ${t ? '마지막 명령 ' + (this.lastCmdTxt || '') + ' ' + hm : '명령 대기'}${this.errKind ? ' · ' + (this.errKind === 'perm' ? '권한 오류' : '오류') : ''}${this.diagErr ? ' · ' + this.diagErr : ''}`;
+},
 applyLevel(lv) {
 if (!this.sid) return;
-if (Number(lv) >= 1 && Number(lv) <= 6) { applyStage(Router.cur === 'act2' ? 'a2' : 'a1', this.sid, Number(lv)); setTimeout(() => this.push(), 400); return; }
+if (Number(lv) >= 1 && Number(lv) <= 6) { applyStage(this.actP(), this.sid, Number(lv)); setTimeout(() => this.push(), 400); return; }
 if (!LADDER.includes(lv)) return;
-setStuLevel(Router.cur === 'act2' ? 'a2' : 'a1', this.sid, lv);
+setStuLevel(this.actP(), this.sid, lv);
 setTimeout(() => this.push(), 400);
 },
 /* ----- 칠판 기기 ----- */
@@ -2948,13 +2983,19 @@ Live.load();
 Screens.monitor = {
 timers: [], data: {},
 mount(root) {
-this.root = root; this.data = {};
+this.root = root; this.data = {}; this.seen = {};
 root.innerHTML = `<div id="monitor"><header><h1>🍂 우리 반 감나무 갤러리 <small>실시간 모니터 · 5까지의 수</small></h1><button class="tb" id="monBack">⌂ 처음으로</button><button class="tb live" id="monCfg">● 실시간 연결 설정</button></header><div class="mgrid" id="monGrid"></div></div>`;
 root.querySelector('#monBack').onclick = () => { Sfx.unlock(); Router.go('intro'); };
 root.querySelector('#monCfg').onclick = () => this.cfgModal();
 this.draw(); this.note();
-Live.errKind = null; Live.watch(d => { this.data = d || {}; this.draw(); }).then(ok => { if (!ok) Live.fail('연결'); });
+Live.errKind = null; Live.watch(d => this.ingest(d)).then(ok => { if (!ok) Live.fail('연결'); });
 this.timers.push(setInterval(() => this.draw(), 2000));
+},
+ingest(d) {
+/* 온라인 판정: 기기 시계 차이에 영향받지 않도록 「ts 값이 바뀐 것을 마지막으로 본 시각」을 기준으로 함(15초) */
+d = d || {}; const now = Date.now(), first = !this.gotFirst; this.gotFirst = true; this.data = d;
+Object.keys(d).forEach(k => { const v = d[k]; if (!v || !v.ts) return; const o = this.seen[k]; if (!o || o.ts !== v.ts) this.seen[k] = { ts: v.ts, at: (!o && now - v.ts > 15000) ? 0 : now }; });
+this.draw();
 },
 unmount() { this.timers.forEach(clearInterval); this.timers = []; Live.unwatch(); },
 draw() {
@@ -2967,7 +3008,7 @@ const HELP = { '독립': 0, '힌트 사용': 1, '시각힌트': 1, '오답': 1, 
 const pers = (x, y, full) => full ? `<g transform="translate(${x},${y})"><ellipse cx="0" cy="4" rx="21" ry="18" fill="#f2761a" stroke="#c4540a" stroke-width="2.5"/><ellipse cx="-7" cy="-1" rx="6" ry="4" fill="#ffb15e" opacity=".8"/><path d="M-12 -12 L0 -6 L12 -12 L6 -15 L0 -22 L-6 -15Z" fill="#4c8a2b" stroke="#2d5c14" stroke-width="2"/></g>` : `<g transform="translate(${x},${y})"><ellipse cx="0" cy="4" rx="19" ry="16" fill="none" stroke="#b69a72" stroke-width="3" stroke-dasharray="5 5"/><path d="M0 -12 L0 -22" stroke="#8a6a3c" stroke-width="3"/><path d="M0 -17 Q12 -25 18 -14 Q8 -10 0 -17Z" fill="#c9b27c"/></g>`;
 for (let i = 1; i <= MAX_STUDENTS; i++) {
 const st = (state.students || []).find(x => Number(x.id) === i), d = this.data[i] || this.data[String(i)];
-const on = !!(d && d.ts && now - d.ts <= 15000), s = stg(d), has = s >= 1;
+const sn = this.seen[i] || this.seen[String(i)], on = !!(d && d.ts && sn && now - sn.at <= 15000), s = stg(d), has = s >= 1;
 const ok = d && d.acc >= 0 ? Math.round(d.acc * d.n / 100) : 0, hl = d ? helpLv(d.prompt) : 0;
 const img = st ? `<img alt="" src="${st.photo || initialAvatar(st.name, st.id)}">` : '';
 let tw = `<svg width="268" height="64" viewBox="0 0 330 80"><path d="M0 14 Q80 4 165 12 T330 8" stroke="#7a4a1f" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M0 52 Q80 42 165 50 T330 46" stroke="#7a4a1f" stroke-width="9" fill="none" stroke-linecap="round"/>`;
@@ -2985,7 +3026,22 @@ const i = Number(z.dataset.i), st = (state.students || []).find(x => Number(x.id
 z.querySelector('.mn').textContent = `${i}번`; z.querySelector('.mname').textContent = st ? st.name : '';
 const mv = dir => { if (!d) return; const s = stg(d); if (!s) return; const nx = Math.max(1, Math.min(6, s + dir)); if (nx !== s) Live.sendLevel(i, nx); };
 z.querySelector('.mup').onclick = () => mv(1); z.querySelector('.mdn').onclick = () => mv(-1);
+const hp = z.querySelector('.hint'); if (hp && d) { hp.classList.add('tap'); hp.onclick = () => this.hintPop(i, z, d, !!(this.seen[i] && Date.now() - this.seen[i].at <= 15000)); }
 });
+},
+hintPop(i, z, d, on) {
+const mon = this.root.querySelector('#monitor'); const old = mon.querySelector('.hpop'); if (old) old.remove();
+const sr = mon.getBoundingClientRect(), r = z.getBoundingClientRect();
+const p = document.createElement('div'); p.className = 'hpop'; p.dataset.i = i;
+const L = Math.min(Math.max(r.left - sr.left + 10, 6), sr.width - 470), T = Math.max(6, r.top - sr.top + 60);
+p.style.left = L + 'px'; p.style.top = T + 'px';
+const send = o => { if (!on) return; Live.write(`${FB_ROOT}/${Live.room}/cmd/${i}`, Object.assign({}, o, { ts: Date.now() })); };
+p.innerHTML = `<div class="hpt">${i}번 힌트 조절 ${on ? '' : '(오프라인 — 적용 안 됨)'}</div><div class="hpr">${[['none', '없음'], ['num', '순서 번호'], ['ans', '정답 강조']].map(([v, l]) => `<button class="btn hb" data-h="${v}">${l}</button>`).join('')}</div><div class="hpr"><span>시각힌트</span>${[4000, 6000, 8000].map(v => `<button class="btn hb" data-d="${v}">${v / 1000}초</button>`).join('')}</div><div class="hpr"><span>도움(다-2)</span><button class="btn hb" data-p="on">켜기</button><button class="btn hb" data-p="off">끄기</button></div><div class="hpr"><button class="btn hb" id="hpX">닫기</button></div>`;
+mon.appendChild(p); p.style.left = Math.min(L, sr.width - p.offsetWidth - 6) + 'px';
+p.querySelectorAll('[data-h]').forEach(b => b.onclick = () => { send({ hint: b.dataset.h }); p.remove(); });
+p.querySelectorAll('[data-d]').forEach(b => b.onclick = () => { send({ dly: Number(b.dataset.d) }); p.remove(); });
+p.querySelectorAll('[data-p]').forEach(b => b.onclick = () => { send({ help: b.dataset.p }); p.remove(); });
+p.querySelector('#hpX').onclick = () => p.remove();
 },
 note() {
 const mon = this.root && this.root.querySelector('#monitor'); if (!mon) return; const old = mon.querySelector('.mnote'); if (old) old.remove();
@@ -3004,7 +3060,7 @@ const del = m.querySelector('#mcfgDel'); if (del) del.onclick = () => { Live.unw
 m.querySelector('#mcfgSave').onclick = () => {
 const c = Live.parseCfg(m.querySelector('#mcfgTxt').value);
 if (!c) { m.querySelector('#mcfgInfo').textContent = '설정을 읽지 못했어요. apiKey와 projectId(또는 databaseURL)가 들어 있는지 확인해 주세요.'; return; }
-Live.unwatch(); Live.saveCfg(c); m.remove(); this.data = {}; this.draw(); this.note(); Live.watch(d => { this.data = d || {}; this.draw(); });
+Live.unwatch(); Live.saveCfg(c); m.remove(); this.data = {}; this.draw(); this.note(); Live.watch(d => this.ingest(d));
 };
 }
 };
@@ -3113,6 +3169,7 @@ Router.init();
 Options.init();
 Photo.init();
 StageBadge.init();
+{ const d = document.createElement('div'); d.id = 'liveDiag'; document.getElementById('stage').appendChild(d); }
 RosterManager.init();
 const unlockOnce = () => { Sfx.unlock(); Speech.unlock(); document.removeEventListener('pointerdown', unlockOnce, true); };
 document.addEventListener('pointerdown', unlockOnce, true);
@@ -3144,7 +3201,7 @@ if (L.includes(l1)) setStuLevel('a1', sNum, l1); if (L.includes(l2)) setStuLevel
 if (['none', 'num', 'ans'].includes(hh)) Settings.set('a2Hint', hh);
 }
 const act = params.get('a'), room = params.get('r');
-if (room && /^\d{4}$/.test(room)) Live.startStudent(sNum, FB_DEFAULT, room);
+if (room && /^\d{4}$/.test(room)) { Live.homeAct = act === '2' ? '2' : '1'; Live.startStudent(sNum, FB_DEFAULT, room); }
 let asked = false; try { asked = !!localStorage.getItem(state.photoAskKey || ''); } catch (e) {}
 const tgt = act === '2' ? 'act2' : 'activity1';
 if (state.fragName && !state.myFace.photo && !asked) { Screens.register.frag = { ret: tgt, first: true }; Router.go('register'); }
