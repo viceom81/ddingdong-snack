@@ -423,6 +423,11 @@ display:flex;flex-direction:column;align-items:center;justify-content:center;gap
 #act2 .daBig.blink{animation:a2blink .8s ease-in-out infinite}
 #act2 .a1tree{position:absolute;left:calc(var(--u)*2);top:calc(var(--u)*21);width:calc(var(--u)*25);height:calc(var(--u)*20.5);border-radius:calc(var(--u)*1.2);overflow:hidden;box-shadow:0 calc(var(--u)*.4) calc(var(--u)*1.2) rgba(0,0,0,.2)}
 #optGear{position:absolute;right:calc(var(--u)*.6);top:calc(var(--u)*.5);z-index:49;height:calc(var(--u)*2.7);padding:0 calc(var(--u)*1);font-size:calc(var(--u)*1.4);font-weight:800;border-radius:calc(var(--u)*1.4);background:#fff;border:calc(var(--u)*.2) solid #2E5E9E;color:#1B3F73;opacity:.85;box-shadow:0 calc(var(--u)*.2) calc(var(--u)*.5) rgba(0,0,0,.2);line-height:1}
+#optGear.off{display:none}
+.introOpt{position:absolute;top:calc(var(--u)*.8);min-height:calc(var(--u)*3.4);padding:0 calc(var(--u)*1.4);font-size:calc(var(--u)*1.5);background:#fff;color:#1B3F73;border:calc(var(--u)*.2) solid #2E5E9E;opacity:.9}
+#introOpt1{left:calc(var(--u)*6)}#introOpt2{left:calc(var(--u)*6);top:calc(var(--u)*4.6)}
+.scom{margin-top:calc(var(--u)*1);border-top:calc(var(--u)*.15) solid #ccd}.scom summary{cursor:pointer;font-weight:800;font-size:calc(var(--u)*1.7);padding:calc(var(--u)*.8) 0;color:#1B3F73}
+#a2Flash{position:absolute;left:50%;top:14%;transform:translateX(-50%);font-size:calc(var(--u)*9);font-weight:900;color:#2E8B3D;background:rgba(255,255,255,.9);border-radius:calc(var(--u)*2);padding:0 calc(var(--u)*3);z-index:40;pointer-events:none}
 #optGear.hold::after{content:'';position:absolute;left:0;bottom:0;height:calc(var(--u)*.3);background:#2E5E9E;animation:gearHold 2s linear forwards;border-radius:calc(var(--u)*.2)}
 @keyframes gearHold{from{width:0}to{width:100%}}
 #openRosterBtn{top:calc(var(--u)*3.6)!important}
@@ -967,6 +972,8 @@ return `<svg viewBox="0 0 ${total} ${total}" shape-rendering="crispEdges" xmlns=
 
 /* ---------- 설정 (localStorage, 실패해도 동작) ---------- */
 const SETTINGS_KEY = 'gamnamu.settings.v1';
+const SETTINGS_KEY_A1 = 'gamnamu.settings.a1.v1';
+const A1_KEYS = ['a1Total', 'a1Sub', 'a1Subs', 'a1Level', 'a1Levels', 'a1DaOn'];
 const DEFAULTS = {
 speakCount: true, // 터치할 때마다 "하나, 둘…" 음성
 showNumbers: false, // 점 위 숫자 표시
@@ -977,14 +984,31 @@ dotPct: 0, // 점 크기 증감(%) -40~+40
 fixed: 0, // 0=무작위, 1~5=숫자 고정
 autoClear: true, // 오류 시 점 자동 지움
 showCircles: false, // 땅에 점선
-a1Total: 10, a2Total: 5, daOn: 'off', gearHold: 'off', a2Sub: '다-1', a2Subs: {}, daScan: 'off', daScanMs: '1500', daChoices1: '2', daChoices2: '1', daHint: '6000', daFriend: 'off', a2Level: '가', a2Item: 'both', a2Hint: 'num', a2Levels: {}
+a1Total: 10, a2Total: 5, daOn: 'off', gearHold: 'off', a2Sub: '다-1', a2Subs: {}, daScan: 'off', daScanMs: '1500', daChoices1: '2', daChoices2: '1', daHint: '6000', daFriend: 'off', a2Level: '가', a2Item: 'both', a2Hint: 'num', a2Levels: {}, a1Sub: '다-1', a1Subs: {}, a1Level: '가', a1Levels: {}, a1DaOn: 'off', a2SpeakCount: false, a2ShowCount: false, a2PracticeCount: false
 };
 const Settings = {
 data: Object.assign({}, DEFAULTS),
-load() { try { const s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || 'null'); if (s && typeof s === 'object') Object.assign(this.data, s); } catch (e) {} },
-save() { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(this.data)); } catch (e) {} },
+load() {
+let mainRaw = null, a1Raw = null;
+try { const s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || 'null'); if (s && typeof s === 'object') { mainRaw = s; Object.assign(this.data, s); } } catch (e) {}
+try { const s = JSON.parse(localStorage.getItem(SETTINGS_KEY_A1) || 'null'); if (s && typeof s === 'object') { a1Raw = s; Object.assign(this.data, s); } } catch (e) {}
+if (!a1Raw) { /* 기존 저장값 → 활동1·활동2 양쪽 초기값으로 이관 */
+const m = mainRaw || {};
+if (m.a2Subs) this.data.a1Subs = Object.assign({}, m.a2Subs);
+if (m.a2Levels) this.data.a1Levels = Object.assign({}, m.a2Levels);
+if (m.a2Sub) this.data.a1Sub = m.a2Sub;
+if (m.a2Level) this.data.a1Level = m.a2Level;
+if (m.daOn) this.data.a1DaOn = m.daOn;
+if (mainRaw) this.save();
+}
+},
+save() {
+const a1 = {}, rest = {};
+Object.keys(this.data).forEach(k => { (A1_KEYS.includes(k) ? a1 : rest)[k] = this.data[k]; });
+try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(rest)); localStorage.setItem(SETTINGS_KEY_A1, JSON.stringify(a1)); } catch (e) {}
+},
 set(k, v) { this.data[k] = v; this.save(); Router.applySettings(); },
-reset() { this.data = Object.assign({}, DEFAULTS); try { localStorage.removeItem(SETTINGS_KEY); } catch (e) {} Router.applySettings(); }
+reset() { this.data = Object.assign({}, DEFAULTS); try { localStorage.removeItem(SETTINGS_KEY); localStorage.removeItem(SETTINGS_KEY_A1); } catch (e) {} Router.applySettings(); }
 };
 
 /* ---------- 효과음 (WebAudio, 마림바풍) ---------- */
@@ -1127,11 +1151,12 @@ cur: null, root: null,
 init() { this.root = document.getElementById('app'); },
 register(name, def) { Screens[name] = def; },
 go(name) {
-if (name === 'activity1' && typeof daMode === 'function' && daMode()) name = 'a1da';
+if (name === 'activity1' && typeof daMode === 'function' && daMode('a1')) name = 'a1da';
 if (this.cur && Screens[this.cur].unmount) Screens[this.cur].unmount();
 this.root.innerHTML = '';
 const div = document.createElement('div'); div.className = 'screen'; div.id = name; this.root.appendChild(div);
 this.cur = name; state.screen = name;
+try { document.getElementById('optGear').classList.toggle('off', name === 'intro'); } catch (e) {}
 try { document.getElementById('stage').classList.toggle('pm', state.mode === 'practice'); } catch (e) {}
 Screens[name].mount(div);
 if (name === 'activity1' || name === 'a1da' || name === 'complete') BackGuard.arm();
@@ -1203,6 +1228,7 @@ root.innerHTML = `
 </div>
 <button class="btn" id="introAct2">활동 2 · 개수 세기</button>
 <button class="btn" id="introStart">그냥 입장</button>
+<button class="btn introOpt" id="introOpt1" type="button">⚙ 활동1 옵션</button><button class="btn introOpt" id="introOpt2" type="button">⚙ 활동2 옵션</button>
 <div id="caption" style="position:absolute;left:calc(var(--u)*3);right:calc(var(--u)*33);bottom:calc(var(--u)*2.2);height:calc(var(--u)*6.6);margin:0">화면을 한 번 터치하면 소리가 켜져요</div>
 <div id="studentModal" class="modalOverlay">
 <div class="modalBox">
@@ -1240,6 +1266,8 @@ Router.go('activity1');
 root.querySelector('#introAct2').onclick = () => { Sfx.unlock(); Speech.stop(); state.mode = 'free'; state.activeStudent = null; state.practiceStudentId = null; Router.go('act2'); };
 root.querySelector('#goAct2Btn').onclick = () => { if (!this.selectedStudent) return; Sfx.unlock(); Speech.stop(); state.mode = 'board'; state.activeStudent = this.selectedStudent; state.practiceStudentId = null; this.closeModal(); Router.go('act2'); };
 root.querySelector('#openRosterBtn').onclick = () => RosterManager.open();
+root.querySelector('#introOpt1').onclick = () => Options.open(true, 'a1');
+root.querySelector('#introOpt2').onclick = () => Options.open(true, 'a2');
 const smModal = root.querySelector('#studentModal');
 smModal.onclick = e => { if (e.target === smModal) this.closeModal(); };
 root.querySelector('#smCloseBtn').onclick = () => this.closeModal();
@@ -1674,7 +1702,7 @@ const T = a1Total(), step = Math.min(T, a.fruits + (a.phase === 'success' ? 0 : 
 b.innerHTML = `<b>${step} / ${T}</b><span>남은 문제 ${Math.max(0, T - step)}</span>`;
 },
 applySettings() {
-if (typeof daMode === 'function' && daMode() && state.screen === 'activity1') { Router.go('activity1'); return; }
+if (typeof daMode === 'function' && daMode('a1') && state.screen === 'activity1') { Router.go('activity1'); return; }
 if (!this.dotsG) return;
 this.updateProgressBadge();
 this.dotsG.classList.toggle('shownum', !!Settings.data.showNumbers);
@@ -2200,6 +2228,7 @@ redo() { if (a2.phase === 'order' || !this.root) return; this.setRound(); },
 applySettings() {
 if (!this.root || this._sig === undefined) return;
 const live = ['da', 'harvest', 'harvested', 'ask', 'practice'].includes(a2.phase);
+if (a2.phase === 'harvest' && this.svg && !!document.getElementById('a2BCount') !== !!(Settings.data.a2ShowCount && a2.moved.length)) this.drawHarvest();
 if (live && this._sig !== this.sigNow()) { this.setRound(); return; }
 if (this._fut !== this.futNow()) {
 this._fut = this.futNow();
@@ -2302,7 +2331,7 @@ h += `<path d="M${B.x + 10},${B.y + 90} L${B.x + B.w - 10},${B.y + 90} L${B.x + 
 a2.moved.forEach((k, j) => { const [x, y] = A2_BSLOT(j); h += `<g data-b="${j}" style="cursor:pointer">` + a2G(kind, x, y - 45, 1.15, a2.slots[k]) + (Settings.data.a2Hint === 'num' ? `<circle cx="${x + 17}" cy="${y - 64}" r="10" fill="#2E8B3D" stroke="#fff" stroke-width="2"/><text x="${x + 17}" y="${y - 63}" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="900" fill="#fff">${j + 1}</text>` : '') + '</g>'; });
 h += '</g>';
 h += `<path d="M${B.x + 6},${B.y + 92} L${B.x + B.w - 6},${B.y + 92} L${B.x + B.w - 24},${B.y + 150} L${B.x + 24},${B.y + 150} Z" fill="#B07B3A" stroke="#7A5128" stroke-width="5" stroke-linejoin="round" pointer-events="none"/>`;
-h += `<text x="${B.x + B.w / 2}" y="${B.y + 132}" text-anchor="middle" font-size="26" font-weight="900" fill="#FFF3DC" pointer-events="none">바구니</text><g id="a2Ghost"></g>`;
+h += `<text x="${B.x + B.w / 2}" y="${B.y + 132}" text-anchor="middle" font-size="26" font-weight="900" fill="#FFF3DC" pointer-events="none">바구니</text><g id="a2Ghost"></g>` + (Settings.data.a2ShowCount && a2.moved.length ? `<text id="a2BCount" x="${B.x + B.w / 2}" y="${B.y + 70}" text-anchor="middle" font-size="64" font-weight="900" fill="#2E8B3D" stroke="#fff" stroke-width="6" paint-order="stroke" pointer-events="none">${a2.moved.length}</text>` : '');
 svg.innerHTML = h;
 this.stat(`바구니에 ${a2.moved.length}${A2_ITEM[kind].unit}`);
 },
@@ -2324,7 +2353,7 @@ hup(e) {
 const d = this.drag; if (!d) return; this.drag = null;
 const p = this.pt(e), B = A2_BASKET;
 const inB = p.x > B.x - 10 && p.x < B.x + B.w + 10 && p.y > B.y - 10 && p.y < B.y + B.h + 10;
-if ((!d.moved || inB) && !a2.moved.includes(d.k)) { a2.moved.push(d.k); Sfx.kok(); }
+if ((!d.moved || inB) && !a2.moved.includes(d.k)) { a2.moved.push(d.k); Sfx.kok(); if (Settings.data.a2SpeakCount) Speech.say(countWord(a2.moved.length), { caption: false }); }
 this.drawHarvest();
 if (a2.moved.length === a2.n && a2.phase === 'harvest') { a2.phase = 'harvested'; this.later(() => this.showAsk(), 700); }
 },
@@ -2363,11 +2392,12 @@ foot.querySelector('#a2Clear').onclick = () => { a2.marks = []; Sfx.kok(); this.
 this.svg.addEventListener('pointerdown', e => {
 if (a2.phase !== 'practice') return; const g = e.target.closest && e.target.closest('[data-k]'); if (!g) return;
 const k = Number(g.getAttribute('data-k')), i = a2.marks.indexOf(k);
-if (i >= 0) a2.marks.splice(i, 1); else a2.marks.push(k);
+if (i >= 0) a2.marks.splice(i, 1); else { a2.marks.push(k); if (Settings.data.a2PracticeCount) { if (Settings.data.a2SpeakCount) Speech.say(countWord(a2.marks.length), { caption: false }); if (Settings.data.a2ShowCount) this.flash(a2.marks.length); } }
 Sfx.kok(); this.drawScene(true); this.updPractice();
 });
 Speech.say(`${it.name}을 하나씩 눌러서 표시하며 세어 봐요. 다 세면 숫자를 골라요`);
 },
+flash(n) { let f = document.getElementById('a2Flash'); if (!f) { f = document.createElement('div'); f.id = 'a2Flash'; this.root.appendChild(f); } f.textContent = n; clearTimeout(this._ft); this._ft = setTimeout(() => f.remove(), 900); },
 updPractice() { this.stat(`표시한 것 ${a2.marks.length}${A2_ITEM[a2.item].unit}`); },
 practiceAnswer(k, btn) {
 if (a2.phase !== 'practice' || this.lock) return; Sfx.unlock();
@@ -2421,12 +2451,16 @@ key: 'gamnamu.dalog.v1',
 list() { try { const a = JSON.parse(localStorage.getItem(this.key) || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; } },
 add(o) { try { const a = this.list(); a.push({ sid: o.sid == null ? null : Number(o.sid), act: o.act, sub: o.sub, stage: o.stage, ts: Date.now() }); localStorage.setItem(this.key, JSON.stringify(a.slice(-300))); return true; } catch (e) { return false; } }
 };
-function daSub() { const d = Settings.data, sid = a2Sid(); return (d.a2Subs && d.a2Subs[sid]) || d.a2Sub || '다-1'; }
-function daMode() {
-const d = Settings.data, sid = a2Sid();
-const assigned = sid != null && d.a2Subs && d.a2Subs[sid];
-if (!(assigned || (a2Level() === '다' && d.daOn === 'on'))) return null;
-return daSub() === '다-2' ? '다-2' : '다-1';
+function actOf() { return Router.cur === 'act2' ? 'a2' : 'a1'; }
+function a1Level() { const d = Settings.data, sid = a2Sid(); let lv = d.a1Level; if (sid != null && d.a1Levels && d.a1Levels[sid]) lv = d.a1Levels[sid]; return A2_LEVELS[lv] ? lv : '가'; }
+function daSub(act) { act = act || actOf(); const d = Settings.data, sid = a2Sid(), subs = act === 'a1' ? d.a1Subs : d.a2Subs; return (subs && subs[sid]) || (act === 'a1' ? d.a1Sub : d.a2Sub) || '다-1'; }
+function daMode(act) {
+act = act || actOf();
+const d = Settings.data, sid = a2Sid(), subs = act === 'a1' ? d.a1Subs : d.a2Subs;
+const assigned = sid != null && subs && subs[sid];
+const lv = act === 'a1' ? a1Level() : a2Level(), on = act === 'a1' ? d.a1DaOn : d.daOn;
+if (!(assigned || (lv === '다' && on === 'on'))) return null;
+return daSub(act) === '다-2' ? '다-2' : '다-1';
 }
 const daNum = (k, def) => { const v = Number(Settings.data[k]); return v > 0 ? v : def; };
 const Scan = {
@@ -2622,47 +2656,61 @@ gear.addEventListener('click', () => { if (Settings.data.gearHold !== 'on') this
 const stModal = document.getElementById('settings');
 if (stModal) stModal.onclick = e => { if (e.target === stModal) this.close(); };
 },
-open(adv) { this.armed = false; this.adv = !!adv; this.render(); document.getElementById('settings').classList.add('open'); Scan.pause(); },
+open(adv, act) { this.armed = false; this.adv = !!adv; this.act = act || (Router.cur === 'act2' ? 'a2' : 'a1'); this.render(); document.getElementById('settings').classList.add('open'); Scan.pause(); },
 close() { document.getElementById('settings').classList.remove('open'); Scan.resume(); },
 render() {
 const d = Settings.data, card = document.getElementById('settingsCard');
 const sw = key => `<button class="sw ${d[key] ? 'on' : ''}" data-tg="${key}" aria-pressed="${!!d[key]}"><i></i>${d[key] ? '켜짐' : '꺼짐'}</button>`;
 const steps = (key, list) => list.map(([v, l]) => `<button class="sb ${Math.abs(d[key] - v) < 1e-9 ? 'on' : ''}" data-step="${key}" data-v="${v}">${l}</button>`).join('');
 const row = (label, ctl, cls) => `<div class="srow ${cls || ''}"><span>${label}</span><div class="ctl">${ctl}</div></div>`;
-let h = `<h3>옵션${this.adv ? '<small>교사 고급 설정</small>' : ''}</h3><div class="grid">`
+const act = this.act || 'a1', A = act === 'a1';
+const opt = (label, key, list, wide) => row(label, list.map(([v, l]) => `<button class="sb ${String(d[key]) === String(v) ? 'on' : ''}" data-a2="${key}" data-v="${v}">${l}</button>`).join(''), wide ? 'wide' : '');
+const onoff = [['off', '끄기'], ['on', '켜기']];
+let h = `<h3>${A ? '활동1 옵션' : '활동2 옵션'}${this.adv ? '<small>교사 고급 설정</small>' : ''}</h3><div class="grid">`;
+if (A) {
+h += row('활동1 문제 수', steps('a1Total', [[3, '3'], [5, '5'], [7, '7'], [10, '10']]))
 + row('콕콕 찍을 때 하나·둘·셋 말하기', sw('speakCount'))
 + row('땅에 점선 동그라미 보이기', sw('showCircles'))
 + row('점 위에 숫자 보이기', sw('showNumbers'))
 + row('틀리면 점 자동 지우기', sw('autoClear'))
-+ row('음성 속도', steps('rate', [[0.7, '느리게'], [0.85, '보통'], [1.0, '빠르게']]))
-+ row('효과음 크기', steps('sfxVol', [[0.15, '작게'], [0.35, '보통'], [0.6, '크게']]))
 + row('점 크기', steps('dotPct', [[-20, '작게'], [0, '보통'], [20, '크게']]))
 + row('숫자 고정', steps('fixed', [[0, '무작위'], [1, '1'], [2, '2'], [3, '3'], [4, '4'], [5, '5']]), 'wide')
-+ row('활동1 문제 수', steps('a1Total', [[3, '3'], [5, '5'], [7, '7'], [10, '10']]))
-+ row('활동2 문제 수', steps('a2Total', [[3, '3'], [5, '5'], [7, '7'], [10, '10']]))
-+ row('⚙ 옵션 버튼', [['off', '한 번 누르기'], ['on', '2초 길게 누르기']].map(([v, l]) => `<button class="sb ${d.gearHold === v ? 'on' : ''}" data-a2="gearHold" data-v="${v}">${l}</button>`).join(''))
-+ row('다 수준 전용 활동(다 학생)', [['off', '끄기'], ['on', '켜기']].map(([v, l]) => `<button class="sb ${d.daOn === v ? 'on' : ''}" data-a2="daOn" data-v="${v}">${l}</button>`).join(''))
-+ row('다 세분(기본)', [['다-1', '다-1 독립'], ['다-2', '다-2 함께']].map(([v, l]) => `<button class="sb ${d.a2Sub === v ? 'on' : ''}" data-a2="a2Sub" data-v="${v}">${l}</button>`).join(''))
-+ row('스위치 스캔(Space/Enter)', [['off', '끄기'], ['on', '켜기']].map(([v, l]) => `<button class="sb ${d.daScan === v ? 'on' : ''}" data-a2="daScan" data-v="${v}">${l}</button>`).join(''))
-+ row('스캔 속도', [['1000', '빠름 1초'], ['1500', '보통 1.5초'], ['2500', '느림 2.5초']].map(([v, l]) => `<button class="sb ${String(d.daScanMs) === v ? 'on' : ''}" data-a2="daScanMs" data-v="${v}">${l}</button>`).join(''), 'wide')
-+ row('다-1 선택지 수', ['2', '3'].map(v => `<button class="sb ${String(d.daChoices1) === v ? 'on' : ''}" data-a2="daChoices1" data-v="${v}">${v}</button>`).join(''))
-+ row('다-2 선택지 수', [['1', '1(정답만)'], ['2', '2']].map(([v, l]) => `<button class="sb ${String(d.daChoices2) === v ? 'on' : ''}" data-a2="daChoices2" data-v="${v}">${l}</button>`).join(''))
-+ row('힌트 지연(다-2)', [['4000', '4초'], ['6000', '6초'], ['8000', '8초']].map(([v, l]) => `<button class="sb ${String(d.daHint) === v ? 'on' : ''}" data-a2="daHint" data-v="${v}">${l}</button>`).join(''))
-+ row('친구 시범(다-2)', [['off', '끄기'], ['on', '켜기']].map(([v, l]) => `<button class="sb ${d.daFriend === v ? 'on' : ''}" data-a2="daFriend" data-v="${v}">${l}</button>`).join(''))
-+ row('활동2 수준', ['가', '나', '다'].map(v => `<button class="sb ${d.a2Level === v ? 'on' : ''}" data-a2="a2Level" data-v="${v}">${v} (${A2_LEVELS[v][0]}~${A2_LEVELS[v][1]})</button>`).join(''))
-+ row('활동2 힌트 도움', [['none', '없음'], ['num', '순서 번호 표시'], ['ans', '정답 숫자 강조']].map(([v, l]) => `<button class="sb ${d.a2Hint === v ? 'on' : ''}" data-a2="a2Hint" data-v="${v}">${l}</button>`).join(''), 'wide')
-+ row('활동2 물건', [['both', '둘 다'], ['persimmon', '감만'], ['leaf', '나뭇잎만']].map(([v, l]) => `<button class="sb ${d.a2Item === v ? 'on' : ''}" data-a2="a2Item" data-v="${v}">${l}</button>`).join(''))
++ opt('활동1 수준(기본)', 'a1Level', ['가', '나', '다'].map(v => [v, v]))
++ opt('다 수준 전용 활동(다 학생)', 'a1DaOn', onoff)
++ opt('다 세분(기본)', 'a1Sub', [['다-1', '다-1 독립'], ['다-2', '다-2 함께']]);
+} else {
+h += row('활동2 문제 수', steps('a2Total', [[3, '3'], [5, '5'], [7, '7'], [10, '10']]))
++ opt('활동2 수준(기본)', 'a2Level', ['가', '나', '다'].map(v => [v, `${v} (${A2_LEVELS[v][0]}~${A2_LEVELS[v][1]})`]))
++ opt('활동2 힌트 도움', 'a2Hint', [['none', '없음'], ['num', '순서 번호 표시'], ['ans', '정답 숫자 강조']], true)
++ opt('활동2 물건', 'a2Item', [['both', '둘 다'], ['persimmon', '감만'], ['leaf', '나뭇잎만']])
++ row('담을 때 하나·둘·셋 말하기', sw('a2SpeakCount'))
++ row('바구니 위에 숫자 보이기', sw('a2ShowCount'))
++ row('연습 단계에도 세기 적용', sw('a2PracticeCount'))
++ opt('다 수준 전용 활동(다 학생)', 'daOn', onoff)
++ opt('다 세분(기본)', 'a2Sub', [['다-1', '다-1 독립'], ['다-2', '다-2 함께']]);
+}
+h += opt('스위치 스캔(Space/Enter)', 'daScan', onoff)
++ opt('스캔 속도', 'daScanMs', [['1000', '빠름 1초'], ['1500', '보통 1.5초'], ['2500', '느림 2.5초']], true)
++ opt('다-1 선택지 수', 'daChoices1', [['2', '2'], ['3', '3']])
++ opt('다-2 선택지 수', 'daChoices2', [['1', '1(정답만)'], ['2', '2']])
++ opt('힌트 지연(다-2)', 'daHint', [['4000', '4초'], ['6000', '6초'], ['8000', '8초']])
++ opt('친구 시범(다-2)', 'daFriend', onoff)
 + '</div>';
 if (this.adv) {
+const P = A ? 'a1' : 'a2';
 h += '<div class="grid">'
-+ row('음성 볼륨', `<input type="range" data-rg="volume" min="0" max="1" step="0.05" value="${d.volume}"><output>${Math.round(d.volume * 100)}</output>`)
-+ row('음성 속도(세밀)', `<input type="range" data-rg="rate" min="0.5" max="1.3" step="0.05" value="${d.rate}"><output>${Number(d.rate).toFixed(2)}</output>`)
-+ row('점 크기(세밀)', steps('dotPct', [[-40, '-40%'], [-20, '-20%'], [0, '0'], [20, '+20%'], [40, '+40%']]), 'wide')
-+ row('활동2 학생별 수준(눌러서 가→나→다)', [1, 2, 3, 4, 5, 6].map(i => `<button class="sb" data-a2s="${i}">${i}번 ${(d.a2Levels && d.a2Levels[i]) || '자동'}</button>`).join(''), 'wide')
-+ row('다 세분 학생별(눌러서 자동→다-1→다-2)', [1, 2, 3, 4, 5, 6].map(i => `<button class="sb" data-a2sub="${i}">${i}번 ${(d.a2Subs && d.a2Subs[i]) || '자동'}</button>`).join(''), 'wide')
-+ row('교사용 학생 관리', `<button class="sb on" id="sOpenRoster">학생 등록 화면 열기</button>`, 'wide')
++ row(`${A ? '활동1' : '활동2'} 학생별 수준(눌러서 가→나→다)`, [1, 2, 3, 4, 5, 6].map(i => `<button class="sb" data-lvs="${P}|${i}">${i}번 ${(d[P + 'Levels'] && d[P + 'Levels'][i]) || '자동'}</button>`).join(''), 'wide')
++ row(`${A ? '활동1' : '활동2'} 다 세분 학생별(자동→다-1→다-2)`, [1, 2, 3, 4, 5, 6].map(i => `<button class="sb" data-subs="${P}|${i}">${i}번 ${(d[P + 'Subs'] && d[P + 'Subs'][i]) || '자동'}</button>`).join(''), 'wide')
 + '</div>';
 }
+h += `<details class="scom" ${this.comOpen ? 'open' : ''}><summary>공통 설정 (양쪽 활동에 같이 적용)</summary><div class="grid">`
++ row('음성 속도', steps('rate', [[0.7, '느리게'], [0.85, '보통'], [1.0, '빠르게']]))
++ row('효과음 크기', steps('sfxVol', [[0.15, '작게'], [0.35, '보통'], [0.6, '크게']]))
++ opt('⚙ 옵션 버튼', 'gearHold', [['off', '한 번 누르기'], ['on', '2초 길게 누르기']], true);
+if (this.adv) h += row('음성 볼륨', `<input type="range" data-rg="volume" min="0" max="1" step="0.05" value="${d.volume}"><output>${Math.round(d.volume * 100)}</output>`)
++ row('음성 속도(세밀)', `<input type="range" data-rg="rate" min="0.5" max="1.3" step="0.05" value="${d.rate}"><output>${Number(d.rate).toFixed(2)}</output>`)
++ row('교사용 학생 관리', `<button class="sb on" id="sOpenRoster">학생 등록 화면 열기</button>`, 'wide');
+h += '</div></details>';
 const canRedo = Router.cur && Screens[Router.cur] && Screens[Router.cur].redo;
 h += '<div class="sfoot">' + (canRedo ? '<button class="sb" id="sRedo">지금 문제 다시</button>' : '') + '<button class="sb" id="sReset">기본값으로</button><button class="sb on" id="sClose" style="min-width:calc(var(--u)*20);font-size:calc(var(--u)*2.6)">닫기</button></div>';
 card.classList.toggle('adv', this.adv);
@@ -2671,8 +2719,9 @@ card.querySelectorAll('[data-tg]').forEach(b => b.onclick = () => { Settings.set
 card.querySelectorAll('[data-step]').forEach(b => b.onclick = () => { Settings.set(b.dataset.step, parseFloat(b.dataset.v)); this.render(); });
 card.querySelectorAll('[data-rg]').forEach(r => r.oninput = () => { const v = parseFloat(r.value); Settings.set(r.dataset.rg, v); r.nextElementSibling.textContent = r.dataset.rg === 'rate' ? v.toFixed(2) : Math.round(v * 100); });
 card.querySelectorAll('[data-a2]').forEach(b => b.onclick = () => { Settings.set(b.dataset.a2, b.dataset.v); this.render(); });
-card.querySelectorAll('[data-a2s]').forEach(b => b.onclick = () => { const k = b.dataset.a2s, m = Object.assign({}, Settings.data.a2Levels), o = ['', '가', '나', '다']; const c = o.indexOf(m[k] || ''); const nx = o[(c + 1) % 4]; if (nx) m[k] = nx; else delete m[k]; Settings.set('a2Levels', m); this.render(); });
-card.querySelectorAll('[data-a2sub]').forEach(b => b.onclick = () => { const k = b.dataset.a2sub, m = Object.assign({}, Settings.data.a2Subs), o = ['', '다-1', '다-2']; const nx = o[(o.indexOf(m[k] || '') + 1) % 3]; if (nx) m[k] = nx; else delete m[k]; Settings.set('a2Subs', m); this.render(); });
+card.querySelectorAll('[data-lvs]').forEach(b => b.onclick = () => { const [P, k] = b.dataset.lvs.split('|'), key = P + 'Levels', m = Object.assign({}, Settings.data[key]), o = ['', '가', '나', '다']; const nx = o[(o.indexOf(m[k] || '') + 1) % 4]; if (nx) m[k] = nx; else delete m[k]; Settings.set(key, m); this.render(); });
+card.querySelectorAll('[data-subs]').forEach(b => b.onclick = () => { const [P, k] = b.dataset.subs.split('|'), key = P + 'Subs', m = Object.assign({}, Settings.data[key]), o = ['', '다-1', '다-2']; const nx = o[(o.indexOf(m[k] || '') + 1) % 3]; if (nx) m[k] = nx; else delete m[k]; Settings.set(key, m); this.render(); });
+const dt = card.querySelector('.scom'); if (dt) dt.addEventListener('toggle', () => { this.comOpen = dt.open; });
 const roBtn = card.querySelector('#sOpenRoster');
 if (roBtn) roBtn.onclick = () => { this.close(); RosterManager.open(); };
 const rd = card.querySelector('#sRedo'); if (rd) rd.onclick = () => { this.close(); try { Screens[Router.cur].redo(); } catch (e) {} };
