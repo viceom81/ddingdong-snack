@@ -424,6 +424,9 @@ display:flex;flex-direction:column;align-items:center;justify-content:center;gap
 #act2 .a1tree{position:absolute;left:calc(var(--u)*2);top:calc(var(--u)*21);width:calc(var(--u)*25);height:calc(var(--u)*20.5);border-radius:calc(var(--u)*1.2);overflow:hidden;box-shadow:0 calc(var(--u)*.4) calc(var(--u)*1.2) rgba(0,0,0,.2)}
 #optGear{position:absolute;right:calc(var(--u)*.6);top:calc(var(--u)*.5);z-index:49;height:calc(var(--u)*2.7);padding:0 calc(var(--u)*1);font-size:calc(var(--u)*1.4);font-weight:800;border-radius:calc(var(--u)*1.4);background:#fff;border:calc(var(--u)*.2) solid #2E5E9E;color:#1B3F73;opacity:.85;box-shadow:0 calc(var(--u)*.2) calc(var(--u)*.5) rgba(0,0,0,.2);line-height:1}
 #optGear.off{display:none}
+#photoBtn{position:absolute;display:none;transform:translateX(-50%);z-index:48;gap:calc(var(--u)*.6);align-items:center}
+#photoBtn .btn{min-height:calc(var(--u)*2.8);padding:0 calc(var(--u)*1);font-size:calc(var(--u)*1.5);background:#fff;color:#1B3F73;border:calc(var(--u)*.2) solid #2E5E9E;white-space:nowrap}
+#a2Face,#faceReactionWrap{cursor:pointer}
 .smLv{flex-direction:column;gap:calc(var(--u)*1);align-items:stretch;padding:calc(var(--u)*.5) calc(var(--u)*1)}
 .smLv .lvt{font-size:calc(var(--u)*2);font-weight:900;color:#1B3F73}
 .smLv .lvrow{display:flex;gap:calc(var(--u)*.8);align-items:center;font-size:calc(var(--u)*1.9)}.smLv .lvrow b{min-width:calc(var(--u)*12)}
@@ -744,7 +747,16 @@ if (mirror) { ctx.translate(cw, 0); ctx.scale(-1, 1); }
 ctx.drawImage(src, 0, 0, w, h, 0, 0, cw, ch);
 return cv.toDataURL('image/jpeg', 0.82);
 },
-fromFile(file) {
+shrinkSquare(src, w, h, mirror) {
+const side = Math.min(w, h), sx = (w - side) / 2, sy = (h - side) * 0.4, OUT = 320;
+const cv = document.createElement('canvas'); cv.width = OUT; cv.height = OUT;
+const ctx = cv.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, OUT, OUT);
+try { ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high'; } catch (e) {}
+if (mirror) { ctx.translate(OUT, 0); ctx.scale(-1, 1); }
+ctx.drawImage(src, sx, sy, side, side, 0, 0, OUT, OUT);
+return cv.toDataURL('image/jpeg', 0.82);
+},
+fromFile(file, sq) {
 /* 큰 사진(수 MB)도 base64 변환 없이 object URL로 바로 디코드 → 400px로 축소. EXIF 회전은 브라우저가 적용(image-orientation:from-image) */
 return new Promise((resolve, reject) => {
 let url = null;
@@ -754,7 +766,7 @@ if (file && file.type && !/^image\//.test(file.type)) { reject(new Error('이미
 const img = new Image();
 img.onerror = () => { done(); reject(new Error('이미지 로드 실패')); };
 img.onload = () => {
-try { const w = img.naturalWidth || img.width, h = img.naturalHeight || img.height; resolve(this.shrink(img, w, h, false)); }
+try { const w = img.naturalWidth || img.width, h = img.naturalHeight || img.height; resolve(sq ? this.shrinkSquare(img, w, h, false) : this.shrink(img, w, h, false)); }
 catch (e) { reject(e); } finally { done(); }
 };
 url = URL.createObjectURL(file);
@@ -1190,6 +1202,7 @@ this.cur = name; state.screen = name;
 try { document.getElementById('optGear').classList.toggle('off', name === 'intro' || name === 'monitor'); } catch (e) {}
 try { document.getElementById('stage').classList.toggle('pm', state.mode === 'practice'); } catch (e) {}
 Screens[name].mount(div);
+try { Photo.refresh(); setTimeout(() => Photo.refresh(), 250); } catch (e) {}
 if (name === 'activity1' || name === 'a1da' || name === 'complete') BackGuard.arm();
 Screens[name].applySettings && Screens[name].applySettings();
 },
@@ -2045,10 +2058,11 @@ root.innerHTML = `
 <div class="regSide" id="regSide"></div>
 </div>
 <input type="file" id="regFileIn" accept="image/*" capture="user">`;
+if (this.frag) root.querySelector('h1').textContent = '사진을 찍어요';
 root.querySelector('#regFileIn').onchange = async e => {
 const f = e.target.files && e.target.files[0]; e.target.value = '';
 if (!f) return;
-try { this.photo = await MyFace.fromFile(f); this.show('confirm'); }
+try { this.photo = await MyFace.fromFile(f, !!this.frag); this.show('confirm'); }
 catch (err) { showGlobalToast('사진을 읽지 못했어요. 다시 골라 주세요.'); }
 };
 /* 가상 키보드가 열리면(visualViewport가 줄면) 사진을 숨겨 입력칸·저장 버튼이 보이게 */
@@ -2065,7 +2079,7 @@ this.show('camera');
 unmount() {
 this.seq++; this.stopCam(); clearTimeout(this.fileTimer);
 try { window.visualViewport && window.visualViewport.removeEventListener('resize', this.vvHandler); } catch (e) {}
-this.root = null;
+this.root = null; this.frag = null;
 },
 stopCam() {
 try { if (this.stream) this.stream.getTracks().forEach(t => t.stop()); } catch (e) {}
@@ -2078,6 +2092,7 @@ if (state.screen !== 'register' || !this.root || this.step !== 'camera') return;
 if (document.hidden) { this.seq++; this.stopCam(); }
 else if (!this.stream) this.show('camera');
 },
+skipBtn() { if (this.frag && this.frag.first) return this.btn('건너뛰기', 'sec', () => { try { localStorage.setItem(state.photoAskKey, '1'); } catch (e) {} this.saveAndStart({ photo: '', name: state.fragName || '' }); }, 'regNoPhotoBtn'); return this.frag ? this.btn('돌아가기', 'sec', () => Router.go(this.frag.ret), 'regNoPhotoBtn') : this.btn('사진 없이 시작', 'sec', () => this.saveAndStart({ photo: '', name: '', skipped: true }), 'regNoPhotoBtn'); },
 say(t) { Speech.say(t); const s = this.root && this.root.querySelector('#regSub'); if (s) s.textContent = t; },
 btn(txt, cls, fn, id) {
 const b = document.createElement('button'); b.className = 'btn ' + (cls || ''); b.innerHTML = txt; if (id) b.id = id; b.onclick = () => { Sfx.unlock(); fn(); }; return b;
@@ -2107,7 +2122,7 @@ video.muted = true; video.autoplay = true; video.playsInline = true;
 view.appendChild(video);
 const guide = document.createElement('div'); guide.className = 'guide'; view.appendChild(guide);
 side.appendChild(this.btn('찰칵', 'big', () => this.snap(), 'regSnapBtn'));
-side.appendChild(this.btn('사진 없이 시작', 'sec', () => this.saveAndStart({ photo: '', name: '', skipped: true }), 'regNoPhotoBtn'));
+side.appendChild(this.skipBtn());
 this.say('얼굴을 보고 찰칵을 눌러요');
 /* 권한 창이 오래 떠 있거나 카메라가 안 켜지면 「사진 고르기」도 함께 보여 줌 */
 this.fileTimer = setTimeout(() => {
@@ -2129,11 +2144,11 @@ const msg = info || this.camErrorText(null);
 const m = document.createElement('div'); m.className = 'msg'; m.textContent = msg; m.style.whiteSpace = 'pre-line'; view.appendChild(m);
 side.appendChild(this.btn('사진 고르기', 'file', () => this.root.querySelector('#regFileIn').click(), 'regFileBtn'));
 side.appendChild(this.btn('다시 해 보기', 'sec', () => this.show('camera'), 'regRetryCamBtn'));
-side.appendChild(this.btn('사진 없이 시작', 'sec', () => this.saveAndStart({ photo: '', name: '', skipped: true }), 'regNoPhotoBtn'));
+side.appendChild(this.skipBtn());
 this.say(msg.replace(/\n/g, ' '));
 } else if (step === 'confirm') {
 const img = document.createElement('img'); img.alt = ''; img.src = this.photo; view.appendChild(img);
-side.appendChild(this.btn('이 사진으로', 'ok', () => this.show('name'), 'regUseBtn'));
+side.appendChild(this.btn('이 사진으로', 'ok', () => this.frag ? this.saveAndStart({ photo: this.photo, name: state.fragName || '' }) : this.show('name'), 'regUseBtn'));
 side.appendChild(this.btn('다시 찍기', 'sec', () => this.show('camera'), 'regRetakeBtn'));
 this.say('이 사진이 마음에 들어요?');
 } else if (step === 'name') {
@@ -2156,7 +2171,7 @@ snap() {
 const video = this.root && this.root.querySelector('video');
 if (!video || !video.videoWidth) { showGlobalToast('카메라가 아직 준비 중이에요'); return; }
 try {
-this.photo = MyFace.shrink(video, video.videoWidth, video.videoHeight, true);
+this.photo = this.frag ? MyFace.shrinkSquare(video, video.videoWidth, video.videoHeight, true) : MyFace.shrink(video, video.videoWidth, video.videoHeight, true);
 Sfx.kok();
 this.show('confirm');
 } catch (e) { showGlobalToast('사진을 찍지 못했어요'); }
@@ -2166,9 +2181,10 @@ if (this.saving || !this.root) return; this.saving = true;
 Speech.stop();
 try { const a = document.activeElement; a && a.blur && a.blur(); } catch (e) {}
 try { await MyFace.save(obj, state.practiceStudentId); } catch (e) {}
+if (this.frag && state.photoAskKey) { try { localStorage.setItem(state.photoAskKey, '1'); } catch (e) {} }
 this.saving = false;
 this.stopCam();
-if (state.screen === 'register') Router.go('activity1');
+if (state.screen === 'register') Router.go(this.frag ? this.frag.ret : 'activity1');
 }
 };
 document.addEventListener('visibilitychange', () => { try { Screens.register.onVisibility(); } catch (e) {} });
@@ -2688,6 +2704,36 @@ Router.register('a1da', Screens.a1da);
 
 
 
+/* ---------- 폰 사진 (QR practice): 사진은 이 기기에만 '학생번호+이름' 키로 저장, 서버·Firebase·QR·URL로는 절대 보내지 않음 ---------- */
+const Photo = {
+on() { return state.mode === 'practice' && !!state.fragName && state.practiceStudentId != null; },
+has() { return !!(state.myFace && state.myFace.photo); },
+src() { const m = state.myFace; return (m && m.photo) || initialAvatar(state.fragName || '', state.practiceStudentId); },
+refresh() {
+const b = document.getElementById('photoBtn'); if (!b) return;
+const show = this.on() && ['activity1', 'a1da', 'act2', 'complete'].includes(state.screen);
+b.style.display = show ? 'flex' : 'none'; if (!show) return;
+b.querySelector('#photoTake').textContent = this.has() ? '📷 다시 찍기' : '📷 사진 찍기';
+b.querySelector('#photoDel').style.display = this.has() ? '' : 'none';
+const f = document.querySelector('#a2Face, #faceReactionWrap, .compAvatar'), st = document.getElementById('stage').getBoundingClientRect();
+if (f) { const r = f.getBoundingClientRect(), hw = (b.offsetWidth || 160) / 2; b.style.left = Math.max(hw + 4, Math.min(st.width - hw - 4, r.left + r.width / 2 - st.left)) + 'px'; b.style.top = (r.bottom - st.top + 6) + 'px'; }
+else { b.style.left = '12%'; b.style.top = '9%'; }
+},
+paint() {
+const i = document.querySelector('#a2Face img'); if (i) i.src = this.src();
+const im = document.querySelector('#faceReactionWrap image'); if (im) im.setAttribute('href', this.src());
+const c = document.querySelector('.compAvatar img'); if (c) c.src = this.src();
+},
+open() { if (!this.on()) return; Sfx.unlock(); Screens.register.frag = { ret: state.screen === 'a1da' ? 'activity1' : state.screen }; Router.go('register'); },
+async del() { if (!this.on()) return; await MyFace.save({ photo: '', name: state.fragName, skipped: false }, state.practiceStudentId); this.paint(); this.refresh(); },
+init() {
+const st = document.getElementById('stage');
+const b = document.createElement('div'); b.id = 'photoBtn'; b.innerHTML = '<button type="button" id="photoTake" class="btn"></button><button type="button" id="photoDel" class="btn">🗑 지우기</button>'; st.appendChild(b);
+b.querySelector('#photoTake').onclick = () => this.open(); b.querySelector('#photoDel').onclick = () => this.del();
+st.addEventListener('click', e => { if (this.on() && e.target.closest && e.target.closest('#a2Face,#faceReactionWrap')) this.open(); });
+}
+};
+
 /* ---------- 실시간 연동 (Firebase Realtime Database compat). 설정이 없으면 전부 꺼진 채 오프라인으로 정상 동작.
    전송 항목: 학생 번호, 활동, 단계, 정답률, 문항 수, 도움 단계, 시각. 이름·사진·얼굴은 절대 전송하지 않음. ---------- */
 const FB_VER = '10.12.2';
@@ -2926,6 +2972,7 @@ Settings.load();
 Speech.init();
 Router.init();
 Options.init();
+Photo.init();
 RosterManager.init();
 const unlockOnce = () => { Sfx.unlock(); Speech.unlock(); document.removeEventListener('pointerdown', unlockOnce, true); };
 document.addEventListener('pointerdown', unlockOnce, true);
@@ -2951,14 +2998,18 @@ const fh = new URLSearchParams(location.hash.replace(/^#/, '')), fnm = (fh.get('
 if (fnm) { /* 칠판 명단의 번호·이름을 그대로 사용. 이 기기의 얼굴 사진은 같은 번호·같은 이름으로 저장된 경우에만 표시 */
 const mf = state.myFace;
 state.myFace = { photo: (mf && !mf.skipped && mf.name === fnm && mf.photo) ? mf.photo : '', name: fnm, skipped: false, ts: 0 };
-state.fragName = fnm;
+state.fragName = fnm; state.photoAskKey = `gamnamu.photoAsked.${sNum}.${fnm}`;
 const L = ['가', '나', '다', '다-1', '다-2'], l1 = fh.get('l1'), l2 = fh.get('l2'), hh = fh.get('h');
 if (L.includes(l1)) setStuLevel('a1', sNum, l1); if (L.includes(l2)) setStuLevel('a2', sNum, l2);
 if (['none', 'num', 'ans'].includes(hh)) Settings.set('a2Hint', hh);
 }
 const act = params.get('a'), room = params.get('r');
 if (room && /^\d{4}$/.test(room)) Live.startStudent(sNum, FB_DEFAULT, room);
-if (act === '2') Router.go('act2');
+let asked = false; try { asked = !!localStorage.getItem(state.photoAskKey || ''); } catch (e) {}
+const tgt = act === '2' ? 'act2' : 'activity1';
+if (state.fragName && !state.myFace.photo && !asked) { Screens.register.frag = { ret: tgt, first: true }; Router.go('register'); }
+else if (state.fragName) Router.go(tgt);
+else if (act === '2') Router.go('act2');
 else Router.go(state.myFace ? 'activity1' : 'register');
 }
 } else if (params.get('screen') === 'act2') {
