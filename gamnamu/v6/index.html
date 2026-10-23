@@ -31,8 +31,8 @@ opacity:0;transition:opacity .25s;z-index:80;box-shadow:0 calc(var(--u)*.3) calc
 
 /* ---------- 도입 ---------- */
 #intro{background:linear-gradient(#FBF6EA,#F2E9D5)}
-#intro h1{position:absolute;left:0;right:0;top:calc(var(--u)*1.4);margin:0;text-align:center;
-font-size:calc(var(--u)*5.2);font-weight:900;letter-spacing:-.02em}
+#intro h1{position:absolute;left:calc(var(--u)*25);right:calc(var(--u)*31);top:calc(var(--u)*1.4);margin:0;text-align:center;white-space:nowrap;
+font-size:calc(var(--u)*4.6);font-weight:900;letter-spacing:-.02em}
 #openRosterBtn{position:absolute;right:calc(var(--u)*3);top:calc(var(--u)*2);min-height:calc(var(--u)*4.2);
 padding:0 calc(var(--u)*1.5);background:#E3EEFF;border:calc(var(--u)*.25) solid #2E5E9E;color:#1B3F73;
 font-size:calc(var(--u)*1.85);border-radius:calc(var(--u)*1);z-index:5}
@@ -432,28 +432,48 @@ display:flex;flex-direction:column;align-items:center;justify-content:center;gap
 .smLv .lvrow{display:flex;gap:calc(var(--u)*.8);align-items:center;font-size:calc(var(--u)*1.9)}.smLv .lvrow b{min-width:calc(var(--u)*12)}
 .smLv .lvb{min-width:calc(var(--u)*8);min-height:calc(var(--u)*5);font-size:calc(var(--u)*2.2);padding:0 calc(var(--u)*1);background:#E8EEF7;color:#1B3F73}.smLv .lvb.on{background:#2E5E9E;color:#fff}
 .smLv .lvnote{font-size:calc(var(--u)*1.5);color:#667}
-#monitor .mnote{position:absolute;left:calc(var(--u)*1.2);right:calc(var(--u)*1.2);top:calc(var(--u)*6);bottom:calc(var(--u)*1.2);background:rgba(255,255,255,.96);z-index:3;border-radius:calc(var(--u)*1.4);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--u)*2);text-align:center}
+#monitor{position:absolute;inset:0;font-family:inherit;color:#3b2412;background:linear-gradient(#ffe9b8 0%,#ffd48a 55%,#f3b45e 100%);overflow:hidden}
+#monitor header{position:relative;z-index:6;height:calc(var(--u)*5.102);display:flex;align-items:center;padding:0 calc(var(--u)*1.531);gap:calc(var(--u)*0.893);background:#5a3418;border-bottom:calc(var(--u)*0.383) solid #8a5a2b;color:#fff3d6}
+#monitor header h1{pointer-events:none;font-size:calc(var(--u)*2.423);font-weight:900;letter-spacing:-calc(var(--u)*0.064);flex:1;display:flex;align-items:center;gap:calc(var(--u)*0.765);margin:0;white-space:nowrap}
+#monitor header h1 small{font-size:calc(var(--u)*1.403);font-weight:700;color:#ffd98a;background:#3d2210;padding:calc(var(--u)*0.255) calc(var(--u)*0.893);border-radius:calc(var(--u)*1.276)}
+#monitor .tb{font-size:calc(var(--u)*1.786);font-weight:900;font-family:inherit;border:0;border-radius:calc(var(--u)*1.020);padding:0 calc(var(--u)*1.658);height:calc(var(--u)*3.571);min-height:0;background:#fff3d6;color:#5a3418;box-shadow:0 calc(var(--u)*0.255) 0 #b88a4a;white-space:nowrap;cursor:pointer}
+#monitor .tb.live{background:#2f8f46;color:#fff;box-shadow:0 calc(var(--u)*0.255) 0 #1d6030}
+#monitor .mgrid{position:relative;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr;gap:calc(var(--u)*0.893);padding:calc(var(--u)*0.893) calc(var(--u)*1.148);height:calc(100% - calc(var(--u)*5.485))}
+#monitor .mz{position:relative;border-radius:calc(var(--u)*1.658);background:linear-gradient(#fffaf0,#fff0cf);border:calc(var(--u)*0.319) solid #8a5a2b;box-shadow:0 calc(var(--u)*0.383) 0 #6b4220;overflow:hidden;display:flex;flex-direction:column;gap:calc(var(--u)*0.191);padding:calc(var(--u)*0.319) calc(var(--u)*0.765) calc(var(--u)*0.510);min-height:0}
+#monitor .mz.off{filter:grayscale(.85);background:#e6e0d6;border-color:#8f857a}
+#monitor .top{display:flex;align-items:center;gap:calc(var(--u)*0.510);height:calc(var(--u)*2.934)}
+#monitor .av{width:calc(var(--u)*2.679);height:calc(var(--u)*2.679);border-radius:50%;background:#e3d3b4;border:calc(var(--u)*0.191) solid #fff;box-shadow:0 0 0 calc(var(--u)*0.191) #8a5a2b;overflow:hidden;flex:none}
+#monitor .av img{width:100%;height:100%;object-fit:cover}
+#monitor .mn{font-size:calc(var(--u)*2.168);font-weight:900;line-height:1;white-space:nowrap}
+#monitor .mname{font-size:calc(var(--u)*1.276);font-weight:800;color:#6d4a2a;max-width:calc(var(--u)*8.291);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#monitor .chip{white-space:nowrap;font-size:calc(var(--u)*1.148);font-weight:900;padding:calc(var(--u)*0.128) calc(var(--u)*0.702);border-radius:calc(var(--u)*1.276);color:#fff;display:flex;align-items:center;gap:calc(var(--u)*0.383)}
+#monitor .chip i{width:calc(var(--u)*0.765);height:calc(var(--u)*0.765);border-radius:50%;background:#fff}
+#monitor .chip.on{background:#23813d}#monitor .chip.offc{background:#6c6c6c}
+#monitor .hint{margin-left:auto;white-space:nowrap;font-size:calc(var(--u)*1.148);font-weight:900;padding:calc(var(--u)*0.191) calc(var(--u)*0.765);border-radius:calc(var(--u)*1.276);background:#ffe3a0;color:#7a4a00;border:calc(var(--u)*0.128) solid #d9a441;max-width:calc(var(--u)*12.117);overflow:hidden;text-overflow:ellipsis}
+#monitor .cc{display:flex;align-items:center;gap:calc(var(--u)*0.765);height:calc(var(--u)*4.209);border:calc(var(--u)*0.319) solid var(--c);border-radius:calc(var(--u)*1.020);background:#fff;padding:0 calc(var(--u)*0.893)}
+#monitor .cct{font-size:calc(var(--u)*3.316);font-weight:900;line-height:1;color:var(--c);white-space:nowrap}#monitor .cct em{font-style:normal;margin-left:calc(var(--u)*0.383)}
+#monitor .ccn{font-size:calc(var(--u)*1.658);font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#monitor .track{display:flex;gap:calc(var(--u)*0.255);align-items:flex-end;height:calc(var(--u)*3.954);margin:calc(var(--u)*0.319) 0 calc(var(--u)*0.446)}
+#monitor .nd{flex:1;height:calc(var(--u)*3.189);border-radius:calc(var(--u)*0.574);background:var(--c);color:var(--t);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;opacity:.45}
+#monitor .nd.dn{opacity:.8}
+#monitor .nd .gl{font-size:calc(var(--u)*1.276);font-weight:900;height:calc(var(--u)*1.339)}#monitor .nd b{font-size:calc(var(--u)*1.403);font-weight:900}
+#monitor .nd.cur{opacity:1;flex:1.5;height:calc(var(--u)*3.954);box-shadow:0 0 0 calc(var(--u)*0.255) #fff,0 0 0 calc(var(--u)*0.510) #3b2412;position:relative;z-index:2}
+#monitor .nd.cur .gl{font-size:calc(var(--u)*1.531);height:calc(var(--u)*1.594)}#monitor .nd.cur b{font-size:calc(var(--u)*1.913)}
+#monitor .tl{display:flex;justify-content:space-between;font-size:calc(var(--u)*1.020);font-weight:800;color:#6d4a2a}
+#monitor .mid{display:flex;align-items:center;gap:calc(var(--u)*0.383)}
+#monitor .sc{white-space:nowrap;font-size:calc(var(--u)*2.041);font-weight:900;color:#b24a00;line-height:1}#monitor .sc small{font-size:calc(var(--u)*1.276);color:#6d4a2a}
+#monitor .help{white-space:nowrap;font-size:calc(var(--u)*1.276);font-weight:800;display:flex;align-items:center;gap:calc(var(--u)*0.383);color:#4b2f18;height:calc(var(--u)*1.531)}
+#monitor .dot{width:calc(var(--u)*1.212);height:calc(var(--u)*1.212);border-radius:50%;border:calc(var(--u)*0.191) solid #9a6a35;background:#fff}#monitor .dot.f{background:#e0483a;border-color:#a8281c}
+#monitor .btns{display:grid;grid-template-columns:1fr 1fr;gap:calc(var(--u)*0.765);margin-top:auto;height:calc(var(--u)*3.444)}
+#monitor .btns .btn{border:0;border-radius:calc(var(--u)*1.020);font-size:calc(var(--u)*1.913);font-weight:900;font-family:inherit;color:#fff;cursor:pointer;white-space:nowrap;min-height:0;padding:0}
+#monitor .btns .btn.mup{background:#d9480f;box-shadow:0 calc(var(--u)*0.319) 0 #8f2f06}#monitor .btns .btn.mdn{background:#2b6ca3;box-shadow:0 calc(var(--u)*0.319) 0 #184368}
+#monitor .btns .btn:disabled{background:#9c958b;box-shadow:0 calc(var(--u)*0.319) 0 #6f6a63;cursor:default}
+#monitor .mnote{position:absolute;left:calc(var(--u)*1.2);right:calc(var(--u)*1.2);top:calc(var(--u)*5.4);bottom:calc(var(--u)*1.2);background:rgba(255,255,255,.96);z-index:3;border-radius:calc(var(--u)*1.4);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--u)*2);text-align:center}
 #monitor .mnote h2{font-size:calc(var(--u)*5);color:#C0392B;margin:0}#monitor .mnote p{font-size:calc(var(--u)*2.2);margin:0;color:#1B3F73}
 #monitor .mnote .btn{min-height:calc(var(--u)*6);font-size:calc(var(--u)*2.6);padding:0 calc(var(--u)*3);background:#2E5E9E;color:#fff}
 #mcfgModal ol{margin:0;padding-left:calc(var(--u)*2.4);font-size:calc(var(--u)*1.6);line-height:1.5}#mcfgModal code{background:#EEF;padding:0 .3em;font-size:calc(var(--u)*1.4)}
-#introMon{position:absolute;right:calc(var(--u)*16);top:calc(var(--u)*3.6);min-height:calc(var(--u)*4.2);padding:0 calc(var(--u)*1.6);font-size:calc(var(--u)*1.8);background:#1B3F73;color:#fff}
-#monitor{position:absolute;inset:0;background:#EEF3FA;padding:calc(var(--u)*1.2)}
-#monitor h1{pointer-events:none;position:absolute;left:0;right:0;top:calc(var(--u)*.6);text-align:center;font-size:calc(var(--u)*3.4);margin:0;color:#1B3F73}
-#monitor .mtop{z-index:6;position:absolute;left:calc(var(--u)*7);top:calc(var(--u)*1.2);display:flex;gap:calc(var(--u)*1)}
-#monitor .mtop .btn,#monitor .mcfg{min-height:calc(var(--u)*3.8);font-size:calc(var(--u)*1.7);padding:0 calc(var(--u)*1.4)}
-#monitor .mcfg{z-index:6;position:absolute;right:calc(var(--u)*1.2);top:calc(var(--u)*1.2)}
-#monitor .mgrid{position:absolute;left:calc(var(--u)*1.2);right:calc(var(--u)*1.2);top:calc(var(--u)*6);bottom:calc(var(--u)*1.2);display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:calc(var(--u)*1)}
-#monitor .mz{background:#fff;border-radius:calc(var(--u)*1.4);border:calc(var(--u)*.25) solid #C9D6EA;padding:calc(var(--u)*1);display:flex;flex-direction:column;gap:calc(var(--u)*.2);font-size:calc(var(--u)*1.6);overflow:hidden}
-#monitor .mz.on{border-color:#2E8B3D;background:#F4FBF4}
-#monitor .mz .mh{display:flex;align-items:center;gap:calc(var(--u)*.8);font-size:calc(var(--u)*2.6);font-weight:900;color:#1B3F73}
-#monitor .mz .mh img{width:calc(var(--u)*3.4);height:calc(var(--u)*3.4);border-radius:50%;object-fit:cover}
-#monitor .mz .mdot{width:calc(var(--u)*1.4);height:calc(var(--u)*1.4);border-radius:50%;background:#aab;margin-left:auto}
-#monitor .mz.on .mdot{background:#2E8B3D}
-#monitor .mz b{font-size:calc(var(--u)*1.9)}
-#monitor .mz .mbtns{margin-top:auto;display:flex;gap:calc(var(--u)*.8)}
-#monitor .mz .mbtns .btn{flex:1;min-height:calc(var(--u)*4);font-size:calc(var(--u)*1.9);background:#2E5E9E;color:#fff;padding:0}
-#monitor .mz .mbtns .btn:disabled{opacity:.35}
-#mcfgModal{position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:5}
+#introMon{position:absolute;right:calc(var(--u)*15);top:calc(var(--u)*3.6);min-height:calc(var(--u)*4.2);padding:0 calc(var(--u)*1.2);font-size:calc(var(--u)*1.6);background:#1B3F73;color:#fff}
+#mcfgModal{z-index:20;position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:5}
 #mcfgModal .box{background:#fff;border-radius:calc(var(--u)*1.6);padding:calc(var(--u)*2);width:calc(var(--u)*70);display:flex;flex-direction:column;gap:calc(var(--u)*1);font-size:calc(var(--u)*1.8)}
 #mcfgModal textarea{width:100%;height:calc(var(--u)*16);font-size:calc(var(--u)*1.5);font-family:monospace}
 #mcfgModal .row{display:flex;gap:calc(var(--u)*1);justify-content:flex-end}
@@ -1016,7 +1036,7 @@ return `<svg viewBox="0 0 ${total} ${total}" shape-rendering="crispEdges" xmlns=
 /* ---------- 설정 (localStorage, 실패해도 동작) ---------- */
 const SETTINGS_KEY = 'gamnamu.settings.v1';
 const SETTINGS_KEY_A1 = 'gamnamu.settings.a1.v1';
-const A1_KEYS = ['a1Total', 'a1Sub', 'a1Subs', 'a1Level', 'a1Levels', 'a1DaOn'];
+const A1_KEYS = ['a1Total', 'a1Sub', 'a1Subs', 'a1Level', 'a1Levels', 'a1Stages', 'a1DaOn'];
 const DEFAULTS = {
 speakCount: true, // 터치할 때마다 "하나, 둘…" 음성
 showNumbers: false, // 점 위 숫자 표시
@@ -1027,7 +1047,7 @@ dotPct: 0, // 점 크기 증감(%) -40~+40
 fixed: 0, // 0=무작위, 1~5=숫자 고정
 autoClear: true, // 오류 시 점 자동 지움
 showCircles: false, // 땅에 점선
-a1Total: 10, a2Total: 5, daOn: 'off', gearHold: 'off', a2Sub: '다-1', a2Subs: {}, daScan: 'off', daScanMs: '1500', daChoices1: '2', daChoices2: '1', daHint: '6000', daFriend: 'off', a2Level: '가', a2Item: 'both', a2Hint: 'num', a2Levels: {}, a1Sub: '다-1', a1Subs: {}, a1Level: '가', a1Levels: {}, a1DaOn: 'off', a2SpeakCount: false, a2ShowCount: false, a2PracticeCount: false
+a1Total: 10, a2Total: 5, daOn: 'off', gearHold: 'off', a2Sub: '다-1', a2Subs: {}, daScan: 'off', daScanMs: '1500', daChoices1: '2', daChoices2: '1', daHint: '6000', daFriend: 'off', a2Level: '가', a2Item: 'both', a2Hint: 'num', a2Levels: {}, a2Ranges: {}, a1Sub: '다-1', a1Subs: {}, a1Level: '가', a1Levels: {}, a1Stages: {}, a1DaOn: 'off', a2SpeakCount: false, a2ShowCount: false, a2PracticeCount: false
 };
 const Settings = {
 data: Object.assign({}, DEFAULTS),
@@ -2253,6 +2273,17 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect
 return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
 }
 function a2Sid() { return state.mode === 'board' && state.activeStudent ? state.activeStudent.id : state.mode === 'practice' ? state.practiceStudentId : null; }
+/* 단계(1~6) 매핑표 — 모니터 ▲▼ 명령 → 학생 기기 설정
+   단계  표시           활동2 범위   다-모드  수준  저장 위치
+    1   다 · 색 짝짓기    1~2        다-2     다    a2Subs[번호]='다-2', a2Levels[번호]='다'
+    2   다 · 모양 짝짓기  1~2        다-1     다    a2Subs[번호]='다-1', a2Levels[번호]='다'
+    3   나 · 1~2개        1~2        -        나    a2Subs 삭제, a2Levels='나', a2Ranges[번호]=[1,2]
+    4   나 · 3개          1~3        -        나    a2Subs 삭제, a2Levels='나', a2Ranges 삭제(나=1~3)
+    5   가 · 4~5개        1~4        -        가    a2Subs 삭제, a2Levels='가', a2Ranges[번호]=[1,4]
+    6   가 · 숫자 찾기    1~5        -        가    a2Subs 삭제, a2Levels='가', a2Ranges 삭제(가=1~5)
+   활동1은 범위가 없어 다-모드(1·2)와 수준(3~6 → 다/나/가)만 반영. 학생 상태의 level은 단계 번호(숫자), lv는 기존 문자. */
+function a2Range() { const r = (Settings.data.a2Ranges || {})[a2Sid()]; return (Array.isArray(r) && r.length === 2) ? r : A2_LEVELS[a2Level()]; }
+function stageOf(P) { const m = daMode(P); if (m) return m === '다-2' ? 1 : 2; if (P === 'a1') { const lv = a1Level(), g = (Settings.data.a1Stages || {})[a2Sid()]; if (g >= 3 && g <= 6 && (g <= 4 ? (g === 3 ? lv === '다' || lv === '나' : lv === '나') : lv === '가')) return g; return lv === '다' ? 3 : lv === '나' ? 4 : 6; } const hi = a2Range()[1]; return hi <= 2 ? 3 : hi === 3 ? 4 : hi === 4 ? 5 : 6; }
 function a2Level() {
 const d = Settings.data; let lv = d.a2Level; const sid = a2Sid();
 if (sid != null && d.a2Levels && d.a2Levels[sid]) lv = d.a2Levels[sid];
@@ -2284,7 +2315,7 @@ unmount() { this.timers.forEach(clearTimeout); this.timers = []; Scan.stop(); Da
 mount(root) { this.root = root; this.startSession(); },
 startSession() {
 this.timers.forEach(clearTimeout); this.timers = [];
-const [lo, hi] = daMode() ? [1, 2] : A2_LEVELS[a2Level()];
+const [lo, hi] = daMode() ? [1, 2] : a2Range();
 a2.total = a2TotalOpt(); a2.queue = a2Queue(lo, hi, a2.total); a2.idx = 0; a2.results = [];
 const its = a2Items(), st = its[Math.floor(Math.random() * its.length)];
 a2.items = a2.queue.map((_, i) => its.length === 1 ? its[0] : (i % 2 === 0 ? st : (st === 'leaf' ? 'persimmon' : 'leaf')));
@@ -2292,7 +2323,7 @@ this.setRound();
 },
 setRound() { a2.n = a2.queue[a2.idx]; a2.item = a2.items[a2.idx]; a2.tries = 0; this._sig = this.sigNow(); this._fut = this.futNow(); if (daMode()) { this.daRound(); return; } this.showHarvest(true); },
 sigNow() { const d = Settings.data; return [daMode(), d.daChoices1, d.daChoices2, d.daHint, d.daScan, d.daScanMs].join('|'); },
-futNow() { const d = Settings.data, r = daMode() ? [1, 2] : A2_LEVELS[a2Level()]; return [a2TotalOpt(), r.join('-'), d.a2Item].join('|'); },
+futNow() { const d = Settings.data, r = daMode() ? [1, 2] : a2Range(); return [a2TotalOpt(), r.join('-'), d.a2Item].join('|'); },
 redo() { if (a2.phase === 'order' || !this.root) return; this.setRound(); },
 applySettings() {
 if (!this.root || this._sig === undefined) return;
@@ -2301,7 +2332,7 @@ if (a2.phase === 'harvest' && this.svg && !!document.getElementById('a2BCount') 
 if (live && this._sig !== this.sigNow()) { this.setRound(); return; }
 if (this._fut !== this.futNow()) {
 this._fut = this.futNow();
-const T = a2TotalOpt(), [lo, hi] = daMode() ? [1, 2] : A2_LEVELS[a2Level()], cur = a2.idx;
+const T = a2TotalOpt(), [lo, hi] = daMode() ? [1, 2] : a2Range(), cur = a2.idx;
 a2.total = Math.max(T, cur + 1);
 const head = a2.queue.slice(0, cur + 1), hi_ = a2.items.slice(0, cur + 1);
 const q = a2Queue(lo, hi, Math.max(1, a2.total)).slice(0, a2.total - head.length);
@@ -2311,12 +2342,12 @@ while (items.length < a2.total) { const prev = items[items.length - 1]; items.pu
 a2.items = items;
 if (!its.includes(a2.items[cur + 1]) && cur + 1 < a2.total && its.length === 1) a2.items[cur + 1] = its[0];
 if (this._line !== undefined && this.root.querySelector('#a2Stat')) this.stat(this._line);
-const lv = this.root.querySelector('.a2lv'); if (lv) { const r = A2_LEVELS[a2Level()]; lv.textContent = daMode() ? `수준 다 · ${daMode()}` : `수준 ${a2Level()} · ${r[0]}~${r[1]}`; }
+const lv = this.root.querySelector('.a2lv'); if (lv) { const r = a2Range(); lv.textContent = daMode() ? `수준 다 · ${daMode()}` : `수준 ${a2Level()} · ${r[0]}~${r[1]}`; }
 }
 },
 shell(title, hideNav) {
 Scan.stop(); DaHint.stop();
-const lv = a2Level(), r = A2_LEVELS[lv];
+const lv = a2Level(), r = a2Range();
 this.root.innerHTML = `<div class="a2nav"><button class="btn a2back" id="a2Back">처음으로</button>${hideNav ? '' : '<button class="btn a2back" id="a2Restart">활동2 처음으로</button>'}</div><h1 class="a2title">${title}</h1><div class="a2lv">수준 ${lv} · ${r[0]}~${r[1]}</div><div id="caption">화면을 한 번 터치하면 소리가 켜져요</div>`;
 this.root.querySelector('#a2Back').onclick = () => { Sfx.unlock(); Speech.stop(); if (state.mode !== 'board' && state.mode !== 'practice') state.mode = 'free'; Router.go('intro'); };
 const rs = this.root.querySelector('#a2Restart'); if (rs) rs.onclick = () => { Sfx.unlock(); Speech.stop(); this.startSession(); };
@@ -2342,7 +2373,7 @@ const s = document.createElementNS(NS, 'svg'); s.setAttribute('class', 'a2sc'); 
 this.root.appendChild(s); this.svg = s; return s;
 },
 numBar() {
-const [lo, hi] = A2_LEVELS[a2Level()]; const bar = document.createElement('div'); bar.className = 'a2nums'; bar.id = 'a2Nums';
+const [lo, hi] = a2Range(); const bar = document.createElement('div'); bar.className = 'a2nums'; bar.id = 'a2Nums';
 for (let k = lo; k <= hi; k++) { const b = document.createElement('button'); b.className = 'btn a2nb'; b.dataset.k = k; b.textContent = k; b.id = 'a2Num' + k; bar.appendChild(b); }
 this.root.appendChild(bar); return bar;
 },
@@ -2738,8 +2769,15 @@ st.addEventListener('click', e => { if (this.on() && e.target.closest && e.targe
    전송 항목: 학생 번호, 활동, 단계, 정답률, 문항 수, 도움 단계, 시각. 이름·사진·얼굴은 절대 전송하지 않음. ---------- */
 const FB_VER = '10.12.2';
 function stuLevelOf(P, sid) { const d = Settings.data; sid = String(sid); const sub = d[P + 'Subs'] && d[P + 'Subs'][sid]; if (sub) return sub; const lv = d[P + 'Levels'] && d[P + 'Levels'][sid]; return lv || d[P === 'a1' ? 'a1Level' : 'a2Level'] || '가'; }
+function applyStage(P, sid, n) {
+sid = String(sid); n = Number(n); if (!(n >= 1 && n <= 6)) return;
+const sub = Object.assign({}, Settings.data[P + 'Subs']), lvs = Object.assign({}, Settings.data[P + 'Levels']), rng = Object.assign({}, Settings.data.a2Ranges);
+if (n <= 2) { sub[sid] = n === 1 ? '다-2' : '다-1'; lvs[sid] = '다'; delete rng[sid]; }
+else { delete sub[sid]; lvs[sid] = n <= 4 ? '나' : '가'; if (n === 3) rng[sid] = [1, 2]; else if (n === 5) rng[sid] = [1, 4]; else delete rng[sid]; }
+Settings.set(P + 'Subs', sub); Settings.set(P + 'Levels', lvs); if (P === 'a2') Settings.set('a2Ranges', rng); else { const g = Object.assign({}, Settings.data.a1Stages); g[sid] = n; Settings.set('a1Stages', g); }
+}
 function setStuLevel(P, sid, lv) {
-sid = String(sid); const sub = Object.assign({}, Settings.data[P + 'Subs']), lvs = Object.assign({}, Settings.data[P + 'Levels']);
+sid = String(sid); if (P === 'a2' && Settings.data.a2Ranges && Settings.data.a2Ranges[sid]) { const r = Object.assign({}, Settings.data.a2Ranges); delete r[sid]; Settings.set('a2Ranges', r); } const sub = Object.assign({}, Settings.data[P + 'Subs']), lvs = Object.assign({}, Settings.data[P + 'Levels']);
 if (lv === '다-1' || lv === '다-2') { sub[sid] = lv; Settings.set(P + 'Subs', sub); }
 else { delete sub[sid]; lvs[sid] = lv; Settings.set(P + 'Subs', sub); Settings.set(P + 'Levels', lvs); }
 }
@@ -2790,16 +2828,19 @@ this.onv(this.cmdPath, this.cmdCb);
 this.timer = setInterval(() => this.push(), 5000); this.push(); return true;
 },
 stopStudent() { clearInterval(this.timer); this.timer = null; try { if (this.db && this.cmdPath) this.db.ref(this.cmdPath).off('value', this.cmdCb); } catch (e) {} this.sid = null; this.cmdPath = null; },
-level() { const a = Router.cur === 'act2' ? '2' : Router.cur === 'a1da' || Router.cur === 'activity1' ? '1' : this.act; return daMode(a === '2' ? 'a2' : 'a1') || (a === '2' ? a2Level() : a1Level()); },
+level() { const P = Router.cur === 'act2' ? 'a2' : 'a1'; return daMode(P) || (P === 'a2' ? a2Level() : a1Level()); },
+hintText() { const P = Router.cur === 'act2' ? 'a2' : 'a1', m = daMode(P); if (m) { const st = DaHint.stage; return m + (st && st !== '독립' ? ' · ' + st : ''); } if (P === 'a2') return { none: '힌트 없음', num: '순서 번호', ans: '정답 강조' }[Settings.data.a2Hint] || '힌트 없음'; return '힌트 없음'; },
 status() {
 const a = Router.cur === 'act2' ? '2' : (Router.cur === 'a1da' || Router.cur === 'activity1') ? '1' : this.act; this.act = a;
-const h = this.hist.slice(-10), n = h.length, ok = h.filter(x => x).length;
-return { act: a, level: this.level(), acc: n ? Math.round(ok * 100 / n) : -1, n, prompt: this.prompt || '', ts: Date.now() };
+const P = a === '2' ? 'a2' : 'a1', h = this.hist.slice(-10), n = h.length, ok = h.filter(x => x).length;
+return { act: a, level: stageOf(P), lv: this.level(), acc: n ? Math.round(ok * 100 / n) : -1, n, prompt: this.prompt || '', hint: this.hintText(), ts: Date.now() };
 },
 push() { if (!this.sid || !this.db) return; this.write(`${FB_ROOT}/${this.room}/students/${this.sid}`, this.status()); },
 rec(act, ok, prompt) { if (!this.sid) return; this.act = act; this.hist.push(!!ok); if (this.hist.length > 10) this.hist.shift(); this.prompt = prompt || ''; this.push(); },
 applyLevel(lv) {
-if (!LADDER.includes(lv) || !this.sid) return;
+if (!this.sid) return;
+if (Number(lv) >= 1 && Number(lv) <= 6) { applyStage(Router.cur === 'act2' ? 'a2' : 'a1', this.sid, Number(lv)); setTimeout(() => this.push(), 400); return; }
+if (!LADDER.includes(lv)) return;
 setStuLevel(Router.cur === 'act2' ? 'a2' : 'a1', this.sid, lv);
 setTimeout(() => this.push(), 400);
 },
@@ -2812,7 +2853,7 @@ this.onv(this.watchPath, this.watchCb); return true;
 },
 prune(v) { const now = Date.now(); Object.keys(v).forEach(k => { const d = v[k]; if (d && d.ts && now - d.ts > 6 * 3600 * 1000) this.write(`${FB_ROOT}/${this.room}/students/${k}`, null); }); },
 unwatch() { try { if (this.db && this.watchPath) this.db.ref(this.watchPath).off('value', this.watchCb); } catch (e) {} this.watchPath = null; },
-sendLevel(sid, lv) { if (this.db && LADDER.includes(lv)) this.write(`${FB_ROOT}/${this.room}/cmd/${sid}`, { level: lv, ts: Date.now() }); }
+sendLevel(sid, lv) { if (this.db && ((lv >= 1 && lv <= 6) || LADDER.includes(lv))) this.write(`${FB_ROOT}/${this.room}/cmd/${sid}`, { level: lv, ts: Date.now() }); }
 };
 Live.load();
 
@@ -2820,7 +2861,7 @@ Screens.monitor = {
 timers: [], data: {},
 mount(root) {
 this.root = root; this.data = {};
-root.innerHTML = `<div id="monitor"><div class="mtop"><button class="btn" id="monBack">처음으로</button></div><h1>실시간 모니터</h1><button class="btn mcfg" id="monCfg">⚙ 실시간 연결 설정</button><div class="mgrid" id="monGrid"></div></div>`;
+root.innerHTML = `<div id="monitor"><header><h1>🍂 우리 반 감나무 갤러리 <small>실시간 모니터 · 5까지의 수</small></h1><button class="tb" id="monBack">⌂ 처음으로</button><button class="tb live" id="monCfg">● 실시간 연결 설정</button></header><div class="mgrid" id="monGrid"></div></div>`;
 root.querySelector('#monBack').onclick = () => { Sfx.unlock(); Router.go('intro'); };
 root.querySelector('#monCfg').onclick = () => this.cfgModal();
 this.draw(); this.note();
@@ -2831,20 +2872,29 @@ unmount() { this.timers.forEach(clearInterval); this.timers = []; Live.unwatch()
 draw() {
 const g = document.getElementById('monGrid'); if (!g) return;
 const now = Date.now(); let h = '';
+const ST = [['다', '색 짝짓기', '#E3A82B', '#3b2a10'], ['다', '모양·개수 짝짓기', '#E58A2E', '#fff'], ['나', '1~2개 세어 보기', '#DB6A2C', '#fff'], ['나', '3개 세어 보기', '#C84B31', '#fff'], ['가', '4~5개 세어 보기', '#A33C4C', '#fff'], ['가', '세어 숫자 찾기 1~5', '#6E3F8F', '#fff']];
+const stg = d => { if (!d) return 0; const L = d.level; if (Number(L) >= 1 && Number(L) <= 6) return Number(L); return { '다-2': 1, '다-1': 2, '다': 3, '나': 4, '가': 6 }[L] || 0; };
+const helpLv = p => ({ '독립': 0, '시각힌트': 1, '오답': 1, '연습': 1, '손힌트': 2, '신체촉진': 3 }[p] != null ? { '독립': 0, '시각힌트': 1, '오답': 1, '연습': 1, '손힌트': 2, '신체촉진': 3 }[p] : 0);
+const pers = (x, y, full) => full ? `<g transform="translate(${x},${y})"><ellipse cx="0" cy="4" rx="21" ry="18" fill="#f2761a" stroke="#c4540a" stroke-width="2.5"/><ellipse cx="-7" cy="-1" rx="6" ry="4" fill="#ffb15e" opacity=".8"/><path d="M-12 -12 L0 -6 L12 -12 L6 -15 L0 -22 L-6 -15Z" fill="#4c8a2b" stroke="#2d5c14" stroke-width="2"/></g>` : `<g transform="translate(${x},${y})"><ellipse cx="0" cy="4" rx="19" ry="16" fill="none" stroke="#b69a72" stroke-width="3" stroke-dasharray="5 5"/><path d="M0 -12 L0 -22" stroke="#8a6a3c" stroke-width="3"/><path d="M0 -17 Q12 -25 18 -14 Q8 -10 0 -17Z" fill="#c9b27c"/></g>`;
 for (let i = 1; i <= MAX_STUDENTS; i++) {
 const st = (state.students || []).find(x => Number(x.id) === i), d = this.data[i] || this.data[String(i)];
-const on = !!(d && d.ts && now - d.ts <= 15000);
-const nm = st ? st.name : '';
+const on = !!(d && d.ts && now - d.ts <= 15000), s = stg(d), has = s >= 1;
+const ok = d && d.acc >= 0 ? Math.round(d.acc * d.n / 100) : 0, hl = d ? helpLv(d.prompt) : 0;
 const img = st ? `<img alt="" src="${st.photo || initialAvatar(st.name, st.id)}">` : '';
-const accTxt = d && d.acc >= 0 ? `${d.acc}% (최근 ${d.n}문항)` : '기록 없음';
-const lvl = d ? `활동${d.act} · ${d.level}` : '-';
-h += `<div class="mz ${on ? 'on' : ''}" data-i="${i}"><div class="mh">${img}<span class="mn"></span><span class="mdot" title="${on ? '온라인' : '오프라인'}"></span></div><div>${on ? '온라인' : (d ? '오프라인' : '접속 없음')}</div><div>현재 <b>${lvl}</b></div><div>정답률 <b>${accTxt}</b></div><div>최근 도움 <b>${d && d.prompt ? d.prompt : '-'}</b></div><div class="mbtns"><button class="btn mup" ${d && Live.db ? '' : 'disabled'}>▲ 단계 올리기</button><button class="btn mdn" ${d && Live.db ? '' : 'disabled'}>▼ 내리기</button></div></div>`;
+let tw = `<svg width="268" height="64" viewBox="0 0 330 80"><path d="M0 14 Q80 4 165 12 T330 8" stroke="#7a4a1f" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M0 52 Q80 42 165 50 T330 46" stroke="#7a4a1f" stroke-width="9" fill="none" stroke-linecap="round"/>`;
+for (let k = 0; k < 10; k++) { const r = k < 5 ? 0 : 1, c2 = k % 5; tw += pers(34 + c2 * 65, (r ? 40 : 2) + (c2 % 2 ? 4 : 0) + 16, k < ok); }
+tw += '</svg>';
+const trk = ST.map((x, k) => `<div class="nd ${k + 1 === s ? 'cur' : k + 1 < s ? 'dn' : ''}" style="--c:${x[2]};--t:${x[3]}"><div class="gl">${x[0]}</div><b>${k + 1}</b></div>`).join('');
+const dots = [1, 2, 3].map(q => `<span class="dot ${q <= hl ? 'f' : ''}"></span>`).join('');
+const hint = d && d.hint ? ((/시각/.test(d.hint) ? '☝ ' : '') + d.hint) : (d ? '힌트 없음' : '');
+const cur = has ? ST[s - 1] : ['-', '접속 없음', '#999', '#fff'];
+h += `<div class="mz ${on ? 'on' : 'off'}" data-i="${i}"><div class="top"><div class="av">${img}</div><div class="mn"></div><span class="mname"></span><div class="chip ${on ? 'on' : 'offc'}"><i></i>${on ? '온라인' : (d ? '오프라인' : '접속 없음')}</div>${hint ? `<span class="hint">${hint}</span>` : ''}</div><div class="cc" style="--c:${cur[2]}"><div class="cct">${cur[0]}<em>${has ? s : ''}</em></div><div class="ccn">${cur[1]}${d ? ' · 활동' + d.act : ''}</div></div><div class="track">${trk}</div><div class="tl"><span>쉬움 ▸ 1 색 짝짓기</span><span>6 세어 숫자 찾기 ◂ 어려움</span></div><div class="mid">${tw}<div class="sc">${d && d.acc >= 0 ? ok : '-'}<small>/10 정답${d && d.acc >= 0 ? ' · ' + d.acc + '%' : ''}</small></div></div><div class="help">최근 도움 ${dots} <span>${d && d.prompt ? d.prompt + ' ' : ''}${hl}단계</span></div><div class="btns"><button class="btn mup" ${on && has && s < 6 && Live.db ? '' : 'disabled'}>▲ 단계 올리기</button><button class="btn mdn" ${on && has && s > 1 && Live.db ? '' : 'disabled'}>▼ 내리기</button></div></div>`;
 }
 g.innerHTML = h;
 g.querySelectorAll('.mz').forEach(z => {
 const i = Number(z.dataset.i), st = (state.students || []).find(x => Number(x.id) === i), d = this.data[i] || this.data[String(i)];
-z.querySelector('.mn').textContent = `${i}번${st ? ' ' + st.name : ''}`;
-const mv = dir => { if (!d) return; const k = LADDER.indexOf(d.level); if (k < 0) return; const nx = LADDER[Math.max(0, Math.min(LADDER.length - 1, k + dir))]; if (nx !== d.level) Live.sendLevel(i, nx); };
+z.querySelector('.mn').textContent = `${i}번`; z.querySelector('.mname').textContent = st ? st.name : '';
+const mv = dir => { if (!d) return; const s = stg(d); if (!s) return; const nx = Math.max(1, Math.min(6, s + dir)); if (nx !== s) Live.sendLevel(i, nx); };
 z.querySelector('.mup').onclick = () => mv(1); z.querySelector('.mdn').onclick = () => mv(-1);
 });
 },
