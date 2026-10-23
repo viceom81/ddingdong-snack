@@ -428,6 +428,8 @@ display:flex;flex-direction:column;align-items:center;justify-content:center;gap
 #act2 .a1tree{position:absolute;left:calc(var(--u)*2);top:calc(var(--u)*21);width:calc(var(--u)*25);height:calc(var(--u)*20.5);border-radius:calc(var(--u)*1.2);overflow:hidden;box-shadow:0 calc(var(--u)*.4) calc(var(--u)*1.2) rgba(0,0,0,.2)}
 #optGear{position:absolute;right:calc(var(--u)*.6);top:calc(var(--u)*.5);z-index:49;height:calc(var(--u)*2.7);padding:0 calc(var(--u)*1);font-size:calc(var(--u)*1.4);font-weight:800;border-radius:calc(var(--u)*1.4);background:#fff;border:calc(var(--u)*.2) solid #2E5E9E;color:#1B3F73;opacity:.85;box-shadow:0 calc(var(--u)*.2) calc(var(--u)*.5) rgba(0,0,0,.2);line-height:1}
 #optGear.off{display:none}
+#stgBadge{position:absolute;display:none;right:calc(var(--u)*.6);top:calc(var(--u)*3.8);z-index:47;align-items:center;padding:0 calc(var(--u)*1.2);height:calc(var(--u)*3.2);border-radius:calc(var(--u)*1.6);font-size:calc(var(--u)*1.7);font-weight:900;border:calc(var(--u)*.25) solid #fff;box-shadow:0 calc(var(--u)*.2) calc(var(--u)*.6) rgba(0,0,0,.3);white-space:nowrap}
+#stage.hasStg #act2 .a2lv{display:none!important}
 #photoBtn{position:absolute;display:none;transform:translateX(-50%);z-index:48;gap:calc(var(--u)*.6);align-items:center}
 #photoBtn .btn{min-height:calc(var(--u)*2.8);padding:0 calc(var(--u)*1);font-size:calc(var(--u)*1.5);background:#fff;color:#1B3F73;border:calc(var(--u)*.2) solid #2E5E9E;white-space:nowrap}
 #a2Face,#faceReactionWrap{cursor:pointer}
@@ -1226,11 +1228,11 @@ this.cur = name; state.screen = name;
 try { document.getElementById('optGear').classList.toggle('off', name === 'intro' || name === 'monitor'); } catch (e) {}
 try { document.getElementById('stage').classList.toggle('pm', state.mode === 'practice'); } catch (e) {}
 Screens[name].mount(div);
-try { Photo.refresh(); setTimeout(() => Photo.refresh(), 250); } catch (e) {}
+try { Photo.refresh(); StageBadge.refresh(); setTimeout(() => Photo.refresh(), 250); } catch (e) {}
 if (name === 'activity1' || name === 'a1da' || name === 'complete') BackGuard.arm();
 Screens[name].applySettings && Screens[name].applySettings();
 },
-applySettings() { this.cur && Screens[this.cur].applySettings && Screens[this.cur].applySettings(); },
+applySettings() { this.cur && Screens[this.cur].applySettings && Screens[this.cur].applySettings(); try { StageBadge.refresh(); } catch (e) {} },
 caption(text, mute) { const c = document.getElementById('caption'); if (c) { c.textContent = (mute ? '(소리 없음) ' : '') + text; c.classList.toggle('mute', !!mute); } }
 };
 
@@ -1928,10 +1930,12 @@ best = { x: cx, y: cy };
 return best;
 },
 nextNumber() {
-const a = state.a1, fx = Settings.data.fixed;
+const a = state.a1, fx = Settings.data.fixed; a.errs = 0;
 if (fx >= 1 && fx <= 5) return fx;
+const rg = a1RangeNow(), key = rg.join('-');
+if (a.bagKey !== key) { a.bag = []; a.bagKey = key; }
 if (!a.bag.length) {
-const bag = [1, 2, 3, 4, 5];
+const bag = []; for (let i = rg[0]; i <= rg[1]; i++) bag.push(i); if (rg[2]) bag.push(rg[2], rg[2]);
 for (let i = bag.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [bag[i], bag[j]] = [bag[j], bag[i]]; }
 if (bag[bag.length - 1] === a.last) { const k = Math.floor(Math.random() * (bag.length - 1)); [bag[bag.length - 1], bag[k]] = [bag[k], bag[bag.length - 1]]; }
 a.bag = bag;
@@ -2009,7 +2013,7 @@ if (c === 0) { Speech.say('먼저 콕 해 봐요'); return; }
 const card = document.getElementById('numcard');
 const baseCls = this.isStudentMode() ? 'hasProg' : '';
 const isCorrect = (c === n);
-Live.rec('1', isCorrect, isCorrect ? '독립' : '오답');
+{ const pr = isCorrect ? (state.a1.errs ? '오답 후 정답' : '독립') : '오답'; Live.rec('1', isCorrect, pr); if (!isCorrect) state.a1.errs = (state.a1.errs || 0) + 1; }
 
 if (state.mode === 'practice') {
 PracticeLog.record({
@@ -2282,14 +2286,16 @@ function a2Sid() { return state.mode === 'board' && state.activeStudent ? state.
     1   다 · 색 짝짓기    색 짝짓기(숫자 무관)      다    a2Match[번호]=1, a2Levels='다' (a2Subs='다-2'면 도움 모드)
     2   다 · 모양 짝짓기  모양 짝짓기(숫자 무관)    다    a2Match[번호]=2, a2Levels='다'
     (기존 다-1/다-2 숫자 짝짓기는 학생 수준 옵션의 다 모드로 유지, 단계 표시는 3)
-    3   나 · 1~2개        1~2        -        나    a2Subs 삭제, a2Levels='나', a2Ranges[번호]=[1,2]
-    4   나 · 3개          1~3        -        나    a2Subs 삭제, a2Levels='나', a2Ranges 삭제(나=1~3)
-    5   가 · 4~5개        1~4        -        가    a2Subs 삭제, a2Levels='가', a2Ranges[번호]=[1,4]
-    6   가 · 숫자 찾기    1~5        -        가    a2Subs 삭제, a2Levels='가', a2Ranges 삭제(가=1~5)
-   활동1은 범위가 없어 다-모드(1·2)와 수준(3~6 → 다/나/가)만 반영. 학생 상태의 level은 단계 번호(숫자), lv는 기존 문자. */
+    3   나 · 1~2개        1~2 (숫자 문제)           나    a2Subs·a2Match 삭제, a2Levels='나', a2Ranges[번호]=[1,2]
+    4   나 · 3개          3 중심(1~3, 3이 60%)      나    a2Ranges[번호]=[1,3,3]
+    5   가 · 4~5개        4~5                      가    a2Ranges[번호]=[4,5]
+    6   가 · 숫자 찾기    1~5 전체                  가    a2Ranges 삭제(가=1~5)
+   활동1: 1·2단계=다-2/다-1(점 콕 함께/같은 숫자 찾기), 3~6단계=a1Stages로 뽑는 숫자 범위(1~2/1~3(3 중심)/4~5/1~5). 학생 상태의 level은 단계 번호(숫자), lv는 기존 문자. */
 function matchStage() { const m = (Settings.data.a2Match || {})[a2Sid()]; return (m === 1 || m === 2) ? m : 0; }
-function a2Range() { const r = (Settings.data.a2Ranges || {})[a2Sid()]; return (Array.isArray(r) && r.length === 2) ? r : A2_LEVELS[a2Level()]; }
-function stageOf(P) { if (P === 'a2') { const ms = matchStage(); if (ms) return ms; } const m = daMode(P); if (m) return 3; if (P === 'a1') { const lv = a1Level(), g = (Settings.data.a1Stages || {})[a2Sid()]; if (g >= 1 && g <= 6 && (g <= 2 ? lv === '다' : g === 3 ? (lv === '다' || lv === '나') : g === 4 ? lv === '나' : lv === '가')) return g; return lv === '다' ? 3 : lv === '나' ? 4 : 6; } const hi = a2Range()[1]; return hi <= 2 ? 3 : hi === 3 ? 4 : hi === 4 ? 5 : 6; }
+function a2PeakNow() { return (daMode() || matchStage()) ? 0 : (a2Range()[2] || 0); }
+function a1RangeNow() { const sid = a2Sid(), g = sid != null ? (Settings.data.a1Stages || {})[sid] : 0; return g === 3 ? [1, 2] : g === 4 ? [1, 3, 3] : g === 5 ? [4, 5] : [1, 5]; }
+function a2Range() { const r = (Settings.data.a2Ranges || {})[a2Sid()]; return (Array.isArray(r) && r.length >= 2) ? r : A2_LEVELS[a2Level()]; }
+function stageOf(P) { if (P === 'a2') { const ms = matchStage(); if (ms) return ms; } const m = daMode(P); if (m) return P === 'a1' ? (m === '다-2' ? 1 : 2) : 3; if (P === 'a1') { const lv = a1Level(), g = (Settings.data.a1Stages || {})[a2Sid()]; if (g >= 1 && g <= 6 && (g <= 2 ? lv === '다' : g === 3 ? (lv === '다' || lv === '나') : g === 4 ? lv === '나' : lv === '가')) return g; return lv === '다' ? 3 : lv === '나' ? 4 : 6; } const r = a2Range(), hi = r[1]; return hi <= 2 ? 3 : hi === 3 ? 4 : (r[0] >= 4 || hi === 4) ? 5 : 6; }
 function a2Level() {
 const d = Settings.data; let lv = d.a2Level; const sid = a2Sid();
 if (sid != null && d.a2Levels && d.a2Levels[sid]) lv = d.a2Levels[sid];
@@ -2307,8 +2313,9 @@ const A2_BASKET = { x: 440, y: 240, w: 260, h: 170 };
 function a2Items() { const m = Settings.data.a2Item; return m === 'persimmon' || m === 'leaf' ? [m] : ['persimmon', 'leaf']; }
 const a2Say = (item, n) => `${A2_ITEM[item].name} ${A2_CNT[n]} ${A2_ITEM[item].unit}`;
 function a2Shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
-function a2Queue(lo, hi, T) {
+function a2Queue(lo, hi, T, peak) {
 const nums = []; for (let i = lo; i <= hi; i++) nums.push(i);
+if (peak >= lo && peak <= hi) { const q = []; for (let i = 0; i < T; i++) { let v = Math.random() < 0.6 ? peak : nums[Math.floor(Math.random() * nums.length)]; q.push(v); } return q; }
 if (nums.length >= T) return a2Shuffle(nums).slice(0, T);
 const q = []; while (q.length < T) { let b = a2Shuffle(nums); if (q.length && b[0] === q[q.length - 1] && b.length > 1) b.push(b.shift()); q.push(...b); }
 return q.slice(0, T);
@@ -2322,7 +2329,7 @@ mount(root) { this.root = root; this.startSession(); },
 startSession() {
 this.timers.forEach(clearTimeout); this.timers = [];
 const [lo, hi] = (daMode() || matchStage()) ? [1, 2] : a2Range();
-a2.total = a2TotalOpt(); a2.queue = a2Queue(lo, hi, a2.total); a2.idx = 0; a2.results = [];
+a2.total = a2TotalOpt(); a2.queue = a2Queue(lo, hi, a2.total, a2PeakNow()); a2.idx = 0; a2.results = [];
 const its = a2Items(), st = its[Math.floor(Math.random() * its.length)];
 a2.items = a2.queue.map((_, i) => its.length === 1 ? its[0] : (i % 2 === 0 ? st : (st === 'leaf' ? 'persimmon' : 'leaf')));
 this.setRound();
@@ -2341,7 +2348,7 @@ this._fut = this.futNow();
 const T = a2TotalOpt(), [lo, hi] = (daMode() || matchStage()) ? [1, 2] : a2Range(), cur = a2.idx;
 a2.total = Math.max(T, cur + 1);
 const head = a2.queue.slice(0, cur + 1), hi_ = a2.items.slice(0, cur + 1);
-const q = a2Queue(lo, hi, Math.max(1, a2.total)).slice(0, a2.total - head.length);
+const q = a2Queue(lo, hi, Math.max(1, a2.total), a2PeakNow()).slice(0, a2.total - head.length);
 a2.queue = head.concat(q);
 const its = a2Items(); const items = hi_.slice();
 while (items.length < a2.total) { const prev = items[items.length - 1]; items.push(its.length === 1 ? its[0] : (prev === 'leaf' ? 'persimmon' : 'leaf')); }
@@ -2477,7 +2484,7 @@ Speech.say(m);
 answer(k, btn) {
 if (a2.phase !== 'ask' || this.lock) return; this.lock = true; Sfx.unlock();
 if (k === a2.n) {
-a2.phase = 'ok'; btn.classList.add('ok'); a2.results.push({ item: a2.item, n: a2.n, tries: a2.tries }); if (a2.tries === 0) Live.rec('2', true, '독립'); Sfx.dingdong(); this.pulse(); Speech.say('딩동! 잘했어요!');
+a2.phase = 'ok'; btn.classList.add('ok'); a2.results.push({ item: a2.item, n: a2.n, tries: a2.tries }); if (a2.tries === 0) Live.rec('2', true, Settings.data.a2Hint !== 'none' ? '힌트 사용' : '독립'); else Live.setPrompt('오답 후 정답'); Sfx.dingdong(); this.pulse(); Speech.say('딩동! 잘했어요!');
 this.later(() => { if (a2.idx + 1 < a2.total) { a2.idx++; this.setRound(); } else this.showCards(); }, 1700);
 } else {
 a2.phase = 'wrong'; a2.tries++; Live.rec('2', false, '오답'); btn.classList.add('no'); Sfx.error(); Speech.say(`괜찮아요. ${A2_ITEM[a2.item].name} 세는 연습을 해 봐요`);
@@ -2683,7 +2690,8 @@ const tgt = wrap.querySelector(`.dab[data-v="${tgtKey}"]`);
 let wrong = 0, done = false;
 const finish = stage => {
 if (done) return; done = true; Scan.stop(); DaHint.stop();
-DaLog.add({ sid: a2Sid(), act: 2, sub: mode, stage }); Live.rec('2', stage === '독립', stage);
+DaLog.add({ sid: a2Sid(), act: 2, sub: mode, stage });
+if (help) Live.rec('2', stage === '독립', stage); else if (wrong > 0) Live.setPrompt('오답 후 정답'); else Live.rec('2', true, Settings.data.a2Hint !== 'none' ? '힌트 사용' : '독립');
 a2.phase = 'ok'; a2.results.push({ item: a2.item, n: a2.n, tries: wrong }); tgt.classList.remove('blink'); tgt.classList.add('ok');
 Sfx.dingdong(); this.pulse(); Speech.say('딩동! 잘했어요!');
 this.later(() => { if (a2.idx + 1 < a2.total) { a2.idx++; this.setRound(); } else this.showCards(); }, 1700);
@@ -2800,6 +2808,19 @@ Router.register('a1da', Screens.a1da);
 
 
 
+/* ---------- 단계 배지 (학생 화면 상단, 모니터와 같은 번호·색·단계명) ---------- */
+const STG = [['다', '색 짝짓기', '#E3A82B', '#3b2a10'], ['다', '모양 짝짓기', '#E58A2E', '#fff'], ['나', '1~2개 세어 보기', '#DB6A2C', '#fff'], ['나', '3개 세어 보기', '#C84B31', '#fff'], ['가', '4~5개 세어 보기', '#A33C4C', '#fff'], ['가', '세어 숫자 찾기 1~5', '#6E3F8F', '#fff']];
+const StageBadge = {
+refresh() {
+const b = document.getElementById('stgBadge'), st = document.getElementById('stage'); if (!b || !st) return;
+const scr = state.screen, show = ['activity1', 'a1da', 'act2'].includes(scr) && a2Sid() != null;
+st.classList.toggle('hasStg', show); b.style.display = show ? 'flex' : 'none'; if (!show) return;
+const n = stageOf(scr === 'act2' ? 'a2' : 'a1'), x = STG[n - 1];
+b.style.background = x[2]; b.style.color = x[3]; b.textContent = `${n}단계 · ${x[1]} (${x[0]})`;
+},
+init() { const b = document.createElement('div'); b.id = 'stgBadge'; document.getElementById('stage').appendChild(b); }
+};
+
 /* ---------- 폰 사진 (QR practice): 사진은 이 기기에만 '학생번호+이름' 키로 저장, 서버·Firebase·QR·URL로는 절대 보내지 않음 ---------- */
 const Photo = {
 on() { return state.mode === 'practice' && !!state.fragName && state.practiceStudentId != null; },
@@ -2838,8 +2859,8 @@ function applyStage(P, sid, n) {
 sid = String(sid); n = Number(n); if (!(n >= 1 && n <= 6)) return;
 const sub = Object.assign({}, Settings.data[P + 'Subs']), lvs = Object.assign({}, Settings.data[P + 'Levels']), rng = Object.assign({}, Settings.data.a2Ranges);
 const mt = Object.assign({}, Settings.data.a2Match);
-if (n <= 2) { lvs[sid] = '다'; delete rng[sid]; if (P === 'a2') mt[sid] = n; else delete sub[sid]; }
-else { delete sub[sid]; delete mt[sid]; lvs[sid] = n <= 4 ? '나' : '가'; if (n === 3) rng[sid] = [1, 2]; else if (n === 5) rng[sid] = [1, 4]; else delete rng[sid]; }
+if (n <= 2) { lvs[sid] = '다'; delete rng[sid]; if (P === 'a2') mt[sid] = n; else sub[sid] = n === 1 ? '다-2' : '다-1'; }
+else { delete sub[sid]; delete mt[sid]; lvs[sid] = n <= 4 ? '나' : '가'; if (n === 3) rng[sid] = [1, 2]; else if (n === 4) rng[sid] = [1, 3, 3]; else if (n === 5) rng[sid] = [4, 5]; else delete rng[sid]; }
 Settings.set(P + 'Subs', sub); Settings.set(P + 'Levels', lvs); if (P === 'a2') { Settings.set('a2Ranges', rng); Settings.set('a2Match', mt); } else { const g = Object.assign({}, Settings.data.a1Stages); g[sid] = n; Settings.set('a1Stages', g); }
 }
 function setStuLevel(P, sid, lv) {
@@ -2902,6 +2923,7 @@ const P = a === '2' ? 'a2' : 'a1', h = this.hist.slice(-10), n = h.length, ok = 
 return { act: a, level: stageOf(P), lv: this.level(), acc: n ? Math.round(ok * 100 / n) : -1, n, prompt: this.prompt || '', hint: this.hintText(), ts: Date.now() };
 },
 push() { if (!this.sid || !this.db) return; this.write(`${FB_ROOT}/${this.room}/students/${this.sid}`, this.status()); },
+setPrompt(p) { if (!this.sid) return; this.prompt = p; this.push(); },
 rec(act, ok, prompt) { if (!this.sid) return; this.act = act; this.hist.push(!!ok); if (this.hist.length > 10) this.hist.shift(); this.prompt = prompt || ''; this.push(); },
 applyLevel(lv) {
 if (!this.sid) return;
@@ -2938,9 +2960,10 @@ unmount() { this.timers.forEach(clearInterval); this.timers = []; Live.unwatch()
 draw() {
 const g = document.getElementById('monGrid'); if (!g) return;
 const now = Date.now(); let h = '';
-const ST = [['다', '색 짝짓기', '#E3A82B', '#3b2a10'], ['다', '모양·개수 짝짓기', '#E58A2E', '#fff'], ['나', '1~2개 세어 보기', '#DB6A2C', '#fff'], ['나', '3개 세어 보기', '#C84B31', '#fff'], ['가', '4~5개 세어 보기', '#A33C4C', '#fff'], ['가', '세어 숫자 찾기 1~5', '#6E3F8F', '#fff']];
+const ST = [['다', '색 짝짓기', '#E3A82B', '#3b2a10'], ['다', '모양 짝짓기', '#E58A2E', '#fff'], ['나', '1~2개 세어 보기', '#DB6A2C', '#fff'], ['나', '3개 세어 보기', '#C84B31', '#fff'], ['가', '4~5개 세어 보기', '#A33C4C', '#fff'], ['가', '세어 숫자 찾기 1~5', '#6E3F8F', '#fff']];
 const stg = d => { if (!d) return 0; const L = d.level; if (Number(L) >= 1 && Number(L) <= 6) return Number(L); return { '다-2': 1, '다-1': 2, '다': 3, '나': 4, '가': 6 }[L] || 0; };
-const helpLv = p => ({ '독립': 0, '시각힌트': 1, '오답': 1, '연습': 1, '손힌트': 2, '신체촉진': 3 }[p] != null ? { '독립': 0, '시각힌트': 1, '오답': 1, '연습': 1, '손힌트': 2, '신체촉진': 3 }[p] : 0);
+/* 도움 단계(최근 도움 점): 0=독립, 1=힌트 사용(순서 번호·정답 강조·시각힌트)·방금 오답, 2=오답 후 정답(·손힌트), 3=신체촉진(함께) */
+const HELP = { '독립': 0, '힌트 사용': 1, '시각힌트': 1, '오답': 1, '연습': 1, '오답 후 정답': 2, '손힌트': 2, '신체촉진': 3 }, helpLv = p => (HELP[p] != null ? HELP[p] : 0);
 const pers = (x, y, full) => full ? `<g transform="translate(${x},${y})"><ellipse cx="0" cy="4" rx="21" ry="18" fill="#f2761a" stroke="#c4540a" stroke-width="2.5"/><ellipse cx="-7" cy="-1" rx="6" ry="4" fill="#ffb15e" opacity=".8"/><path d="M-12 -12 L0 -6 L12 -12 L6 -15 L0 -22 L-6 -15Z" fill="#4c8a2b" stroke="#2d5c14" stroke-width="2"/></g>` : `<g transform="translate(${x},${y})"><ellipse cx="0" cy="4" rx="19" ry="16" fill="none" stroke="#b69a72" stroke-width="3" stroke-dasharray="5 5"/><path d="M0 -12 L0 -22" stroke="#8a6a3c" stroke-width="3"/><path d="M0 -17 Q12 -25 18 -14 Q8 -10 0 -17Z" fill="#c9b27c"/></g>`;
 for (let i = 1; i <= MAX_STUDENTS; i++) {
 const st = (state.students || []).find(x => Number(x.id) === i), d = this.data[i] || this.data[String(i)];
@@ -3089,6 +3112,7 @@ Speech.init();
 Router.init();
 Options.init();
 Photo.init();
+StageBadge.init();
 RosterManager.init();
 const unlockOnce = () => { Sfx.unlock(); Speech.unlock(); document.removeEventListener('pointerdown', unlockOnce, true); };
 document.addEventListener('pointerdown', unlockOnce, true);
