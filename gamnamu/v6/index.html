@@ -424,6 +424,15 @@ display:flex;flex-direction:column;align-items:center;justify-content:center;gap
 #act2 .a1tree{position:absolute;left:calc(var(--u)*2);top:calc(var(--u)*21);width:calc(var(--u)*25);height:calc(var(--u)*20.5);border-radius:calc(var(--u)*1.2);overflow:hidden;box-shadow:0 calc(var(--u)*.4) calc(var(--u)*1.2) rgba(0,0,0,.2)}
 #optGear{position:absolute;right:calc(var(--u)*.6);top:calc(var(--u)*.5);z-index:49;height:calc(var(--u)*2.7);padding:0 calc(var(--u)*1);font-size:calc(var(--u)*1.4);font-weight:800;border-radius:calc(var(--u)*1.4);background:#fff;border:calc(var(--u)*.2) solid #2E5E9E;color:#1B3F73;opacity:.85;box-shadow:0 calc(var(--u)*.2) calc(var(--u)*.5) rgba(0,0,0,.2);line-height:1}
 #optGear.off{display:none}
+.smLv{flex-direction:column;gap:calc(var(--u)*1);align-items:stretch;padding:calc(var(--u)*.5) calc(var(--u)*1)}
+.smLv .lvt{font-size:calc(var(--u)*2);font-weight:900;color:#1B3F73}
+.smLv .lvrow{display:flex;gap:calc(var(--u)*.8);align-items:center;font-size:calc(var(--u)*1.9)}.smLv .lvrow b{min-width:calc(var(--u)*12)}
+.smLv .lvb{min-width:calc(var(--u)*8);min-height:calc(var(--u)*5);font-size:calc(var(--u)*2.2);padding:0 calc(var(--u)*1);background:#E8EEF7;color:#1B3F73}.smLv .lvb.on{background:#2E5E9E;color:#fff}
+.smLv .lvnote{font-size:calc(var(--u)*1.5);color:#667}
+#monitor .mnote{position:absolute;left:calc(var(--u)*1.2);right:calc(var(--u)*1.2);top:calc(var(--u)*6);bottom:calc(var(--u)*1.2);background:rgba(255,255,255,.96);z-index:3;border-radius:calc(var(--u)*1.4);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--u)*2);text-align:center}
+#monitor .mnote h2{font-size:calc(var(--u)*5);color:#C0392B;margin:0}#monitor .mnote p{font-size:calc(var(--u)*2.2);margin:0;color:#1B3F73}
+#monitor .mnote .btn{min-height:calc(var(--u)*6);font-size:calc(var(--u)*2.6);padding:0 calc(var(--u)*3);background:#2E5E9E;color:#fff}
+#mcfgModal ol{margin:0;padding-left:calc(var(--u)*2.4);font-size:calc(var(--u)*1.6);line-height:1.5}#mcfgModal code{background:#EEF;padding:0 .3em;font-size:calc(var(--u)*1.4)}
 #introMon{position:absolute;right:calc(var(--u)*16);top:calc(var(--u)*3.6);min-height:calc(var(--u)*4.2);padding:0 calc(var(--u)*1.6);font-size:calc(var(--u)*1.8);background:#1B3F73;color:#fff}
 #monitor{position:absolute;inset:0;background:#EEF3FA;padding:calc(var(--u)*1.2)}
 #monitor h1{position:absolute;left:0;right:0;top:calc(var(--u)*.6);text-align:center;font-size:calc(var(--u)*3.4);margin:0;color:#1B3F73}
@@ -1261,9 +1270,11 @@ root.innerHTML = `
 <div id="smChoiceWrap" class="stuChoiceBtns">
 <button class="btn" id="goBoardBtn">활동 1 · 전자칠판</button>
 <button class="btn" id="goAct2Btn">활동 2 · 전자칠판</button>
-<button class="btn" id="goQrBtn">내 기기에서 연습 (QR)</button>
+<button class="btn" id="goQr1">내 기기 · 활동 1 (QR)</button>
+<button class="btn" id="goQr2">내 기기 · 활동 2 (QR)</button>
+<button class="btn" id="goLvBtn">이 학생 수준 옵션</button>
 </div>
-<div id="smQrPick" class="stuChoiceBtns" style="display:none"><button class="btn" id="qrA1">활동 1 QR</button><button class="btn" id="qrA2">활동 2 QR</button></div>
+<div id="smLvWrap" class="smLv" style="display:none"></div>
 <div id="smQrWrap" class="qrView">
 <div style="font-size:calc(var(--u)*2);font-weight:900;color:#1B3F73">휴대기기로 QR을 찍어 연습해요</div>
 <div class="qrFrame" id="qrBox"></div>
@@ -1297,7 +1308,7 @@ smModal.onclick = e => { if (e.target === smModal) this.closeModal(); };
 root.querySelector('#smCloseBtn').onclick = () => this.closeModal();
 root.querySelector('#smBackBtn').onclick = () => {
 root.querySelector('#smQrWrap').classList.remove('open');
-root.querySelector('#smQrPick').style.display = 'none';
+root.querySelector('#smLvWrap').style.display = 'none';
 root.querySelector('#smChoiceWrap').style.display = 'flex';
 root.querySelector('#smBackBtn').style.display = 'none';
 };
@@ -1310,27 +1321,34 @@ state.practiceStudentId = null;
 this.closeModal();
 Router.go('activity1');
 };
-root.querySelector('#goQrBtn').onclick = () => {
-if (!this.selectedStudent) return;
-root.querySelector('#smChoiceWrap').style.display = 'none';
-root.querySelector('#smQrPick').style.display = 'flex';
-root.querySelector('#smBackBtn').style.display = 'inline-flex';
-};
 const showQr = act => {
 if (!this.selectedStudent) return;
 const base = location.href.split('?')[0].split('#')[0];
 let q = `?mode=practice&s=${encodeURIComponent(this.selectedStudent.id)}&a=${act}`;
 const lq = Live.qrQuery(); if (lq) q += lq;
-root.querySelector('#qrBox').innerHTML = QRCode.toSvgString(base + q);
+const sid = this.selectedStudent.id, frag = `#n=${encodeURIComponent(String(this.selectedStudent.name || '').slice(0, 10))}&l1=${encodeURIComponent(stuLevelOf('a1', sid))}&l2=${encodeURIComponent(stuLevelOf('a2', sid))}&h=${Settings.data.a2Hint}`;
+this.lastQrUrl = base + q + frag;
+root.querySelector('#qrBox').innerHTML = QRCode.toSvgString(base + q + frag);
 root.querySelector('#qrUrlTxt').textContent = `?mode=practice&s=${this.selectedStudent.id}&a=${act}${lq ? ' (+실시간)' : ''}`;
 const local = location.protocol !== 'https:' && !/^(localhost|127\.0\.0\.1)$/.test(location.hostname);
 root.querySelector('#qrWarn').classList.toggle('on', local);
-root.querySelector('#smQrPick').style.display = 'none';
+root.querySelector('#smChoiceWrap').style.display = 'none';
 root.querySelector('#smQrWrap').classList.add('open');
+root.querySelector('#smBackBtn').style.display = 'inline-flex';
 };
-root.querySelector('#qrA1').onclick = () => showQr(1);
-root.querySelector('#qrA2').onclick = () => showQr(2);
+root.querySelector('#goQr1').onclick = () => showQr(1);
+root.querySelector('#goQr2').onclick = () => showQr(2);
+root.querySelector('#goLvBtn').onclick = () => { if (!this.selectedStudent) return; root.querySelector('#smChoiceWrap').style.display = 'none'; this.renderLv(); root.querySelector('#smLvWrap').style.display = 'flex'; root.querySelector('#smBackBtn').style.display = 'inline-flex'; };
 this.renderStudents();
+},
+renderLv() {
+const st = this.selectedStudent, w = document.getElementById('smLvWrap'); if (!w || !st) return;
+const row = (label, act) => { const cur = stuLevelOf(act, st.id); return `<div class="lvrow"><b>${label}</b>${['가', '나', '다', '다-1', '다-2'].map(v => `<button class="btn lvb ${cur === v ? 'on' : ''}" data-act="${act}" data-v="${v}">${v}</button>`).join('')}</div>`; };
+const hint = [['none', '없음'], ['num', '순서 번호'], ['ans', '정답 강조']];
+w.innerHTML = `<div class="lvt">${st.id}번 ${''}수준 옵션 (저장하면 칠판·내 기기에서 시작할 때 적용돼요)</div>` + row('활동 1 수준', 'a1') + row('활동 2 수준', 'a2') + `<div class="lvrow"><b>활동 2 힌트</b>${hint.map(([v, l]) => `<button class="btn lvb ${Settings.data.a2Hint === v ? 'on' : ''}" data-h="${v}">${l}</button>`).join('')}</div><div class="lvnote">가·나·다 = 숫자 범위, 다-1 = 독립, 다-2 = 함께 해요. 눌러서 바로 저장돼요.</div>`;
+w.querySelector('.lvt').textContent = `${st.id}번 ${st.name} · 수준 옵션 (누르면 바로 저장)`;
+w.querySelectorAll('[data-act]').forEach(b => b.onclick = () => { setStuLevel(b.dataset.act, st.id, b.dataset.v); this.renderLv(); });
+w.querySelectorAll('[data-h]').forEach(b => b.onclick = () => { Settings.set('a2Hint', b.dataset.h); this.renderLv(); });
 },
 renderStudents() {
 const grid = document.getElementById('studentGrid');
@@ -1362,7 +1380,7 @@ document.getElementById('smAvatar').src = st.photo || initialAvatar(st.name, st.
 document.getElementById('smName').textContent = st.name;
 document.getElementById('smChoiceWrap').style.display = 'flex';
 document.getElementById('smQrWrap').classList.remove('open');
-document.getElementById('smQrPick').style.display = 'none';
+document.getElementById('smLvWrap').style.display = 'none';
 document.getElementById('smBackBtn').style.display = 'none';
 m.classList.add('open');
 },
@@ -2673,11 +2691,20 @@ Router.register('a1da', Screens.a1da);
 /* ---------- 실시간 연동 (Firebase Realtime Database compat). 설정이 없으면 전부 꺼진 채 오프라인으로 정상 동작.
    전송 항목: 학생 번호, 활동, 단계, 정답률, 문항 수, 도움 단계, 시각. 이름·사진·얼굴은 절대 전송하지 않음. ---------- */
 const FB_VER = '10.12.2';
+function stuLevelOf(P, sid) { const d = Settings.data; sid = String(sid); const sub = d[P + 'Subs'] && d[P + 'Subs'][sid]; if (sub) return sub; const lv = d[P + 'Levels'] && d[P + 'Levels'][sid]; return lv || d[P === 'a1' ? 'a1Level' : 'a2Level'] || '가'; }
+function setStuLevel(P, sid, lv) {
+sid = String(sid); const sub = Object.assign({}, Settings.data[P + 'Subs']), lvs = Object.assign({}, Settings.data[P + 'Levels']);
+if (lv === '다-1' || lv === '다-2') { sub[sid] = lv; Settings.set(P + 'Subs', sub); }
+else { delete sub[sid]; lvs[sid] = lv; Settings.set(P + 'Subs', sub); Settings.set(P + 'Levels', lvs); }
+}
+const FB_DEFAULT = { apiKey: 'AIzaSyBLs7v08fBQ8a1lv0-PWk_kWBnxy1xG6F8', authDomain: 'handbell-class.firebaseapp.com', databaseURL: 'https://handbell-class-default-rtdb.firebaseio.com', projectId: 'handbell-class', storageBucket: 'handbell-class.firebasestorage.app', messagingSenderId: '923483706226', appId: '1:923483706226:web:2d150a12c2c0307595c3eb' };
+const FB_ROOT = 'gamnamu_live'; /* 핸드벨 앱과 같은 프로젝트를 쓰므로, 이 앱은 이 최상위 노드 밖을 절대 읽거나 쓰지 않음 */
 const LADDER = ['다-2', '다-1', '다', '나', '가'];
 const Live = {
 KEY: 'gamnamu.fb.v1', cfg: null, room: null, db: null, sid: null, hist: [], act: '1', prompt: '', timer: null, lastCmd: null, cmdPath: null, cmdCb: null, ready: false,
-load() { try { const o = JSON.parse(localStorage.getItem(this.KEY) || 'null'); if (o && o.cfg) { this.cfg = o.cfg; this.room = o.room; } } catch (e) {} },
-store() { try { localStorage.setItem(this.KEY, JSON.stringify({ cfg: this.cfg, room: this.room })); } catch (e) {} },
+custom: null, errKind: null,
+load() { try { const o = JSON.parse(localStorage.getItem(this.KEY) || 'null'); if (o) { if (o.cfg) this.custom = o.cfg; this.room = o.room || null; } } catch (e) {} this.cfg = this.custom || FB_DEFAULT; if (!this.room) { this.room = String(1000 + Math.floor(Math.random() * 9000)); this.store(); } },
+store() { try { localStorage.setItem(this.KEY, JSON.stringify({ cfg: this.custom, room: this.room })); } catch (e) {} },
 parseCfg(txt) {
 let t = String(txt || ''); const i = t.indexOf('{'), j = t.lastIndexOf('}'); if (i < 0 || j <= i) return null; t = t.slice(i, j + 1);
 let o = null; try { o = JSON.parse(t); } catch (e) { try { o = JSON.parse(t.replace(/'/g, '"').replace(/([{,]\s*)([A-Za-z_]\w*)\s*:/g, '$1"$2":').replace(/,(\s*})/g, '$1')); } catch (e2) {} }
@@ -2685,13 +2712,11 @@ if (!o || typeof o !== 'object' || !o.apiKey || !(o.projectId || o.databaseURL))
 const p = o.projectId || String(o.databaseURL).replace(/^https:\/\//, '').split(/[.-]/)[0];
 return { apiKey: o.apiKey, projectId: p, databaseURL: o.databaseURL || `https://${p}-default-rtdb.firebaseio.com` };
 },
-saveCfg(cfg) { this.cfg = cfg; if (!this.room) this.room = String(1000 + Math.floor(Math.random() * 9000)); this.store(); this.ready = false; this.db = null; },
-clear() { this.cfg = null; this.room = null; this.db = null; this.ready = false; try { localStorage.removeItem(this.KEY); } catch (e) {} },
+saveCfg(cfg) { this.custom = cfg; this.cfg = cfg; this.store(); this.ready = false; this.db = null; this.errKind = null; },
+clear() { this.custom = null; this.cfg = FB_DEFAULT; this.ready = false; this.db = null; this.errKind = null; this.store(); },
 b64(str) { return btoa(unescape(encodeURIComponent(str))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); },
 unb64(s) { s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '='; return decodeURIComponent(escape(atob(s))); },
-encCfg() { const c = this.cfg; if (!c) return ''; const def = `https://${c.projectId}-default-rtdb.firebaseio.com`; const a = [c.apiKey, c.projectId]; if (c.databaseURL !== def) a.push(c.databaseURL); return this.b64(JSON.stringify(a)); },
-decCfg(s) { try { const a = JSON.parse(this.unb64(s)); if (!Array.isArray(a) || !a[0] || !a[1]) return null; return { apiKey: a[0], projectId: a[1], databaseURL: a[2] || `https://${a[1]}-default-rtdb.firebaseio.com` }; } catch (e) { return null; } },
-qrQuery() { if (!this.cfg || !this.room) return ''; return `&r=${this.room}&fb=${this.encCfg()}`; },
+qrQuery() { return this.room ? `&r=${this.room}` : ''; },
 loadScript(src) { return new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); }); },
 async connect() {
 if (this.db) return true; if (!this.cfg) return false;
@@ -2700,18 +2725,22 @@ if (!(window.firebase && window.firebase.database)) {
 await this.loadScript(`https://www.gstatic.com/firebasejs/${FB_VER}/firebase-app-compat.js`);
 await this.loadScript(`https://www.gstatic.com/firebasejs/${FB_VER}/firebase-database-compat.js`);
 }
-const fb = window.firebase; const app = (fb.apps && fb.apps.length) ? fb.app() : fb.initializeApp(this.cfg);
-this.db = fb.database(); this.ready = true; return true;
+const fb = window.firebase; let app = null; try { app = (fb.apps || []).find(x => x && x.name === 'gamnamu') || null; } catch (e) {}
+if (!app) app = fb.initializeApp(this.cfg, 'gamnamu');
+this.db = app.database(); this.ready = true; return true;
 } catch (e) { this.db = null; return false; }
 },
-write(path, v) { try { if (this.db) this.db.ref(path).set(v); } catch (e) {} },
+fail(e) { const m = String((e && (e.code || e.message)) || e); this.errKind = /permission/i.test(m) ? 'perm' : 'conn'; try { if (Router.cur === 'monitor') Screens.monitor.note(); } catch (x) {} },
+write(path, v) { try { if (this.db && path.indexOf(FB_ROOT + '/') === 0) { const r = this.db.ref(path).set(v); if (r && r.catch) r.catch(e => this.fail(e)); } } catch (e) { this.fail(e); } },
+onv(path, cb) { if (path.indexOf(FB_ROOT + '/') !== 0) return; try { this.db.ref(path).on('value', cb, e => this.fail(e)); } catch (e) { this.fail(e); } },
 /* ----- 학생 기기 ----- */
 async startStudent(sid, cfg, room) {
-this.stopStudent(); this.sid = String(sid); this.cfg = cfg; this.room = room; this.hist = [];
+this.stopStudent(); this.sid = String(sid); this.room = room; this.hist = [];
 if (!(await this.connect())) return false;
-this.lastCmd = undefined; this.cmdPath = `rooms/${room}/cmd/${this.sid}`;
+this.lastCmd = undefined; this.cmdPath = `${FB_ROOT}/${room}/cmd/${this.sid}`;
 this.cmdCb = snap => { const v = snap && snap.val ? snap.val() : null; if (!v) { if (this.lastCmd === undefined) this.lastCmd = 0; return; } if (this.lastCmd === undefined) { this.lastCmd = v.ts || 0; return; } if ((v.ts || 0) > this.lastCmd) { this.lastCmd = v.ts; this.applyLevel(v.level); } };
-this.db.ref(this.cmdPath).on('value', this.cmdCb);
+this.onv(this.cmdPath, this.cmdCb);
+
 this.timer = setInterval(() => this.push(), 5000); this.push(); return true;
 },
 stopStudent() { clearInterval(this.timer); this.timer = null; try { if (this.db && this.cmdPath) this.db.ref(this.cmdPath).off('value', this.cmdCb); } catch (e) {} this.sid = null; this.cmdPath = null; },
@@ -2721,24 +2750,23 @@ const a = Router.cur === 'act2' ? '2' : (Router.cur === 'a1da' || Router.cur ===
 const h = this.hist.slice(-10), n = h.length, ok = h.filter(x => x).length;
 return { act: a, level: this.level(), acc: n ? Math.round(ok * 100 / n) : -1, n, prompt: this.prompt || '', ts: Date.now() };
 },
-push() { if (!this.sid || !this.db) return; this.write(`rooms/${this.room}/students/${this.sid}`, this.status()); },
+push() { if (!this.sid || !this.db) return; this.write(`${FB_ROOT}/${this.room}/students/${this.sid}`, this.status()); },
 rec(act, ok, prompt) { if (!this.sid) return; this.act = act; this.hist.push(!!ok); if (this.hist.length > 10) this.hist.shift(); this.prompt = prompt || ''; this.push(); },
 applyLevel(lv) {
 if (!LADDER.includes(lv) || !this.sid) return;
-const P = Router.cur === 'act2' ? 'a2' : 'a1', sub = Object.assign({}, Settings.data[P + 'Subs']), lvs = Object.assign({}, Settings.data[P + 'Levels']);
-if (lv === '다-1' || lv === '다-2') { sub[this.sid] = lv; Settings.set(P + 'Subs', sub); }
-else { delete sub[this.sid]; lvs[this.sid] = lv; Settings.set(P + 'Subs', sub); Settings.set(P + 'Levels', lvs); }
+setStuLevel(Router.cur === 'act2' ? 'a2' : 'a1', this.sid, lv);
 setTimeout(() => this.push(), 400);
 },
 /* ----- 칠판 기기 ----- */
 watchPath: null, watchCb: null,
 async watch(cb) {
 if (!(await this.connect())) return false;
-this.unwatch(); this.watchPath = `rooms/${this.room}/students`; this.watchCb = snap => cb(snap && snap.val ? (snap.val() || {}) : {});
-this.db.ref(this.watchPath).on('value', this.watchCb); return true;
+this.unwatch(); this.watchPath = `${FB_ROOT}/${this.room}/students`; this.watchCb = snap => { const v = snap && snap.val ? (snap.val() || {}) : {}; this.prune(v); cb(v); };
+this.onv(this.watchPath, this.watchCb); return true;
 },
+prune(v) { const now = Date.now(); Object.keys(v).forEach(k => { const d = v[k]; if (d && d.ts && now - d.ts > 6 * 3600 * 1000) this.write(`${FB_ROOT}/${this.room}/students/${k}`, null); }); },
 unwatch() { try { if (this.db && this.watchPath) this.db.ref(this.watchPath).off('value', this.watchCb); } catch (e) {} this.watchPath = null; },
-sendLevel(sid, lv) { if (this.db && LADDER.includes(lv)) this.write(`rooms/${this.room}/cmd/${sid}`, { level: lv, ts: Date.now() }); }
+sendLevel(sid, lv) { if (this.db && LADDER.includes(lv)) this.write(`${FB_ROOT}/${this.room}/cmd/${sid}`, { level: lv, ts: Date.now() }); }
 };
 Live.load();
 
@@ -2749,8 +2777,8 @@ this.root = root; this.data = {};
 root.innerHTML = `<div id="monitor"><div class="mtop"><button class="btn" id="monBack">처음으로</button></div><h1>실시간 모니터</h1><button class="btn mcfg" id="monCfg">⚙ 실시간 연결 설정</button><div class="mgrid" id="monGrid"></div></div>`;
 root.querySelector('#monBack').onclick = () => { Sfx.unlock(); Router.go('intro'); };
 root.querySelector('#monCfg').onclick = () => this.cfgModal();
-this.draw();
-if (Live.cfg) Live.watch(d => { this.data = d || {}; this.draw(); });
+this.draw(); this.note();
+Live.errKind = null; Live.watch(d => { this.data = d || {}; this.draw(); }).then(ok => { if (!ok) Live.fail('연결'); });
 this.timers.push(setInterval(() => this.draw(), 2000));
 },
 unmount() { this.timers.forEach(clearInterval); this.timers = []; Live.unwatch(); },
@@ -2774,17 +2802,24 @@ const mv = dir => { if (!d) return; const k = LADDER.indexOf(d.level); if (k < 0
 z.querySelector('.mup').onclick = () => mv(1); z.querySelector('.mdn').onclick = () => mv(-1);
 });
 },
+note() {
+const mon = this.root && this.root.querySelector('#monitor'); if (!mon) return; const old = mon.querySelector('.mnote'); if (old) old.remove();
+if (!Live.errKind) return;
+const n = document.createElement('div'); n.className = 'mnote';
+n.innerHTML = Live.errKind === 'perm' ? '<h2>권한 오류</h2><p>Firebase 콘솔 규칙에 <b>gamnamu_live</b> 읽기/쓰기 허용이 필요해요.<br>(설정 방법을 눌러 규칙 예시를 확인하세요)</p><button class="btn" id="monHow">설정 방법 보기</button>' : '<h2>연결 안 됨 — 설정 필요</h2><p>인터넷 또는 Firebase 설정을 확인해 주세요.<br>연결이 없어도 모든 활동은 그대로 쓸 수 있어요.</p><button class="btn" id="monHow">설정 방법 보기 / 설정하기</button>';
+mon.appendChild(n); n.querySelector('#monHow').onclick = () => this.cfgModal();
+},
 cfgModal() {
 const m = document.createElement('div'); m.id = 'mcfgModal';
-const has = !!Live.cfg;
-m.innerHTML = `<div class="box"><b>실시간 연결 설정</b><div>Firebase 콘솔의 firebaseConfig를 붙여 넣으세요. (이 기기에만 저장돼요)</div><textarea id="mcfgTxt" placeholder='{ apiKey: "...", projectId: "...", databaseURL: "..." }'></textarea><div id="mcfgInfo">${has ? `교실 코드 <b>${Live.room}</b> · 연결 설정됨` : '아직 설정이 없어요. 설정이 없어도 모든 활동은 그대로 쓸 수 있어요.'}</div><div class="row">${has ? '<button class="btn" id="mcfgDel">연결 해제</button>' : ''}<button class="btn" id="mcfgCancel">닫기</button><button class="btn" id="mcfgSave" style="background:#2E5E9E;color:#fff">저장</button></div></div>`;
+const has = !!Live.cfg; const cust = !!Live.custom;
+m.innerHTML = `<div class="box"><b>실시간 연결 설정</b><ol><li>Firebase 콘솔(console.firebase.google.com)에서 프로젝트를 만들어요.</li><li>「빌드 → Realtime Database」에서 데이터베이스를 만들어요.</li><li>「규칙」 탭에서 <b>기존 규칙은 그대로 두고</b> 최상위에 <code>"gamnamu_live":{".read":true,".write":true}</code> 한 줄만 추가해 게시해요. (이 앱은 gamnamu_live 안에서만 읽고 쓰며, 학생 번호와 단계 숫자만 오가요)</li><li>기본 연결 정보가 이미 내장돼 있어요. 다른 프로젝트를 쓰려면 firebaseConfig를 아래에 붙여 넣고 저장해요. (이 기기에만 저장, QR 폰은 내장 정보를 써요)</li></ol><textarea id="mcfgTxt" placeholder='{ apiKey: "...", projectId: "...", databaseURL: "..." }'></textarea><div id="mcfgInfo">${has ? `교실 코드 <b>${Live.room}</b> · ${Live.custom ? '직접 설정한 연결' : '기본 연결(내장)'}` : ''}</div><div class="row">${cust ? '<button class="btn" id="mcfgDel">기본값으로</button>' : ''}<button class="btn" id="mcfgCancel">닫기</button><button class="btn" id="mcfgSave" style="background:#2E5E9E;color:#fff">저장</button></div></div>`;
 this.root.querySelector('#monitor').appendChild(m);
 m.querySelector('#mcfgCancel').onclick = () => m.remove();
-const del = m.querySelector('#mcfgDel'); if (del) del.onclick = () => { Live.unwatch(); Live.clear(); this.data = {}; m.remove(); this.draw(); };
+const del = m.querySelector('#mcfgDel'); if (del) del.onclick = () => { Live.unwatch(); Live.clear(); this.data = {}; m.remove(); this.draw(); this.note(); };
 m.querySelector('#mcfgSave').onclick = () => {
 const c = Live.parseCfg(m.querySelector('#mcfgTxt').value);
 if (!c) { m.querySelector('#mcfgInfo').textContent = '설정을 읽지 못했어요. apiKey와 projectId(또는 databaseURL)가 들어 있는지 확인해 주세요.'; return; }
-Live.unwatch(); Live.saveCfg(c); m.remove(); this.data = {}; this.draw(); Live.watch(d => { this.data = d || {}; this.draw(); });
+Live.unwatch(); Live.saveCfg(c); m.remove(); this.data = {}; this.draw(); this.note(); Live.watch(d => { this.data = d || {}; this.draw(); });
 };
 }
 };
@@ -2912,8 +2947,17 @@ Speech.say(notice);
 state.mode = 'practice';
 state.practiceStudentId = sNum;
 await MyFace.load(sNum);
-const act = params.get('a'), room = params.get('r'), fbc = params.get('fb') ? Live.decCfg(params.get('fb')) : null;
-if (fbc && room && /^\d{4}$/.test(room)) Live.startStudent(sNum, fbc, room);
+const fh = new URLSearchParams(location.hash.replace(/^#/, '')), fnm = (fh.get('n') || '').trim().slice(0, 10);
+if (fnm) { /* 칠판 명단의 번호·이름을 그대로 사용. 이 기기의 얼굴 사진은 같은 번호·같은 이름으로 저장된 경우에만 표시 */
+const mf = state.myFace;
+state.myFace = { photo: (mf && !mf.skipped && mf.name === fnm && mf.photo) ? mf.photo : '', name: fnm, skipped: false, ts: 0 };
+state.fragName = fnm;
+const L = ['가', '나', '다', '다-1', '다-2'], l1 = fh.get('l1'), l2 = fh.get('l2'), hh = fh.get('h');
+if (L.includes(l1)) setStuLevel('a1', sNum, l1); if (L.includes(l2)) setStuLevel('a2', sNum, l2);
+if (['none', 'num', 'ans'].includes(hh)) Settings.set('a2Hint', hh);
+}
+const act = params.get('a'), room = params.get('r');
+if (room && /^\d{4}$/.test(room)) Live.startStudent(sNum, FB_DEFAULT, room);
 if (act === '2') Router.go('act2');
 else Router.go(state.myFace ? 'activity1' : 'register');
 }
