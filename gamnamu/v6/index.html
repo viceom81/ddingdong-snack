@@ -404,6 +404,10 @@ display:flex;flex-direction:column;align-items:center;justify-content:center;gap
 #act2 .daChoices{display:flex;gap:calc(var(--u)*2.5);flex:1;width:100%;justify-content:center;align-items:stretch;min-height:0}
 #act2 .dab{position:relative;flex:1;max-width:calc(var(--u)*26);background:#fff;border:calc(var(--u)*.5) solid #1F2A44;border-radius:calc(var(--u)*2);padding:calc(var(--u)*1.2);color:#E8701A;font-size:calc(var(--u)*11);box-shadow:0 calc(var(--u)*.5) 0 rgba(0,0,0,.2)}
 #act2 .dab svg{width:100%;height:100%}
+#act2 .daTarget.mt svg{width:100%;height:100%}#act2 .dab.mc svg{width:100%;height:100%}
+#act2 .dab .mnum{position:absolute;left:calc(var(--u)*.6);top:calc(var(--u)*.4);width:calc(var(--u)*3.4);height:calc(var(--u)*3.4);border-radius:50%;background:#2E8B3D;color:#fff;font-style:normal;font-size:calc(var(--u)*2.4);font-weight:900;display:flex;align-items:center;justify-content:center}
+#act2 .dab.ans{border-color:#2E8B3D;box-shadow:0 0 0 calc(var(--u)*.6) #9be3a8}
+#act2 .dab.shk{animation:mshk .5s}@keyframes mshk{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 #act2 .dab.dim{opacity:.22;pointer-events:none}
 #act2 .dab.ok{background:#C8E6C9;border-color:#2E8B3D}
 #act2 .dab.press{transform:scale(.95)}
@@ -1047,7 +1051,7 @@ dotPct: 0, // 점 크기 증감(%) -40~+40
 fixed: 0, // 0=무작위, 1~5=숫자 고정
 autoClear: true, // 오류 시 점 자동 지움
 showCircles: false, // 땅에 점선
-a1Total: 10, a2Total: 5, daOn: 'off', gearHold: 'off', a2Sub: '다-1', a2Subs: {}, daScan: 'off', daScanMs: '1500', daChoices1: '2', daChoices2: '1', daHint: '6000', daFriend: 'off', a2Level: '가', a2Item: 'both', a2Hint: 'num', a2Levels: {}, a2Ranges: {}, a1Sub: '다-1', a1Subs: {}, a1Level: '가', a1Levels: {}, a1Stages: {}, a1DaOn: 'off', a2SpeakCount: false, a2ShowCount: false, a2PracticeCount: false
+a1Total: 10, a2Total: 5, daOn: 'off', gearHold: 'off', a2Sub: '다-1', a2Subs: {}, daScan: 'off', daScanMs: '1500', daChoices1: '2', daChoices2: '1', daHint: '6000', daFriend: 'off', a2Level: '가', a2Item: 'both', a2Hint: 'num', a2Levels: {}, a2Ranges: {}, a2Match: {}, a1Sub: '다-1', a1Subs: {}, a1Level: '가', a1Levels: {}, a1Stages: {}, a1DaOn: 'off', a2SpeakCount: false, a2ShowCount: false, a2PracticeCount: false
 };
 const Settings = {
 data: Object.assign({}, DEFAULTS),
@@ -2274,16 +2278,18 @@ return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
 }
 function a2Sid() { return state.mode === 'board' && state.activeStudent ? state.activeStudent.id : state.mode === 'practice' ? state.practiceStudentId : null; }
 /* 단계(1~6) 매핑표 — 모니터 ▲▼ 명령 → 학생 기기 설정
-   단계  표시           활동2 범위   다-모드  수준  저장 위치
-    1   다 · 색 짝짓기    1~2        다-2     다    a2Subs[번호]='다-2', a2Levels[번호]='다'
-    2   다 · 모양 짝짓기  1~2        다-1     다    a2Subs[번호]='다-1', a2Levels[번호]='다'
+   단계  표시           활동2 문제               수준  저장 위치
+    1   다 · 색 짝짓기    색 짝짓기(숫자 무관)      다    a2Match[번호]=1, a2Levels='다' (a2Subs='다-2'면 도움 모드)
+    2   다 · 모양 짝짓기  모양 짝짓기(숫자 무관)    다    a2Match[번호]=2, a2Levels='다'
+    (기존 다-1/다-2 숫자 짝짓기는 학생 수준 옵션의 다 모드로 유지, 단계 표시는 3)
     3   나 · 1~2개        1~2        -        나    a2Subs 삭제, a2Levels='나', a2Ranges[번호]=[1,2]
     4   나 · 3개          1~3        -        나    a2Subs 삭제, a2Levels='나', a2Ranges 삭제(나=1~3)
     5   가 · 4~5개        1~4        -        가    a2Subs 삭제, a2Levels='가', a2Ranges[번호]=[1,4]
     6   가 · 숫자 찾기    1~5        -        가    a2Subs 삭제, a2Levels='가', a2Ranges 삭제(가=1~5)
    활동1은 범위가 없어 다-모드(1·2)와 수준(3~6 → 다/나/가)만 반영. 학생 상태의 level은 단계 번호(숫자), lv는 기존 문자. */
+function matchStage() { const m = (Settings.data.a2Match || {})[a2Sid()]; return (m === 1 || m === 2) ? m : 0; }
 function a2Range() { const r = (Settings.data.a2Ranges || {})[a2Sid()]; return (Array.isArray(r) && r.length === 2) ? r : A2_LEVELS[a2Level()]; }
-function stageOf(P) { const m = daMode(P); if (m) return m === '다-2' ? 1 : 2; if (P === 'a1') { const lv = a1Level(), g = (Settings.data.a1Stages || {})[a2Sid()]; if (g >= 3 && g <= 6 && (g <= 4 ? (g === 3 ? lv === '다' || lv === '나' : lv === '나') : lv === '가')) return g; return lv === '다' ? 3 : lv === '나' ? 4 : 6; } const hi = a2Range()[1]; return hi <= 2 ? 3 : hi === 3 ? 4 : hi === 4 ? 5 : 6; }
+function stageOf(P) { if (P === 'a2') { const ms = matchStage(); if (ms) return ms; } const m = daMode(P); if (m) return 3; if (P === 'a1') { const lv = a1Level(), g = (Settings.data.a1Stages || {})[a2Sid()]; if (g >= 1 && g <= 6 && (g <= 2 ? lv === '다' : g === 3 ? (lv === '다' || lv === '나') : g === 4 ? lv === '나' : lv === '가')) return g; return lv === '다' ? 3 : lv === '나' ? 4 : 6; } const hi = a2Range()[1]; return hi <= 2 ? 3 : hi === 3 ? 4 : hi === 4 ? 5 : 6; }
 function a2Level() {
 const d = Settings.data; let lv = d.a2Level; const sid = a2Sid();
 if (sid != null && d.a2Levels && d.a2Levels[sid]) lv = d.a2Levels[sid];
@@ -2315,15 +2321,15 @@ unmount() { this.timers.forEach(clearTimeout); this.timers = []; Scan.stop(); Da
 mount(root) { this.root = root; this.startSession(); },
 startSession() {
 this.timers.forEach(clearTimeout); this.timers = [];
-const [lo, hi] = daMode() ? [1, 2] : a2Range();
+const [lo, hi] = (daMode() || matchStage()) ? [1, 2] : a2Range();
 a2.total = a2TotalOpt(); a2.queue = a2Queue(lo, hi, a2.total); a2.idx = 0; a2.results = [];
 const its = a2Items(), st = its[Math.floor(Math.random() * its.length)];
 a2.items = a2.queue.map((_, i) => its.length === 1 ? its[0] : (i % 2 === 0 ? st : (st === 'leaf' ? 'persimmon' : 'leaf')));
 this.setRound();
 },
-setRound() { a2.n = a2.queue[a2.idx]; a2.item = a2.items[a2.idx]; a2.tries = 0; this._sig = this.sigNow(); this._fut = this.futNow(); if (daMode()) { this.daRound(); return; } this.showHarvest(true); },
-sigNow() { const d = Settings.data; return [daMode(), d.daChoices1, d.daChoices2, d.daHint, d.daScan, d.daScanMs].join('|'); },
-futNow() { const d = Settings.data, r = daMode() ? [1, 2] : a2Range(); return [a2TotalOpt(), r.join('-'), d.a2Item].join('|'); },
+setRound() { a2.n = a2.queue[a2.idx]; a2.item = a2.items[a2.idx]; a2.tries = 0; this._sig = this.sigNow(); this._fut = this.futNow(); if (matchStage()) { this.matchRound(); return; } if (daMode()) { this.daRound(); return; } this.showHarvest(true); },
+sigNow() { const d = Settings.data; return [matchStage(), daMode(), d.a2Hint, d.daChoices1, d.daChoices2, d.daHint, d.daScan, d.daScanMs].join('|'); },
+futNow() { const d = Settings.data, r = (daMode() || matchStage()) ? [1, 2] : a2Range(); return [a2TotalOpt(), r.join('-'), d.a2Item].join('|'); },
 redo() { if (a2.phase === 'order' || !this.root) return; this.setRound(); },
 applySettings() {
 if (!this.root || this._sig === undefined) return;
@@ -2332,7 +2338,7 @@ if (a2.phase === 'harvest' && this.svg && !!document.getElementById('a2BCount') 
 if (live && this._sig !== this.sigNow()) { this.setRound(); return; }
 if (this._fut !== this.futNow()) {
 this._fut = this.futNow();
-const T = a2TotalOpt(), [lo, hi] = daMode() ? [1, 2] : a2Range(), cur = a2.idx;
+const T = a2TotalOpt(), [lo, hi] = (daMode() || matchStage()) ? [1, 2] : a2Range(), cur = a2.idx;
 a2.total = Math.max(T, cur + 1);
 const head = a2.queue.slice(0, cur + 1), hi_ = a2.items.slice(0, cur + 1);
 const q = a2Queue(lo, hi, Math.max(1, a2.total)).slice(0, a2.total - head.length);
@@ -2643,6 +2649,65 @@ this.root.appendChild(fr); fr.querySelector('#daFriendDone').onclick = () => { f
 Speech.say(m === '다-2' ? `${it.name} ${A2_CNT[n]} ${it.unit}. 같이 눌러요` : `${it.name} ${A2_CNT[n]} ${it.unit}. 같은 그림을 찾아요`);
 };
 
+/* ---------- 활동2 1·2단계: 색 짝짓기 / 모양 짝짓기 (숫자 무관, 에러리스 러닝, 다 수준 UI·힌트·기록 재사용) ---------- */
+const MT_COLORS = { red: ['빨간', '#D83A2E'], yellow: ['노란', '#F2C230'], orange: ['주황', '#F28C28'], brown: ['갈색', '#8B5A2B'] };
+const MT_SHAPES = { maple: '단풍잎', ginkgo: '은행잎', acorn: '도토리', persimmon: '감' };
+function mtGlyph(shape, color) {
+const c = MT_COLORS[color][1], st = 'stroke="#3b2412" stroke-width="2" stroke-linejoin="round"';
+let g;
+if (shape === 'maple') g = `<path d="M0 -24 L5 -12 L16 -16 L12 -4 L24 -2 L14 6 L18 18 L5 12 L0 24 L-5 12 L-18 18 L-14 6 L-24 -2 L-12 -4 L-16 -16 L-5 -12Z" fill="${c}" ${st}/><path d="M0 24 L0 30" stroke="#3b2412" stroke-width="3"/>`;
+else if (shape === 'ginkgo') g = `<path d="M0 22 L-4 6 Q-26 4 -24 -14 Q-12 -22 -2 -14 L0 -18 L2 -14 Q12 -22 24 -14 Q26 4 4 6Z" fill="${c}" ${st}/>`;
+else if (shape === 'acorn') g = `<ellipse cx="0" cy="6" rx="14" ry="18" fill="${c}" ${st}/><path d="M-17 -8 Q0 -26 17 -8Z" fill="#6B4423" ${st}/><path d="M0 -22 L0 -28" stroke="#3b2412" stroke-width="3"/>`;
+else g = `<circle cx="0" cy="3" r="19" fill="${c}" ${st}/><path d="M-12 -12 L0 -6 L12 -12 L6 -15 L0 -22 L-6 -15Z" fill="#4c8a2b" stroke="#2d5c14" stroke-width="2"/>`;
+return `<svg viewBox="-30 -32 60 64" preserveAspectRatio="xMidYMid meet">${g}</svg>`;
+}
+Screens.act2.matchRound = function () {
+const stg = matchStage(), help = daSub('a2') === '다-2' && (Settings.data.a2Subs || {})[a2Sid()] === '다-2', mode = help ? '다-2' : '다-1';
+a2.phase = 'da'; this.lock = false; Scan.stop(); DaHint.stop();
+const ttl = stg === 1 ? '1단계 색 짝짓기' : '2단계 모양 짝짓기';
+this.shell(ttl);
+const lv = this.root.querySelector('.a2lv'); if (lv) lv.textContent = `수준 다 · ${ttl}${help ? ' · 함께' : ''}`;
+this.stat(stg === 1 ? '같은 색을 골라요' : '같은 모양을 골라요');
+const cnt = help ? (daNum('daChoices2', 1) >= 2 ? 2 : 1) : Math.min(3, Math.max(2, daNum('daChoices1', 2)));
+const colors = Object.keys(MT_COLORS), shapes = ['maple', 'ginkgo', 'acorn', 'persimmon'];
+let items, tgtKey, fixed = null;
+if (stg === 1) { fixed = a2Shuffle(['maple', 'ginkgo'])[0]; const cs = a2Shuffle(colors); tgtKey = cs[0]; items = a2Shuffle(cs.slice(0, cnt)).map(c => ({ key: c, shape: fixed, color: c })); }
+else { fixed = a2Shuffle(colors)[0]; const ss = a2Shuffle(shapes); tgtKey = ss[0]; items = a2Shuffle(ss.slice(0, cnt)).map(sh => ({ key: sh, shape: sh, color: fixed })); }
+const tgtItem = items.find(x => x.key === tgtKey) || items[0]; tgtKey = tgtItem.key;
+const hintOpt = Settings.data.a2Hint;
+const wrap = document.createElement('div'); wrap.className = 'daArea';
+wrap.innerHTML = `<div class="daTarget mt" id="mtTarget">${mtGlyph(tgtItem.shape, tgtItem.color)}</div><div class="daChoices">${items.map((x, i) => `<button class="btn dab mc ${hintOpt === 'ans' && x.key === tgtKey ? 'ans' : ''}" data-v="${x.key}">${hintOpt === 'num' ? `<i class="mnum">${i + 1}</i>` : ''}${mtGlyph(x.shape, x.color)}</button>`).join('')}</div>`;
+this.root.appendChild(wrap);
+const btns = () => [...wrap.querySelectorAll('.dab')];
+const tgt = wrap.querySelector(`.dab[data-v="${tgtKey}"]`);
+let wrong = 0, done = false;
+const finish = stage => {
+if (done) return; done = true; Scan.stop(); DaHint.stop();
+DaLog.add({ sid: a2Sid(), act: 2, sub: mode, stage }); Live.rec('2', stage === '독립', stage);
+a2.phase = 'ok'; a2.results.push({ item: a2.item, n: a2.n, tries: wrong }); tgt.classList.remove('blink'); tgt.classList.add('ok');
+Sfx.dingdong(); this.pulse(); Speech.say('딩동! 잘했어요!');
+this.later(() => { if (a2.idx + 1 < a2.total) { a2.idx++; this.setRound(); } else this.showCards(); }, 1700);
+};
+const pick = b => {
+if (done) return; Sfx.unlock();
+if (b.dataset.v === tgtKey) { finish(help ? DaHint.stage : (wrong === 0 ? '독립' : '시각힌트')); return; }
+wrong++; Live.rec('2', false, '오답'); Sfx.error(); b.classList.add('shk'); setTimeout(() => b.classList.remove('shk'), 600);
+if (wrong >= 2) tgt.classList.add('blink');
+};
+wrap.onclick = e => { const b = e.target.closest('.dab'); if (b) pick(b); };
+const begin = () => { if (help) DaHint.start(this, tgt, stg === 1 ? '같은 색을 눌러요' : '같은 모양을 눌러요'); Scan.start(btns, pick); };
+if (help) {
+const tg = document.createElement('button'); tg.className = 'btn daTogether'; tg.id = 'daTogether'; tg.textContent = '함께';
+tg.onclick = () => { if (done) return; DaHint.stage = '신체촉진'; tgt.classList.add('press'); finish('신체촉진'); };
+this.root.appendChild(tg);
+}
+if (help && Settings.data.daFriend === 'on') {
+const fr = document.createElement('div'); fr.className = 'daFriend'; fr.innerHTML = '<span>친구가 먼저 해 봐요</span><button class="btn" id="daFriendDone">시범 끝</button>';
+this.root.appendChild(fr); fr.querySelector('#daFriendDone').onclick = () => { fr.remove(); begin(); };
+} else begin();
+Speech.say(stg === 1 ? '같은 색을 찾아요' : '같은 모양을 찾아요');
+};
+
 /* ---------- 활동1 다 수준 화면 ---------- */
 Screens.a1da = {
 timers: [], root: null, idx: 0, total: 0, queue: [], fruits: 0, n: 1, step: 'match', wrong: 0, filled: 0, done: false, mode: '다-1',
@@ -2772,12 +2837,13 @@ function stuLevelOf(P, sid) { const d = Settings.data; sid = String(sid); const 
 function applyStage(P, sid, n) {
 sid = String(sid); n = Number(n); if (!(n >= 1 && n <= 6)) return;
 const sub = Object.assign({}, Settings.data[P + 'Subs']), lvs = Object.assign({}, Settings.data[P + 'Levels']), rng = Object.assign({}, Settings.data.a2Ranges);
-if (n <= 2) { sub[sid] = n === 1 ? '다-2' : '다-1'; lvs[sid] = '다'; delete rng[sid]; }
-else { delete sub[sid]; lvs[sid] = n <= 4 ? '나' : '가'; if (n === 3) rng[sid] = [1, 2]; else if (n === 5) rng[sid] = [1, 4]; else delete rng[sid]; }
-Settings.set(P + 'Subs', sub); Settings.set(P + 'Levels', lvs); if (P === 'a2') Settings.set('a2Ranges', rng); else { const g = Object.assign({}, Settings.data.a1Stages); g[sid] = n; Settings.set('a1Stages', g); }
+const mt = Object.assign({}, Settings.data.a2Match);
+if (n <= 2) { lvs[sid] = '다'; delete rng[sid]; if (P === 'a2') mt[sid] = n; else delete sub[sid]; }
+else { delete sub[sid]; delete mt[sid]; lvs[sid] = n <= 4 ? '나' : '가'; if (n === 3) rng[sid] = [1, 2]; else if (n === 5) rng[sid] = [1, 4]; else delete rng[sid]; }
+Settings.set(P + 'Subs', sub); Settings.set(P + 'Levels', lvs); if (P === 'a2') { Settings.set('a2Ranges', rng); Settings.set('a2Match', mt); } else { const g = Object.assign({}, Settings.data.a1Stages); g[sid] = n; Settings.set('a1Stages', g); }
 }
 function setStuLevel(P, sid, lv) {
-sid = String(sid); if (P === 'a2' && Settings.data.a2Ranges && Settings.data.a2Ranges[sid]) { const r = Object.assign({}, Settings.data.a2Ranges); delete r[sid]; Settings.set('a2Ranges', r); } const sub = Object.assign({}, Settings.data[P + 'Subs']), lvs = Object.assign({}, Settings.data[P + 'Levels']);
+sid = String(sid); if (P === 'a2' && Settings.data.a2Match && Settings.data.a2Match[sid]) { const mm = Object.assign({}, Settings.data.a2Match); delete mm[sid]; Settings.set('a2Match', mm); } if (P === 'a2' && Settings.data.a2Ranges && Settings.data.a2Ranges[sid]) { const r = Object.assign({}, Settings.data.a2Ranges); delete r[sid]; Settings.set('a2Ranges', r); } const sub = Object.assign({}, Settings.data[P + 'Subs']), lvs = Object.assign({}, Settings.data[P + 'Levels']);
 if (lv === '다-1' || lv === '다-2') { sub[sid] = lv; Settings.set(P + 'Subs', sub); }
 else { delete sub[sid]; lvs[sid] = lv; Settings.set(P + 'Subs', sub); Settings.set(P + 'Levels', lvs); }
 }
