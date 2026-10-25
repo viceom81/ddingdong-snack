@@ -498,6 +498,87 @@ display:flex;flex-direction:column;align-items:center;justify-content:center;gap
 @keyframes gearHold{from{width:0}to{width:100%}}
 #openRosterBtn{top:calc(var(--u)*3.6)!important}
 #act2 .a2lv{top:calc(var(--u)*3.6)!important}
+/* ---------- v7: 수준 칩·팝업, 같은 것 찾기 화면 ---------- */
+#lvChip{position:absolute;display:none;right:calc(var(--u)*.6);top:calc(var(--u)*3.8);z-index:49;align-items:center;height:calc(var(--u)*3.6);padding:0 calc(var(--u)*1.4);border-radius:calc(var(--u)*1.8);background:#F28C28;color:#fff;border:calc(var(--u)*.25) solid #B85F0E;font-size:calc(var(--u)*1.8);font-weight:900;white-space:nowrap;box-shadow:0 calc(var(--u)*.3) 0 #B85F0E;cursor:pointer}
+#act2 .a2lv{display:none!important}
+#lvModal{position:absolute;inset:0;z-index:61;background:rgba(20,25,40,.6);display:none;align-items:center;justify-content:center}
+#lvModal.open{display:flex}
+#lvModal .card{width:calc(var(--u)*80);max-height:calc(var(--u)*54.5);overflow:auto;background:#fff;border-radius:calc(var(--u)*1.6);padding:calc(var(--u)*1.2) calc(var(--u)*2.2)}
+#lvModal h3{margin:0 0 calc(var(--u)*.4);font-size:calc(var(--u)*2.6)}
+#lvModal .lvTabs{display:flex;gap:calc(var(--u)*.8);align-items:center}
+#lvModal .lvTabs .sb{min-width:calc(var(--u)*11)}#lvModal .lvTabs .sb.on{background:#F28C28;color:#fff}
+#lvModal .lvWho{margin-left:auto;font-size:calc(var(--u)*1.8);font-weight:900;color:#6B7A90}
+#lvModal .lvSum{margin:calc(var(--u)*.7) 0;padding:calc(var(--u)*.5) calc(var(--u)*1.4);background:#FFF1D6;border:calc(var(--u)*.2) solid #E8C766;border-radius:calc(var(--u)*1.2);font-size:calc(var(--u)*2.3);font-weight:900}
+.lvBigRow{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(var(--u)*1.2)}
+.lvBig{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--u)*.3);min-height:calc(var(--u)*8.2);border-radius:calc(var(--u)*1.4);background:#E9ECF3;border:calc(var(--u)*.3) solid transparent;padding:calc(var(--u)*.6)}
+.lvBig b{font-size:calc(var(--u)*4.2);line-height:1}.lvBig span{font-size:calc(var(--u)*1.7);font-weight:800;text-align:center}
+.lvBig.on,.lvOpt.on{background:#2E5E9E;color:#fff;border-color:#1B3F73;box-shadow:0 0 0 calc(var(--u)*.3) #9DB8E0}
+.osec{margin:calc(var(--u)*.8) 0 calc(var(--u)*.3);font-size:calc(var(--u)*2.2);font-weight:900;color:#1B3F73;grid-column:1/-1;border-left:calc(var(--u)*.6) solid #F28C28;padding-left:calc(var(--u)*.8)}
+.osec small{font-size:calc(var(--u)*1.5);color:#6B7A90;font-weight:700;margin-left:calc(var(--u)*.8)}
+.lvRow3{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(var(--u)*1.2)}.lvRow3.four{grid-template-columns:repeat(4,1fr)}.lvRow3.two{grid-template-columns:repeat(2,1fr)}
+.lvOpt{display:flex;align-items:center;justify-content:center;gap:calc(var(--u)*.8);min-height:calc(var(--u)*5.2);border-radius:calc(var(--u)*1.2);background:#E9ECF3;border:calc(var(--u)*.3) solid transparent;font-size:calc(var(--u)*2.4);font-weight:900}
+.lvOpt i{font-style:normal;font-size:calc(var(--u)*3.2)}.lvOpt small{font-size:calc(var(--u)*1.4);font-weight:700;opacity:.8}
+.lvStu{display:flex;flex-wrap:wrap;gap:calc(var(--u)*.7)}.lvStu .sb{min-width:calc(var(--u)*11)}
+.smLv .lvsep{font-size:calc(var(--u)*1.6);font-weight:900;color:#6B7A90;margin:0 calc(var(--u)*.3) 0 calc(var(--u)*1)}
+#introLv{right:calc(var(--u)*3);top:calc(var(--u)*.4);min-height:calc(var(--u)*3)!important;background:#F28C28;color:#fff;border:calc(var(--u)*.2) solid #B85F0E;opacity:1}
+/* 같은 것 찾기 틀 */
+#act2 .daArea.sameArea{top:calc(var(--u)*8.2);bottom:calc(var(--u)*10.4);gap:calc(var(--u)*.8)}
+.sameTop{display:flex;align-items:center;gap:calc(var(--u)*1.6);flex:none}
+.sameTop .daTarget{border-color:#E8701A;border-width:calc(var(--u)*.7);box-shadow:0 0 0 calc(var(--u)*.6) #FFD9A8,0 calc(var(--u)*.5) 0 rgba(0,0,0,.18);height:calc(var(--u)*12);width:calc(var(--u)*15)}
+.thisTag{position:relative;display:flex;align-items:center;gap:calc(var(--u)*.6);background:#E8701A;color:#fff;border-radius:calc(var(--u)*1.6);padding:calc(var(--u)*.7) calc(var(--u)*1.6);font-size:calc(var(--u)*4.2);font-weight:900;box-shadow:0 calc(var(--u)*.4) 0 #A94E0B}
+.thisTag span{font-size:calc(var(--u)*4)}
+.thisTag::after{content:'';position:absolute;right:calc(var(--u)*-1.4);top:50%;transform:translateY(-50%);border:calc(var(--u)*1.1) solid transparent;border-left:calc(var(--u)*1.5) solid #E8701A;border-right:0}
+.sameMid{display:flex;align-items:center;justify-content:center;gap:calc(var(--u)*1.6);flex:none}
+.sameMid .arr{font-size:calc(var(--u)*4.4);line-height:1;color:#1B5FC1;font-weight:900;animation:daBob .8s ease-in-out infinite}
+.sameMid .findTag{background:#1B5FC1;color:#fff;border-radius:calc(var(--u)*1.6);padding:calc(var(--u)*.5) calc(var(--u)*2.2);font-size:calc(var(--u)*3.4);font-weight:900;box-shadow:0 calc(var(--u)*.4) 0 #123F82}
+.sameArea .daChoices{border:calc(var(--u)*.45) dashed #1B5FC1;border-radius:calc(var(--u)*2);padding:calc(var(--u)*1);background:rgba(27,95,193,.07)}
+#act2 .dab.ok::after{content:'✔';position:absolute;right:calc(var(--u)*.8);top:calc(var(--u)*.2);font-size:calc(var(--u)*5);color:#1E7A2E;font-weight:900}
+#act2.same #caption{left:calc(var(--u)*2);right:calc(var(--u)*2);bottom:calc(var(--u)*1.2);height:calc(var(--u)*7.8);font-size:calc(var(--u)*3.4);font-weight:900;background:#1F2A44;color:#fff;border-radius:calc(var(--u)*1.6);border:calc(var(--u)*.3) solid #FFD9A8;padding:0 calc(var(--u)*2);line-height:1.2}
+#act2.same #caption::before{content:'👆';margin-right:calc(var(--u)*1)}#act2.same #caption::after{content:'👇';margin-left:calc(var(--u)*1)}
+#act2.same .daTogether{bottom:calc(var(--u)*10.6)}
+#stage.hasStg #stgBadge{top:calc(var(--u)*7.6)}
+#stage.hasStg #act2 .a2face{top:calc(var(--u)*11.4)}
+#stage.hasStg #act2 .daArea.sameArea{right:calc(var(--u)*14)}
+@media (orientation: portrait){
+#stage.pm #lvChip{top:calc(var(--u)*6.6);right:calc(var(--u)*1.6);font-size:calc(var(--u)*2.1);height:calc(var(--u)*4.2)}
+#stage.pm.hasStg #stgBadge{top:calc(var(--u)*11.4);right:calc(var(--u)*1.6)}
+#stage.pm #lvModal .card{width:calc(var(--u)*53);max-height:calc(var(--u)*94);padding:calc(var(--u)*1.6)}
+#stage.pm .lvBigRow{grid-template-columns:1fr}.lvBig{min-height:calc(var(--u)*9)}
+#stage.pm .lvRow3{grid-template-columns:1fr}
+#stage.pm #act2 .a2nav{top:calc(var(--u)*1.2)}
+#stage.pm #act2 .a2title{left:calc(var(--u)*2);right:calc(var(--u)*14);top:calc(var(--u)*18.4);text-align:left;font-size:calc(var(--u)*3.4)}
+#stage.pm #act2 .a2stat{top:calc(var(--u)*6.4);left:calc(var(--u)*2);width:calc(var(--u)*22);font-size:calc(var(--u)*1.7)}
+#stage.pm #act2 .a2stat b{font-size:calc(var(--u)*3)}
+#stage.pm #act2 .a2face{top:calc(var(--u)*17.6);right:calc(var(--u)*2);width:calc(var(--u)*10.5)}
+#stage.pm #act2 .a2face img{width:calc(var(--u)*8);height:calc(var(--u)*8)}
+#stage.pm #act2 .a1tree{display:none}
+#stage.pm #act2 .daArea{left:calc(var(--u)*2.5);right:calc(var(--u)*2.5);top:calc(var(--u)*28.6);bottom:calc(var(--u)*16)}
+#stage.pm #act2 .daArea.sameArea{top:calc(var(--u)*28.6);bottom:calc(var(--u)*16);right:calc(var(--u)*2.5)}
+#stage.pm .sameTop{gap:calc(var(--u)*1.8)}
+#stage.pm .thisTag{font-size:calc(var(--u)*3.8);padding:calc(var(--u)*.6) calc(var(--u)*1.2)}
+#stage.pm .sameTop .daTarget{width:calc(var(--u)*17);height:calc(var(--u)*14)}
+#stage.pm .sameMid .findTag{font-size:calc(var(--u)*3.2);padding:calc(var(--u)*.5) calc(var(--u)*1.4)}
+#stage.pm #act2 .dab{max-width:none;font-size:calc(var(--u)*9)}
+#stage.pm #act2.same #caption{left:calc(var(--u)*2);right:calc(var(--u)*2);bottom:calc(var(--u)*1.4);height:calc(var(--u)*12);font-size:calc(var(--u)*3.4)}
+#stage.pm #act2.same .daTogether{bottom:calc(var(--u)*14.4);left:auto;right:calc(var(--u)*2.5)}
+#stage.pm #act2 .daFriend{left:calc(var(--u)*2.5);right:calc(var(--u)*2.5);top:calc(var(--u)*28.6);bottom:calc(var(--u)*16)}
+#stage.pm #act2 .daSlot{width:calc(var(--u)*13);height:calc(var(--u)*13)}
+}
+#monitor .alldone{background:#2f8f46;color:#fff;font-size:calc(var(--u)*1.7);font-weight:900;padding:calc(var(--u)*.3) calc(var(--u)*1.4);border-radius:calc(var(--u)*1.6);white-space:nowrap}
+#monitor .mid .ord{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:calc(var(--u)*.2)}
+#monitor .ordTxt{font-size:calc(var(--u)*1.2);font-weight:900;color:#1E6B2D;white-space:nowrap}
+#monitor .ordBtn{min-height:calc(var(--u)*2.6);padding:0 calc(var(--u)*1);font-size:calc(var(--u)*1.4);background:#2E5E9E;color:#fff;border-radius:calc(var(--u)*.9);white-space:nowrap}
+#monitor .ordBtn:disabled{background:#9c958b}
+#ordModal{position:absolute;inset:0;z-index:12;background:rgba(20,25,40,.7);display:flex;align-items:center;justify-content:center}
+#ordModal .obox{background:#fff;border:calc(var(--u)*.5) solid #1F2A44;border-radius:calc(var(--u)*2.4);padding:calc(var(--u)*2);width:calc(var(--u)*88);display:flex;flex-direction:column;align-items:center;gap:calc(var(--u)*1.6)}
+#ordModal .ot{font-size:calc(var(--u)*2.8);font-weight:900;color:#8A6D3B}
+#ordModal .ocs{display:flex;gap:calc(var(--u)*2);width:100%;justify-content:center}
+#ordModal .oc{flex:1;max-width:calc(var(--u)*42);display:flex;flex-direction:column;align-items:center;gap:calc(var(--u)*1);border:calc(var(--u)*.3) solid #E8C766;border-radius:calc(var(--u)*1.6);padding:calc(var(--u)*1.2);background:#FFFBEF}
+#ordModal .a2row{display:flex;gap:calc(var(--u)*.6);height:calc(var(--u)*9)}#ordModal .a2row svg{width:calc(var(--u)*9);height:calc(var(--u)*9)}
+#ordModal h2{margin:0;font-size:calc(var(--u)*3.6);font-weight:900;text-align:center}#ordModal h2 em{font-style:normal;color:#E8701A}
+#ordModal .osay{font-size:calc(var(--u)*2);font-weight:900;color:#1E6B2D}
+#ordModal .btn{min-width:calc(var(--u)*18);min-height:calc(var(--u)*5.6);font-size:calc(var(--u)*2.6);background:#2E5E9E;color:#fff;padding:0 calc(var(--u)*2)}
+#ordModal .oclose{background:#6B7A90}
 </style>
 </head>
 <body>
@@ -505,7 +586,9 @@ display:flex;flex-direction:column;align-items:center;justify-content:center;gap
 <div id="app"></div>
 <div id="hotspot" aria-hidden="true"></div>
 <button id="optGear" type="button" aria-label="옵션">⚙ 옵션</button>
+<button id="lvChip" type="button" aria-label="수준 설정"></button>
 <div id="settings"><div class="card" id="settingsCard"></div></div>
+<div id="lvModal"><div class="card" id="lvCard"></div></div>
 <div id="rosterModal" class="modalOverlay"><div class="modalBox" id="rosterCard"></div></div>
 <div id="globalToast"></div>
 </div>
@@ -1048,7 +1131,7 @@ return `<svg viewBox="0 0 ${total} ${total}" shape-rendering="crispEdges" xmlns=
 /* ---------- 설정 (localStorage, 실패해도 동작) ---------- */
 const SETTINGS_KEY = 'gamnamu.settings.v1';
 const SETTINGS_KEY_A1 = 'gamnamu.settings.a1.v1';
-const A1_KEYS = ['a1Total', 'a1Sub', 'a1Subs', 'a1Level', 'a1Levels', 'a1Stages', 'a1DaOn'];
+const A1_KEYS = ['a1Total', 'a1Sub', 'a1Subs', 'a1Level', 'a1Levels', 'a1Stages', 'a1DaOn', 'a1Kind', 'a1Kinds'];
 const DEFAULTS = {
 speakCount: true, // 터치할 때마다 "하나, 둘…" 음성
 showNumbers: false, // 점 위 숫자 표시
@@ -1059,7 +1142,7 @@ dotPct: 0, // 점 크기 증감(%) -40~+40
 fixed: 0, // 0=무작위, 1~5=숫자 고정
 autoClear: true, // 오류 시 점 자동 지움
 showCircles: false, // 땅에 점선
-a1Total: 10, a2Total: 5, daOn: 'off', gearHold: 'off', a2Sub: '다-1', a2Subs: {}, daScan: 'off', daScanMs: '1500', daChoices1: '2', daChoices2: '1', daHint: '6000', daFriend: 'off', a2Level: '가', a2Item: 'both', a2Hint: 'num', a2Levels: {}, a2Ranges: {}, a2Match: {}, a1Sub: '다-1', a1Subs: {}, a1Level: '가', a1Levels: {}, a1Stages: {}, a1DaOn: 'off', a2SpeakCount: false, a2ShowCount: false, a2PracticeCount: false
+a1Total: 10, a2Total: 5, daOn: 'off', gearHold: 'off', a2Sub: '다-1', a2Subs: {}, daScan: 'off', daScanMs: '1500', daChoices1: '2', daChoices2: '1', daHint: '6000', daFriend: 'off', a2Level: '가', a2Item: 'both', a2Hint: 'num', a2Levels: {}, a2Ranges: {}, a2Match: {}, a1Sub: '다-1', a1Subs: {}, a1Level: '가', a1Levels: {}, a1Stages: {}, a1DaOn: 'off', a1Kind: 'place', a2Kind: 'num', a1Kinds: {}, a2Kinds: {}, a2SpeakCount: false, a2ShowCount: false, a2PracticeCount: false
 };
 const Settings = {
 data: Object.assign({}, DEFAULTS),
@@ -1234,11 +1317,11 @@ this.cur = name; state.screen = name;
 try { document.getElementById('optGear').classList.toggle('off', name === 'intro' || name === 'monitor'); } catch (e) {}
 try { document.getElementById('stage').classList.toggle('pm', state.mode === 'practice'); } catch (e) {}
 Screens[name].mount(div);
-try { Photo.refresh(); StageBadge.refresh(); setTimeout(() => Photo.refresh(), 250); } catch (e) {}
+try { Photo.refresh(); StageBadge.refresh(); LvChip.refresh(); setTimeout(() => Photo.refresh(), 250); } catch (e) {}
 if (name === 'activity1' || name === 'a1da' || name === 'complete') BackGuard.arm();
 Screens[name].applySettings && Screens[name].applySettings();
 },
-applySettings() { this.cur && Screens[this.cur].applySettings && Screens[this.cur].applySettings(); try { StageBadge.refresh(); } catch (e) {} },
+applySettings() { this.cur && Screens[this.cur].applySettings && Screens[this.cur].applySettings(); try { StageBadge.refresh(); LvChip.refresh(); } catch (e) {} },
 caption(text, mute) { const c = document.getElementById('caption'); if (c) { c.textContent = (mute ? '(소리 없음) ' : '') + text; c.classList.toggle('mute', !!mute); } }
 };
 
@@ -1304,7 +1387,7 @@ root.innerHTML = `
 </div>
 <button class="btn" id="introAct2">활동 2 · 개수 세기</button>
 <button class="btn" id="introStart">그냥 입장</button>
-<button class="btn" id="introMon" type="button">📺 실시간 모니터</button><button class="btn introOpt" id="introOpt1" type="button">⚙ 활동1 옵션</button><button class="btn introOpt" id="introOpt2" type="button">⚙ 활동2 옵션</button>
+<button class="btn" id="introMon" type="button">📺 실시간 모니터</button><button class="btn introOpt" id="introOpt1" type="button">⚙ 활동1 옵션</button><button class="btn introOpt" id="introOpt2" type="button">⚙ 활동2 옵션</button><button class="btn introOpt" id="introLv" type="button">🎚 수준 설정 ▼</button>
 <div id="caption" style="position:absolute;left:calc(var(--u)*3);right:calc(var(--u)*33);bottom:calc(var(--u)*2.2);height:calc(var(--u)*6.6);margin:0">화면을 한 번 터치하면 소리가 켜져요</div>
 <div id="studentModal" class="modalOverlay">
 <div class="modalBox">
@@ -1348,6 +1431,7 @@ root.querySelector('#openRosterBtn').onclick = () => RosterManager.open();
 root.querySelector('#introMon').onclick = () => { Sfx.unlock(); Router.go('monitor'); };
 root.querySelector('#introOpt1').onclick = () => Options.open(true, 'a1');
 root.querySelector('#introOpt2').onclick = () => Options.open(true, 'a2');
+root.querySelector('#introLv').onclick = () => { Sfx.unlock(); LvPop.open(Router.cur === 'intro' && state.lastAct === 'a2' ? 'a2' : 'a1'); };
 const smModal = root.querySelector('#studentModal');
 smModal.onclick = e => { if (e.target === smModal) this.closeModal(); };
 root.querySelector('#smCloseBtn').onclick = () => this.closeModal();
@@ -1371,7 +1455,7 @@ if (!this.selectedStudent) return;
 const base = location.href.split('?')[0].split('#')[0];
 let q = `?mode=practice&s=${encodeURIComponent(this.selectedStudent.id)}&a=${act}`;
 const lq = Live.qrQuery(); if (lq) q += lq;
-const sid = this.selectedStudent.id, frag = `#n=${encodeURIComponent(String(this.selectedStudent.name || '').slice(0, 10))}&l1=${encodeURIComponent(stuLevelOf('a1', sid))}&l2=${encodeURIComponent(stuLevelOf('a2', sid))}&h=${Settings.data.a2Hint}`;
+const sid = this.selectedStudent.id, frag = `#n=${encodeURIComponent(String(this.selectedStudent.name || '').slice(0, 10))}&l1=${encodeURIComponent(stuLevelOf('a1', sid))}&l2=${encodeURIComponent(stuLevelOf('a2', sid))}&k1=${kindFor('a1', sid)}&k2=${kindFor('a2', sid)}&w1=${whoFor('a1', sid)}&w2=${whoFor('a2', sid)}&h=${Settings.data.a2Hint}`;
 this.lastQrUrl = base + q + frag;
 root.querySelector('#qrBox').innerHTML = QRCode.toSvgString(base + q + frag);
 root.querySelector('#qrUrlTxt').textContent = `?mode=practice&s=${this.selectedStudent.id}&a=${act}${lq ? ' (+실시간)' : ''}`;
@@ -1388,11 +1472,17 @@ this.renderStudents();
 },
 renderLv() {
 const st = this.selectedStudent, w = document.getElementById('smLvWrap'); if (!w || !st) return;
-const row = (label, act) => { const cur = stuLevelOf(act, st.id); return `<div class="lvrow"><b>${label}</b>${['가', '나', '다', '다-1', '다-2'].map(v => `<button class="btn lvb ${cur === v ? 'on' : ''}" data-act="${act}" data-v="${v}">${v}</button>`).join('')}</div>`; };
+const sid = st.id, isDa = P => { const sub = (Settings.data[P + 'Subs'] || {})[sid], lv = (Settings.data[P + 'Levels'] || {})[sid] || Settings.data[P + 'Level']; return !!sub || lv === '다'; };
+const lvOf = P => { const sub = (Settings.data[P + 'Subs'] || {})[sid]; return sub ? '다' : stuLevelOf(P, sid); };
+const row = (label, act) => { const cur = lvOf(act); let h = `<div class="lvrow"><b>${label}</b>${['가', '나', '다'].map(v => `<button class="btn lvb ${cur === v ? 'on' : ''}" data-act="${act}" data-v="${v}">${v}</button>`).join('')}`;
+if (cur === '다') h += `<span class="lvsep">찾기</span>${(act === 'a1' ? [['place', '점선원']] : []).concat([['num', '숫자'], ['shape', '모양'], ['color', '색']]).map(([k, t]) => `<button class="btn lvb ${kindFor(act, sid) === k ? 'on' : ''}" data-kact="${act}" data-k="${k}">${t}</button>`).join('')}<span class="lvsep">누가</span>${[['solo', '혼자'], ['help', '함께']].map(([k, t]) => `<button class="btn lvb ${whoFor(act, sid) === k ? 'on' : ''}" data-wact="${act}" data-w="${k}">${t}</button>`).join('')}`;
+return h + '</div>'; };
 const hint = [['none', '없음'], ['num', '순서 번호'], ['ans', '정답 강조']];
-w.innerHTML = `<div class="lvt">${st.id}번 ${''}수준 옵션 (저장하면 칠판·내 기기에서 시작할 때 적용돼요)</div>` + row('활동 1 수준', 'a1') + row('활동 2 수준', 'a2') + `<div class="lvrow"><b>활동 2 힌트</b>${hint.map(([v, l]) => `<button class="btn lvb ${Settings.data.a2Hint === v ? 'on' : ''}" data-h="${v}">${l}</button>`).join('')}</div><div class="lvnote">가·나·다 = 숫자 범위, 다-1 = 독립, 다-2 = 함께 해요. 눌러서 바로 저장돼요.</div>`;
-w.querySelector('.lvt').textContent = `${st.id}번 ${st.name} · 수준 옵션 (누르면 바로 저장)`;
+w.innerHTML = `<div class="lvt"></div>` + row('활동 1 수준', 'a1') + row('활동 2 수준', 'a2') + `<div class="lvrow"><b>활동 2 힌트</b>${hint.map(([v, l]) => `<button class="btn lvb ${Settings.data.a2Hint === v ? 'on' : ''}" data-h="${v}">${l}</button>`).join('')}</div><div class="lvnote">가·나 = 숫자 범위, 다 = 같은 것 찾기(숫자·모양·색). 눌러서 바로 저장돼요.</div>`;
+w.querySelector('.lvt').textContent = `${st.id}번 ${st.name} · 수준 설정 (누르면 바로 저장)`;
 w.querySelectorAll('[data-act]').forEach(b => b.onclick = () => { setStuLevel(b.dataset.act, st.id, b.dataset.v); this.renderLv(); });
+w.querySelectorAll('[data-kact]').forEach(b => b.onclick = () => { setStuKind(b.dataset.kact, st.id, b.dataset.k); this.renderLv(); });
+w.querySelectorAll('[data-wact]').forEach(b => b.onclick = () => { setStuWho(b.dataset.wact, st.id, b.dataset.w); this.renderLv(); });
 w.querySelectorAll('[data-h]').forEach(b => b.onclick = () => { Settings.set('a2Hint', b.dataset.h); this.renderLv(); });
 },
 renderStudents() {
@@ -2298,11 +2388,19 @@ function a2Sid() { return state.mode === 'board' && state.activeStudent ? state.
     5   가 · 4~5개        4~5                      가    a2Ranges[번호]=[4,5]
     6   가 · 숫자 찾기    1~5 전체                  가    a2Ranges 삭제(가=1~5)
    활동1: 1·2단계=다-2/다-1(점 콕 함께/같은 숫자 찾기), 3~6단계=a1Stages로 뽑는 숫자 범위(1~2/1~3(3 중심)/4~5/1~5). 학생 상태의 level은 단계 번호(숫자), lv는 기존 문자. */
-function matchStage() { const m = (Settings.data.a2Match || {})[a2Sid()]; return (m === 1 || m === 2) ? m : 0; }
+function kindFor(P, sid) { const d = Settings.data; sid = sid == null ? '' : String(sid);
+if (P === 'a2') { const m = (d.a2Match || {})[sid]; if (m === 1) return 'color'; if (m === 2) return 'shape'; }
+const k = (d[P + 'Kinds'] || {})[sid] || d[P + 'Kind']; if (P === 'a1') return (k === 'num' || k === 'shape' || k === 'color') ? k : 'place';
+return (k === 'shape' || k === 'color') ? k : 'num'; }
+function kindOf(act) { act = act || actOf(); return kindFor(act, a2Sid()); }
+const KIND_TXT = { place: '점선 원', num: '숫자', shape: '모양', color: '색' };
+const KIND_LBL = { place: '점선 원 누르기', num: '숫자 찾기', shape: '모양 찾기', color: '색 찾기' };
+const a1Step = (k, m) => k === 'place' ? 'place' : k === 'num' ? (m === '다-2' ? 'place' : 'match') : 'kind';
+function matchStage() { const sid = a2Sid(), m = (Settings.data.a2Match || {})[sid]; if (m === 1 || m === 2) return m; if (!daMode('a2')) return 0; const k = kindFor('a2', sid); return k === 'color' ? 1 : k === 'shape' ? 2 : 0; }
 function a2PeakNow() { return (daMode() || matchStage()) ? 0 : (a2Range()[2] || 0); }
 function a1RangeNow() { const sid = a2Sid(), g = sid != null ? (Settings.data.a1Stages || {})[sid] : 0; return g === 3 ? [1, 2] : g === 4 ? [1, 3, 3] : g === 5 ? [4, 5] : [1, 5]; }
 function a2Range() { const r = (Settings.data.a2Ranges || {})[a2Sid()]; return (Array.isArray(r) && r.length >= 2) ? r : A2_LEVELS[a2Level()]; }
-function stageOf(P) { if (P === 'a2') { const ms = matchStage(); if (ms) return ms; } const m = daMode(P); if (m) return P === 'a1' ? (m === '다-2' ? 1 : 2) : 3; if (P === 'a1') { const lv = a1Level(), g = (Settings.data.a1Stages || {})[a2Sid()]; if (g >= 1 && g <= 6 && (g <= 2 ? lv === '다' : g === 3 ? (lv === '다' || lv === '나') : g === 4 ? lv === '나' : lv === '가')) return g; return lv === '다' ? 3 : lv === '나' ? 4 : 6; } const r = a2Range(), hi = r[1]; return hi <= 2 ? 3 : hi === 3 ? 4 : (r[0] >= 4 || hi === 4) ? 5 : 6; }
+function stageOf(P) { if (P === 'a2') { const ms = matchStage(); if (ms) return ms; } const m = daMode(P); if (m) { const k = kindFor(P, a2Sid()); return k === 'color' ? 1 : k === 'shape' ? 2 : 3; } if (P === 'a1') { const lv = a1Level(), g = (Settings.data.a1Stages || {})[a2Sid()]; if (g >= 1 && g <= 6 && (g <= 2 ? lv === '다' : g === 3 ? (lv === '다' || lv === '나') : g === 4 ? lv === '나' : lv === '가')) return g; return lv === '다' ? 3 : lv === '나' ? 4 : 6; } const r = a2Range(), hi = r[1]; return hi <= 2 ? 3 : hi === 3 ? 4 : (r[0] >= 4 || hi === 4) ? 5 : 6; }
 function a2Level() {
 const d = Settings.data; let lv = d.a2Level; const sid = a2Sid();
 if (sid != null && d.a2Levels && d.a2Levels[sid]) lv = d.a2Levels[sid];
@@ -2336,7 +2434,7 @@ mount(root) { this.root = root; this.startSession(); },
 startSession() {
 this.timers.forEach(clearTimeout); this.timers = [];
 const [lo, hi] = (daMode() || matchStage()) ? [1, 2] : a2Range();
-a2.total = a2TotalOpt(); a2.queue = a2Queue(lo, hi, a2.total, a2PeakNow()); a2.idx = 0; a2.results = [];
+a2.total = a2TotalOpt(); a2.queue = a2Queue(lo, hi, a2.total, a2PeakNow()); a2.idx = 0; a2.results = []; try { Live.resetOrder(); } catch (e) {}
 const its = a2Items(), st = its[Math.floor(Math.random() * its.length)];
 a2.items = a2.queue.map((_, i) => its.length === 1 ? its[0] : (i % 2 === 0 ? st : (st === 'leaf' ? 'persimmon' : 'leaf')));
 this.setRound();
@@ -2358,7 +2456,7 @@ if (a2.phase === 'harvest' && this.svg && !!document.getElementById('a2BCount') 
 const rk = [matchStage(), daMode(), a2Range().join('-')].join('|');
 if (this._rk !== undefined && this._rk !== rk && live) { /* 단계·수준·범위가 바뀌면 현재 라운드를 버리고 새 범위로 다시 만듦 */
 this._rk = rk; const [lo, hi] = (daMode() || matchStage()) ? [1, 2] : a2Range(), cur = a2.idx;
-a2.queue = a2.queue.slice(0, cur).concat(a2Queue(lo, hi, Math.max(1, a2.total - cur), a2PeakNow())); a2.queue.length = Math.max(a2.queue.length, cur + 1);
+const keep = a2.queue[cur] >= lo && a2.queue[cur] <= hi; a2.queue = a2.queue.slice(0, keep ? cur + 1 : cur).concat(a2Queue(lo, hi, Math.max(1, a2.total - cur - (keep ? 1 : 0)), a2PeakNow())); a2.queue.length = Math.max(a2.queue.length, cur + 1);
 this.setRound(); return;
 }
 this._rk = rk;
@@ -2379,7 +2477,7 @@ const lv = this.root.querySelector('.a2lv'); if (lv) { const r = a2Range(); lv.t
 }
 },
 shell(title, hideNav) {
-Scan.stop(); DaHint.stop();
+Scan.stop(); DaHint.stop(); this.root.classList.remove('same');
 const lv = a2Level(), r = a2Range();
 this.root.innerHTML = `<div class="a2nav"><button class="btn a2back" id="a2Back">처음으로</button>${hideNav ? '' : '<button class="btn a2back" id="a2Restart">활동2 처음으로</button>'}</div><h1 class="a2title">${title}</h1><div class="a2lv">수준 ${lv} · ${r[0]}~${r[1]}</div><div id="caption">화면을 한 번 터치하면 소리가 켜져요</div>`;
 this.root.querySelector('#a2Back').onclick = () => { Sfx.unlock(); Speech.stop(); if (state.mode !== 'board' && state.mode !== 'practice') state.mode = 'free'; Router.go('intro'); };
@@ -2547,7 +2645,7 @@ showCards() {
 const R = a2.results, pick = k => { const l = R.filter(r => r.item === k); return l.length ? l[Math.floor(Math.random() * l.length)] : null; };
 let c = [pick('persimmon'), pick('leaf')].filter(Boolean);
 if (c.length < 2) { const rest = a2Shuffle(R.filter(r => !c.includes(r))); const diff = rest.find(r => !c.length || r.n !== c[0].n) || rest[0]; if (diff) c.push(diff); }
-a2.cards = a2Shuffle(c).map(r => ({ item: r.item, n: r.n })); a2.cardIdx = 0;
+a2.cards = a2Shuffle(c).map(r => ({ item: r.item, n: r.n })); a2.cardIdx = 0; try { Live.markDone(a2.cards, daMode() ? '다' : a2Level()); } catch (e) {}
 this.showCard();
 },
 showCard() {
@@ -2561,7 +2659,7 @@ this.root.appendChild(box);
 let said = false;
 box.querySelector('#a2Hear').onclick = () => { Sfx.unlock(); Speech.say(text); box.querySelector('#a2SayMsg').textContent = '따라 말해 봐요: ' + text; };
 box.querySelector('#a2Said').onclick = () => {
-if (said) return; said = true; Sfx.dingdong(); this.pulse();
+if (said) return; said = true; Sfx.dingdong(); this.pulse(); try { Live.markSaid(); } catch (e) {}
 A2Orders.add({ item: cd.item, n: cd.n, level: lv, studentId: a2Sid(), ts: Date.now() });
 box.querySelector('#a2SayMsg').textContent = '주문 카드를 저장했어요!';
 const b = document.createElement('div'); b.className = 'a2foot';
@@ -2591,15 +2689,15 @@ function daMode(act) {
 act = act || actOf();
 const d = Settings.data, sid = a2Sid(), subs = act === 'a1' ? d.a1Subs : d.a2Subs;
 const assigned = sid != null && subs && subs[sid];
-const lv = act === 'a1' ? a1Level() : a2Level(), on = act === 'a1' ? d.a1DaOn : d.daOn;
-if (!(assigned || (lv === '다' && on === 'on'))) return null;
+const lv = act === 'a1' ? a1Level() : a2Level();
+if (!(assigned || lv === '다')) return null;
 return daSub(act) === '다-2' ? '다-2' : '다-1';
 }
 const daNum = (k, def) => { const v = Number(Settings.data[k]); return v > 0 ? v : def; };
 const Scan = {
 t: null, h: null, i: -1, getItems: null, onPick: null, paused: false,
 on() { return Settings.data.daScan === 'on'; },
-holdOpen() { const e = document.getElementById('settings'); return !!(e && e.classList.contains('open')); },
+holdOpen() { return !!document.querySelector('#settings.open,#lvModal.open'); },
 start(getItems, onPick) {
 this.stopTimers(); this.getItems = getItems; this.onPick = onPick; this.paused = false;
 if (!this.on()) return;
@@ -2633,15 +2731,14 @@ stop() { this.timers.forEach(clearTimeout); this.timers = []; }
 Screens.act2.daRound = function () {
 const m = daMode(), it = A2_ITEM[a2.item], n = a2.n;
 a2.phase = 'da'; this.lock = false; Scan.stop(); DaHint.stop();
-this.shell(`${it.name} ${A2_CNT[n]} ${it.unit}`);
-const lv = this.root.querySelector('.a2lv'); if (lv) lv.textContent = `수준 다 · ${m}`;
+this.shell('같은 숫자를 찾아요'); this.root.classList.add('same');
 this.stat(m === '다-2' ? '함께 해요' : '같은 것을 골라요');
-const wrap = document.createElement('div'); wrap.className = 'daArea';
+const wrap = document.createElement('div'); wrap.className = 'daArea sameArea';
 let vals;
 if (m === '다-1') { const c = Math.min(3, Math.max(2, daNum('daChoices1', 2))); vals = a2Shuffle([1, 2, 3].filter(v => v !== n)).slice(0, c - 1).concat([n]); }
 else vals = daNum('daChoices2', 1) >= 2 ? [n, n === 1 ? 2 : 1] : [n];
 vals = a2Shuffle(vals);
-wrap.innerHTML = `<div class="daTarget"><b>${n}</b></div><div class="daChoices">${vals.map(v => `<button class="btn dab" data-v="${v}">${daPicSvg(a2.item, v)}</button>`).join('')}</div>`;
+wrap.innerHTML = sameFrame(`<b>${n}</b>`, vals.map(v => `<button class="btn dab" data-v="${v}">${daPicSvg(a2.item, v)}</button>`).join(''));
 this.root.appendChild(wrap);
 const btns = () => [...wrap.querySelectorAll('.dab:not(.dim)')];
 const tgt = wrap.querySelector(`.dab[data-v="${n}"]`);
@@ -2673,7 +2770,7 @@ if (m === '다-2' && Settings.data.daFriend === 'on') {
 const fr = document.createElement('div'); fr.className = 'daFriend'; fr.innerHTML = '<span>친구가 먼저 해 봐요</span><button class="btn" id="daFriendDone">시범 끝</button>';
 this.root.appendChild(fr); fr.querySelector('#daFriendDone').onclick = () => { fr.remove(); begin(); };
 } else begin();
-Speech.say(m === '다-2' ? `${it.name} ${A2_CNT[n]} ${it.unit}. 같이 눌러요` : `${it.name} ${A2_CNT[n]} ${it.unit}. 같은 그림을 찾아요`);
+Speech.say(sameMsg('num', n));
 };
 
 /* ---------- 활동2 1·2단계: 색 짝짓기 / 모양 짝짓기 (숫자 무관, 에러리스 러닝, 다 수준 UI·힌트·기록 재사용) ---------- */
@@ -2688,52 +2785,61 @@ else if (shape === 'acorn') g = `<ellipse cx="0" cy="6" rx="14" ry="18" fill="${
 else g = `<circle cx="0" cy="3" r="19" fill="${c}" ${st}/><path d="M-12 -12 L0 -6 L12 -12 L6 -15 L0 -22 L-6 -15Z" fill="#4c8a2b" stroke="#2d5c14" stroke-width="2"/>`;
 return `<svg viewBox="-30 -32 60 64" preserveAspectRatio="xMidYMid meet">${g}</svg>`;
 }
-Screens.act2.matchRound = function () {
-const stg = matchStage(), help = daSub('a2') === '다-2' && (Settings.data.a2Subs || {})[a2Sid()] === '다-2', mode = help ? '다-2' : '다-1';
-a2.phase = 'da'; this.lock = false; Scan.stop(); DaHint.stop();
-const ttl = stg === 1 ? '1단계 색 짝짓기' : '2단계 모양 짝짓기';
-this.shell(ttl);
-const lv = this.root.querySelector('.a2lv'); if (lv) lv.textContent = `수준 다 · ${ttl}${help ? ' · 함께' : ''}`;
-this.stat(stg === 1 ? '같은 색을 골라요' : '같은 모양을 골라요');
-const cnt = help ? (daNum('daChoices2', 1) >= 2 ? 2 : 1) : Math.min(3, Math.max(2, daNum('daChoices1', 2)));
+/* 공통 「같은 것 찾기」 화면 틀: 위 = 「이거!」 보기 카드, 가운데 = 「여기서 찾아요 ⬇」, 아래 = 선택 카드 */
+const SAME_PA = ['', '과', '와', '과', '와', '와'];
+function sameMsg(kind, n) { return kind === 'color' ? '위 색과 같은 색을 아래에서 눌러요' : kind === 'shape' ? '위 모양과 같은 모양을 아래에서 눌러요' : `위의 ${n}${SAME_PA[n] || '과'} 같은 숫자를 아래에서 눌러요`; }
+function sameFrame(tgtInner, chHtml, tgtCls, tgtId) {
+return `<div class="sameTop"><div class="thisTag"><span>👆</span><b>이거!</b></div><div class="daTarget ${tgtCls || ''}" ${tgtId ? `id="${tgtId}"` : ''}>${tgtInner}</div></div><div class="sameMid"><span class="arr">⬇</span><b class="findTag">여기서 찾아요</b><span class="arr">⬇</span></div><div class="daChoices">${chHtml}</div>`;
+}
+/* 색·모양 찾기 한 문제 (활동1·활동2 공용). o = {kind, help, cnt, hintOpt, onWrong(), onDone(stage, wrong)} */
+function sameRound(host, wrap, o) {
+const help = o.help, kind = o.kind, cnt = o.cnt;
 const colors = Object.keys(MT_COLORS), shapes = ['maple', 'ginkgo', 'acorn', 'persimmon'];
-let items, tgtKey, fixed = null;
-if (stg === 1) { fixed = a2Shuffle(['maple', 'ginkgo'])[0]; const cs = a2Shuffle(colors); tgtKey = cs[0]; items = a2Shuffle(cs.slice(0, cnt)).map(c => ({ key: c, shape: fixed, color: c })); }
-else { fixed = a2Shuffle(colors)[0]; const ss = a2Shuffle(shapes); tgtKey = ss[0]; items = a2Shuffle(ss.slice(0, cnt)).map(sh => ({ key: sh, shape: sh, color: fixed })); }
+let items, tgtKey;
+if (kind === 'color') { const fx = a2Shuffle(['maple', 'ginkgo'])[0], cs = a2Shuffle(colors); tgtKey = cs[0]; items = a2Shuffle(cs.slice(0, cnt)).map(c => ({ key: c, shape: fx, color: c })); }
+else { const fx = a2Shuffle(colors)[0], ss = a2Shuffle(shapes); tgtKey = ss[0]; items = a2Shuffle(ss.slice(0, cnt)).map(sh => ({ key: sh, shape: sh, color: fx })); }
 const tgtItem = items.find(x => x.key === tgtKey) || items[0]; tgtKey = tgtItem.key;
-const hintOpt = Settings.data.a2Hint;
-const wrap = document.createElement('div'); wrap.className = 'daArea';
-wrap.innerHTML = `<div class="daTarget mt" id="mtTarget">${mtGlyph(tgtItem.shape, tgtItem.color)}</div><div class="daChoices">${items.map((x, i) => `<button class="btn dab mc ${hintOpt === 'ans' && x.key === tgtKey ? 'ans' : ''}" data-v="${x.key}">${hintOpt === 'num' ? `<i class="mnum">${i + 1}</i>` : ''}${mtGlyph(x.shape, x.color)}</button>`).join('')}</div>`;
-this.root.appendChild(wrap);
+const hintOpt = o.hintOpt || 'none';
+wrap.innerHTML = sameFrame(mtGlyph(tgtItem.shape, tgtItem.color), items.map((x, i) => `<button class="btn dab mc ${hintOpt === 'ans' && x.key === tgtKey ? 'ans' : ''}" data-v="${x.key}">${hintOpt === 'num' ? `<i class="mnum">${i + 1}</i>` : ''}${mtGlyph(x.shape, x.color)}</button>`).join(''), 'mt', 'mtTarget');
 const btns = () => [...wrap.querySelectorAll('.dab')];
 const tgt = wrap.querySelector(`.dab[data-v="${tgtKey}"]`);
 let wrong = 0, done = false;
-const finish = stage => {
-if (done) return; done = true; Scan.stop(); DaHint.stop();
-DaLog.add({ sid: a2Sid(), act: 2, sub: mode, stage });
-if (help) Live.rec('2', stage === '독립', stage); else if (wrong > 0) Live.setPrompt('오답 후 정답'); else Live.rec('2', true, Settings.data.a2Hint !== 'none' ? '힌트 사용' : '독립');
-a2.phase = 'ok'; a2.results.push({ item: a2.item, n: a2.n, tries: wrong }); tgt.classList.remove('blink'); tgt.classList.add('ok');
-Sfx.dingdong(); this.pulse(); Speech.say('딩동! 잘했어요!');
-this.later(() => { if (a2.idx + 1 < a2.total) { a2.idx++; this.setRound(); } else this.showCards(); }, 1700);
-};
+const finish = stage => { if (done) return; done = true; Scan.stop(); DaHint.stop(); tgt.classList.remove('blink'); tgt.classList.add('ok'); o.onDone(stage, wrong); };
 const pick = b => {
 if (done) return; Sfx.unlock();
 if (b.dataset.v === tgtKey) { finish(help ? DaHint.stage : (wrong === 0 ? '독립' : '시각힌트')); return; }
-wrong++; Live.rec('2', false, '오답'); Sfx.error(); b.classList.add('shk'); setTimeout(() => b.classList.remove('shk'), 600);
+wrong++; o.onWrong && o.onWrong(); Sfx.error(); b.classList.add('shk'); setTimeout(() => b.classList.remove('shk'), 600);
 if (wrong >= 2) tgt.classList.add('blink');
 };
 wrap.onclick = e => { const b = e.target.closest('.dab'); if (b) pick(b); };
-const begin = () => { if (help) DaHint.start(this, tgt, stg === 1 ? '같은 색을 눌러요' : '같은 모양을 눌러요'); Scan.start(btns, pick); };
+const begin = () => { if (help) DaHint.start(host, tgt, kind === 'color' ? '같은 색을 눌러요' : '같은 모양을 눌러요'); Scan.start(btns, pick); };
 if (help) {
 const tg = document.createElement('button'); tg.className = 'btn daTogether'; tg.id = 'daTogether'; tg.textContent = '함께';
 tg.onclick = () => { if (done) return; DaHint.stage = '신체촉진'; tgt.classList.add('press'); finish('신체촉진'); };
-this.root.appendChild(tg);
+host.root.appendChild(tg);
 }
 if (help && Settings.data.daFriend === 'on') {
 const fr = document.createElement('div'); fr.className = 'daFriend'; fr.innerHTML = '<span>친구가 먼저 해 봐요</span><button class="btn" id="daFriendDone">시범 끝</button>';
-this.root.appendChild(fr); fr.querySelector('#daFriendDone').onclick = () => { fr.remove(); begin(); };
+host.root.appendChild(fr); fr.querySelector('#daFriendDone').onclick = () => { fr.remove(); begin(); };
 } else begin();
-Speech.say(stg === 1 ? '같은 색을 찾아요' : '같은 모양을 찾아요');
+}
+Screens.act2.matchRound = function () {
+const stg = matchStage(), help = daSub('a2') === '다-2', kind = stg === 1 ? 'color' : 'shape';
+a2.phase = 'da'; this.lock = false; Scan.stop(); DaHint.stop();
+this.shell(stg === 1 ? '같은 색을 찾아요' : '같은 모양을 찾아요'); this.root.classList.add('same');
+this.stat(stg === 1 ? '같은 색을 골라요' : '같은 모양을 골라요');
+const cnt = help ? (daNum('daChoices2', 1) >= 2 ? 2 : 1) : Math.min(3, Math.max(2, daNum('daChoices1', 2)));
+const wrap = document.createElement('div'); wrap.className = 'daArea sameArea'; this.root.appendChild(wrap);
+sameRound(this, wrap, { kind, help, cnt, hintOpt: Settings.data.a2Hint,
+onWrong: () => Live.rec('2', false, '오답'),
+onDone: (stage, wrong) => {
+DaLog.add({ sid: a2Sid(), act: 2, sub: help ? '다-2' : '다-1', stage });
+if (help) Live.rec('2', stage === '독립', stage); else if (wrong > 0) Live.setPrompt('오답 후 정답'); else Live.rec('2', true, Settings.data.a2Hint !== 'none' ? '힌트 사용' : '독립');
+a2.phase = 'ok'; a2.results.push({ item: a2.item, n: a2.n, tries: wrong });
+Sfx.dingdong(); this.pulse(); Speech.say('딩동! 잘했어요!');
+this.later(() => { if (a2.idx + 1 < a2.total) { a2.idx++; this.setRound(); } else this.showCards(); }, 1700);
+} });
+Speech.say(sameMsg(kind));
 };
 
 /* ---------- 활동1 다 수준 화면 ---------- */
@@ -2742,43 +2848,46 @@ timers: [], root: null, idx: 0, total: 0, queue: [], fruits: 0, n: 1, step: 'mat
 later(fn, ms) { this.timers.push(setTimeout(fn, ms)); },
 unmount() { this.timers.forEach(clearTimeout); this.timers = []; Scan.stop(); DaHint.stop(); Speech.stop(); this.root = null; },
 mount(root) {
-root.id = 'act2'; this.root = root; this.total = a1Total(); this.queue = a2Queue(1, 2, this.total); this.idx = 0; this.fruits = 0;
+root.id = 'act2'; root.classList.add('same'); this.root = root; this.total = a1Total(); this.queue = a2Queue(1, 2, this.total); this.idx = 0; this.fruits = 0;
 this.round();
 },
 redo() { this.round(); },
 applySettings() {
 if (!this.root) return;
 const m = daMode(); if (!m) { Router.go('activity1'); return; }
+const kn = kindOf('a1'); if (kn !== this.kind) { this.kind = kn; if (!this.done) { this.mode = m; this.step = a1Step(kn, m); this.wrong = 0; this.filled = 0; this.locked = false; this.draw(true); return; } }
 const T = a1Total();
 if (T !== this.total) { const cur = this.idx; this.total = Math.max(T, cur + 1); this.queue = this.queue.slice(0, cur + 1).concat(a2Queue(1, 2, Math.max(1, this.total)).slice(0, this.total - cur - 1)); const c = this.root.querySelector('#a2Stat'); if (c) c.innerHTML = c.innerHTML.replace(/<b>.*?<\/b> 라운드<br>남은 라운드 \d+/, `<b>${this.idx + 1} / ${this.total}</b> 라운드<br>남은 라운드 ${this.total - this.idx - 1}`); }
 const d = Settings.data, sig = [m, d.daHint, d.daScan, d.daScanMs].join('|');
 if (this._sig !== undefined && sig !== this._sig && !this.done) {
-if (m !== this.mode) { this.mode = m; this.step = m === '다-2' ? 'place' : 'match'; this.wrong = 0; this.filled = 0; this.locked = false; }
+if (m !== this.mode) { this.mode = m; this.step = a1Step(this.kind, m); this.wrong = 0; this.filled = 0; this.locked = false; }
 this.draw(false);
 }
 },
 round() {
 this.mode = daMode() || '다-1'; this.locked = false; this.n = this.queue[this.idx]; this.wrong = 0; this.filled = 0; this.done = false;
-this.step = this.mode === '다-2' ? 'place' : 'match';
+this.kind = kindOf('a1'); this.step = a1Step(this.kind, this.mode);
 this.draw(true);
 },
 draw(speak) {
 Scan.stop(); DaHint.stop(); this.timers.forEach(clearTimeout); this.timers = [];
 const m = this.mode, n = this.n, T = this.total;
-const titles = { match: '같은 숫자를 찾아요', dots: '같은 점을 찾아요', place: '점을 콕 해요' };
-this.root.innerHTML = `<div class="a2nav"><button class="btn a2back" id="a2Back">처음으로</button></div><h1 class="a2title">${titles[this.step]}</h1><div class="a2lv">수준 다 · ${m}</div><div id="caption">화면을 한 번 터치하면 소리가 켜져요</div><div class="a2stat" id="a2Stat"><b>${this.idx + 1} / ${T}</b> 라운드<br>남은 라운드 ${T - this.idx - 1}<br><span>${m === '다-2' ? '함께 해요' : '같은 것을 골라요'}</span></div><svg class="a1tree" id="a1tree"></svg>`;
+const titles = { match: '같은 숫자를 찾아요', dots: '같은 점을 찾아요', place: '점을 콕 해요', kind: this.kind === 'color' ? '같은 색을 찾아요' : '같은 모양을 찾아요' };
+this.root.innerHTML = `<div class="a2nav"><button class="btn a2back" id="a2Back">처음으로</button></div><h1 class="a2title">${titles[this.step]}</h1><div id="caption">화면을 한 번 터치하면 소리가 켜져요</div><div class="a2stat" id="a2Stat"><b>${this.idx + 1} / ${T}</b> 라운드<br>남은 라운드 ${T - this.idx - 1}<br><span>${m === '다-2' ? '함께 해요' : '같은 것을 골라요'}</span></div><svg class="a1tree" id="a1tree"></svg>`;
 this.root.insertAdjacentHTML('beforeend', Screens.act2.faceHtml());
 this.root.querySelector('#a2Back').onclick = () => { Sfx.unlock(); Speech.stop(); Router.go('intro'); };
 buildTree(this.root.querySelector('#a1tree'), this.fruits);
-const wrap = document.createElement('div'); wrap.className = 'daArea'; this.root.appendChild(wrap);
+const wrap = document.createElement('div'); wrap.className = 'daArea' + (this.step === 'place' ? '' : ' sameArea'); this.root.appendChild(wrap);
 const target = `<div class="daTarget"><b>${n}</b></div>`;
 const slots = () => { let h = '<div class="daSlots">'; for (let i = 0; i < 2; i++) { const open = i < n, on = i < this.filled; h += `<div class="daSlot ${open ? 'open' : 'cover'} ${on ? 'on' : ''}" data-i="${i}">${on ? '<i></i>' : ''}</div>`; } return h + '</div>'; };
-if (this.step === 'match') {
+if (this.step === 'kind') { /* 아래에서 만듦 */ }
+else if (this.step === 'match') {
 const vals = a2Shuffle([1, 2]);
-wrap.innerHTML = target + `<div class="daChoices">${vals.map(v => `<button class="btn dab num" data-v="${v}">${v}</button>`).join('')}</div>`;
+wrap.innerHTML = sameFrame(`<b>${n}</b>`, vals.map(v => `<button class="btn dab num" data-v="${v}">${v}</button>`).join(''));
 } else if (this.step === 'dots') {
 const vals = a2Shuffle([1, 2]);
-wrap.innerHTML = target + `<div class="daChoices">${vals.map(v => `<button class="btn dab" data-v="${v}"><svg viewBox="0 0 ${v * 60} 70">${Array.from({ length: v }, (_, i) => `<circle cx="${30 + i * 60}" cy="35" r="22" fill="#FDD835" stroke="#B8860B" stroke-width="3"/>`).join('')}</svg></button>`).join('')}</div>`;
+wrap.innerHTML = sameFrame(`<b>${n}</b>`, vals.map(v => `<button class="btn dab" data-v="${v}"><svg viewBox="0 0 ${v * 60} 70">${Array.from({ length: v }, (_, i) => `<circle cx="${30 + i * 60}" cy="35" r="22" fill="#FDD835" stroke="#B8860B" stroke-width="3"/>`).join('')}</svg></button>`).join(''));
+} else if (this.step === 'kind') {
 } else if (m === '다-1') {
 wrap.innerHTML = target + slots();
 } else {
@@ -2790,7 +2899,10 @@ if (this.done) return; this.done = true; Scan.stop(); DaHint.stop(); rec(stage);
 this.fruits++; buildTree(this.root.querySelector('#a1tree'), this.fruits); Sfx.dingdong(); this.later(() => Sfx.fruit(), 450); Screens.act2.pulse.call({ root: this.root }); Speech.say('딩동! 잘했어요!');
 this.later(() => { if (this.idx + 1 < this.total) { this.idx++; this.round(); } else Router.go('complete'); }, 1800);
 };
-if (this.step === 'match' || this.step === 'dots') {
+if (this.step === 'kind') {
+const help = m === '다-2', cnt = help ? (daNum('daChoices2', 1) >= 2 ? 2 : 1) : Math.min(3, Math.max(2, daNum('daChoices1', 2)));
+sameRound(this, wrap, { kind: this.kind, help, cnt, hintOpt: 'none', onWrong: () => { this.wrong++; Live.rec('1', false, '오답'); }, onDone: stage => success(stage) });
+} else if (this.step === 'match' || this.step === 'dots') {
 const btns = () => [...wrap.querySelectorAll('.dab:not(.dim)')];
 const pick = b => {
 if (this.done || this.locked) return; Sfx.unlock();
@@ -2819,7 +2931,7 @@ DaHint.start(this, big, '큰 버튼을 눌러요');
 Scan.start(() => [big], () => touch(DaHint.stage));
 }
 const dd = Settings.data; this._sig = [m, dd.daHint, dd.daScan, dd.daScanMs].join('|');
-const msg = { match: `${n}과 같은 숫자를 찾아요`, dots: `${n}과 같은 점을 찾아요`, place: m === '다-2' ? `큰 버튼을 눌러 점을 ${n}개 만들어요` : `점을 ${n}개 콕 해요` }[this.step];
+const msg = { kind: sameMsg(this.kind), match: sameMsg('num', n), dots: `위의 ${n}${SAME_PA[n]} 같은 점 그림을 아래에서 눌러요`, place: m === '다-2' ? `큰 버튼을 눌러 점을 ${n}개 만들어요` : `점을 ${n}개 콕 해요` }[this.step];
 if (speak) Speech.say(msg); else Router.caption(msg);
 }
 };
@@ -2829,14 +2941,14 @@ Router.register('a1da', Screens.a1da);
 
 
 /* ---------- 단계 배지 (학생 화면 상단, 모니터와 같은 번호·색·단계명) ---------- */
-const STG = [['다', '색 짝짓기', '#E3A82B', '#3b2a10'], ['다', '모양 짝짓기', '#E58A2E', '#fff'], ['나', '1~2개 세어 보기', '#DB6A2C', '#fff'], ['나', '3개 세어 보기', '#C84B31', '#fff'], ['가', '4~5개 세어 보기', '#A33C4C', '#fff'], ['가', '세어 숫자 찾기 1~5', '#6E3F8F', '#fff']];
+const STG = [['다', '같은 색 찾기', '#E3A82B', '#3b2a10'], ['다', '같은 모양 찾기', '#E58A2E', '#fff'], ['나', '1~2개 세어 보기', '#DB6A2C', '#fff'], ['나', '3개 세어 보기', '#C84B31', '#fff'], ['가', '4~5개 세어 보기', '#A33C4C', '#fff'], ['가', '세어 숫자 찾기 1~5', '#6E3F8F', '#fff']];
 const StageBadge = {
 refresh() {
 const b = document.getElementById('stgBadge'), st = document.getElementById('stage'); if (!b || !st) return;
 const scr = state.screen, show = ['activity1', 'a1da', 'act2'].includes(scr) && a2Sid() != null;
 st.classList.toggle('hasStg', show); b.style.display = show ? 'flex' : 'none'; if (!show) return;
 const n = stageOf(scr === 'act2' ? 'a2' : 'a1'), x = STG[n - 1];
-b.style.background = x[2]; b.style.color = x[3]; b.textContent = `${n}단계 · ${x[1]} (${x[0]})`;
+const P = scr === 'act2' ? 'a2' : 'a1', kk = kindFor(P, a2Sid()), isNum = n === 3 && daMode(P) && (kk === 'num' || kk === 'place'); b.style.background = x[2]; b.style.color = x[3]; b.textContent = isNum ? '3단계 · 다 · ' + (kk === 'num' ? '같은 숫자 찾기' : '점선 원 누르기') : `${n}단계 · ${x[1]} (${x[0]})`;
 },
 init() { const b = document.createElement('div'); b.id = 'stgBadge'; document.getElementById('stage').appendChild(b); }
 };
@@ -2874,14 +2986,20 @@ st.addEventListener('click', e => { if (this.on() && e.target.closest && e.targe
 /* ---------- 실시간 연동 (Firebase Realtime Database compat). 설정이 없으면 전부 꺼진 채 오프라인으로 정상 동작.
    전송 항목: 학생 번호, 활동, 단계, 정답률, 문항 수, 도움 단계, 시각. 이름·사진·얼굴은 절대 전송하지 않음. ---------- */
 const FB_VER = '10.12.2';
+function setStuKind(P, sid, k) { sid = String(sid); if (!['place', 'num', 'shape', 'color'].includes(k)) return;
+if (P === 'a2' && Settings.data.a2Match && Settings.data.a2Match[sid]) { const mm = Object.assign({}, Settings.data.a2Match); delete mm[sid]; Settings.set('a2Match', mm); }
+const m = Object.assign({}, Settings.data[P + 'Kinds']); m[sid] = k; Settings.set(P + 'Kinds', m); }
+function setStuWho(P, sid, w) { sid = String(sid); const sub = Object.assign({}, Settings.data[P + 'Subs']); sub[sid] = w === 'help' ? '다-2' : '다-1'; Settings.set(P + 'Subs', sub); }
+function whoFor(P, sid) { const d = Settings.data, sub = (d[P + 'Subs'] || {})[String(sid)] || d[P + 'Sub'] || '다-1'; return sub === '다-2' ? 'help' : 'solo'; }
 function stuLevelOf(P, sid) { const d = Settings.data; sid = String(sid); const sub = d[P + 'Subs'] && d[P + 'Subs'][sid]; if (sub) return sub; const lv = d[P + 'Levels'] && d[P + 'Levels'][sid]; return lv || d[P === 'a1' ? 'a1Level' : 'a2Level'] || '가'; }
 function applyStage(P, sid, n) {
 sid = String(sid); n = Number(n); if (!(n >= 1 && n <= 6)) return;
 const sub = Object.assign({}, Settings.data[P + 'Subs']), lvs = Object.assign({}, Settings.data[P + 'Levels']), rng = Object.assign({}, Settings.data.a2Ranges);
 const mt = Object.assign({}, Settings.data.a2Match);
-if (n <= 2) { lvs[sid] = '다'; delete rng[sid]; if (P === 'a2') mt[sid] = n; else sub[sid] = n === 1 ? '다-2' : '다-1'; }
-else { delete sub[sid]; delete mt[sid]; lvs[sid] = n <= 4 ? '나' : '가'; if (n === 3) rng[sid] = [1, 2]; else if (n === 4) rng[sid] = [1, 3, 3]; else if (n === 5) rng[sid] = [4, 5]; else delete rng[sid]; }
-Settings.set(P + 'Subs', sub); Settings.set(P + 'Levels', lvs); if (P === 'a2') { Settings.set('a2Ranges', rng); Settings.set('a2Match', mt); } else { const g = Object.assign({}, Settings.data.a1Stages); g[sid] = n; Settings.set('a1Stages', g); }
+const kk = Object.assign({}, Settings.data.a1Kinds), k2 = Object.assign({}, Settings.data.a2Kinds);
+if (n <= 2) { lvs[sid] = '다'; delete rng[sid]; if (P === 'a2') { mt[sid] = n; delete k2[sid]; } else kk[sid] = n === 1 ? 'color' : 'shape'; }
+else { delete sub[sid]; delete mt[sid]; delete kk[sid]; delete k2[sid]; lvs[sid] = n <= 4 ? '나' : '가'; if (n === 3) rng[sid] = [1, 2]; else if (n === 4) rng[sid] = [1, 3, 3]; else if (n === 5) rng[sid] = [4, 5]; else delete rng[sid]; }
+Settings.set(P + 'Subs', sub); Settings.set(P + 'Levels', lvs); if (P === 'a2') { Settings.set('a2Ranges', rng); Settings.set('a2Match', mt); Settings.set('a2Kinds', k2); } else Settings.set('a1Kinds', kk); if (P === 'a2') {} if (P === 'a1') { const g = Object.assign({}, Settings.data.a1Stages); g[sid] = n; Settings.set('a1Stages', g); }
 }
 function setStuLevel(P, sid, lv) {
 sid = String(sid); if (P === 'a2' && Settings.data.a2Match && Settings.data.a2Match[sid]) { const mm = Object.assign({}, Settings.data.a2Match); delete mm[sid]; Settings.set('a2Match', mm); } if (P === 'a2' && Settings.data.a2Ranges && Settings.data.a2Ranges[sid]) { const r = Object.assign({}, Settings.data.a2Ranges); delete r[sid]; Settings.set('a2Ranges', r); } const sub = Object.assign({}, Settings.data[P + 'Subs']), lvs = Object.assign({}, Settings.data[P + 'Levels']);
@@ -2893,7 +3011,7 @@ const FB_ROOT = 'gamnamu_live'; /* 핸드벨 앱과 같은 프로젝트를 쓰�
 const LADDER = ['다-2', '다-1', '다', '나', '가'];
 const Live = {
 KEY: 'gamnamu.fb.v1', cfg: null, room: null, db: null, sid: null, hist: [], act: '1', prompt: '', timer: null, lastCmd: null, cmdPath: null, cmdCb: null, ready: false,
-custom: null, errKind: null,
+custom: null, errKind: null, order: null,
 load() { try { const o = JSON.parse(localStorage.getItem(this.KEY) || 'null'); if (o) { if (o.cfg) this.custom = o.cfg; this.room = o.room || null; } } catch (e) {} this.cfg = this.custom || FB_DEFAULT; if (!this.room) { this.room = String(1000 + Math.floor(Math.random() * 9000)); this.store(); } },
 store() { try { localStorage.setItem(this.KEY, JSON.stringify({ cfg: this.custom, room: this.room })); } catch (e) {} },
 parseCfg(txt) {
@@ -2937,13 +3055,16 @@ this.timer = setInterval(() => this.push(), 5000); this.push(); this.diag(); ret
 },
 stopStudent() { clearInterval(this.timer); this.timer = null; try { if (this.db && this.cmdPath) this.db.ref(this.cmdPath).off('value', this.cmdCb); } catch (e) {} this.sid = null; this.cmdPath = null; },
 level() { const P = Router.cur === 'act2' ? 'a2' : 'a1'; return daMode(P) || (P === 'a2' ? a2Level() : a1Level()); },
-hintText() { const P = Router.cur === 'act2' ? 'a2' : 'a1', m = daMode(P); if (m) { const st = DaHint.stage; return m + (st && st !== '독립' ? ' · ' + st : ''); } if (P === 'a2') return { none: '힌트 없음', num: '순서 번호', ans: '정답 강조' }[Settings.data.a2Hint] || '힌트 없음'; return '힌트 없음'; },
+hintText() { const P = Router.cur === 'act2' ? 'a2' : 'a1', m = daMode(P); if (m) { const kt = KIND_TXT[kindFor(P, a2Sid())]; return '다·' + kt + (m === '다-2' ? '·함께' : '') + (DaHint.stage && DaHint.stage !== '독립' ? ' · ' + DaHint.stage : ''); const st = DaHint.stage; return m + (st && st !== '독립' ? ' · ' + st : ''); } if (P === 'a2') return { none: '힌트 없음', num: '순서 번호', ans: '정답 강조' }[Settings.data.a2Hint] || '힌트 없음'; return '힌트 없음'; },
 status() {
 const a = Router.cur === 'act2' ? '2' : (Router.cur === 'a1da' || Router.cur === 'activity1') ? '1' : this.act; this.act = a;
 const P = a === '2' ? 'a2' : 'a1', h = this.hist.slice(-10), n = h.length, ok = h.filter(x => x).length;
-return { act: a, level: stageOf(P), lv: this.level(), acc: n ? Math.round(ok * 100 / n) : -1, n, prompt: this.prompt || '', hint: this.hintText(), ts: Date.now() };
+const o = { act: a, level: stageOf(P), lv: this.level(), kind: daMode(P) ? kindFor(P, a2Sid()) : '', acc: n ? Math.round(ok * 100 / n) : -1, n, prompt: this.prompt || '', hint: this.hintText(), ts: Date.now(), done: !!this.order }; if (this.order) o.order = this.order; return o;
 },
 push() { if (!this.sid || !this.db) return; this.write(`${FB_ROOT}/${this.room}/students/${this.sid}`, this.status()); },
+markDone(cards, lv) { if (!this.sid) return; const c = (cards || []).map(x => ({ item: x.item, n: x.n })).sort((a, b) => (a.item === 'persimmon' ? 0 : 1) - (b.item === 'persimmon' ? 0 : 1)); if (!c.length) return; this.order = { n: c[0].n, item: c[0].item, lv: lv, cards: c, said: 0, ts: Date.now() }; this.push(); },
+markSaid() { if (this.order) { this.order.said = Math.min((this.order.cards || []).length, (this.order.said || 0) + 1); this.push(); } },
+resetOrder() { if (this.order) { this.order = null; this.push(); } },
 setPrompt(p) { if (!this.sid) return; this.prompt = p; this.push(); },
 rec(act, ok, prompt) { if (!this.sid) return; this.act = act; this.hist.push(!!ok); if (this.hist.length > 10) this.hist.shift(); this.prompt = prompt || ''; this.push(); },
 applyCmd(v) {
@@ -2951,6 +3072,7 @@ const P = this.actP();
 if (v.level != null) { this.lastCmdTxt = Number(v.level) >= 1 ? `${v.level}단계` : String(v.level); this.applyLevel(v.level); }
 if (v.hint && ['none', 'num', 'ans'].includes(v.hint)) { Settings.set('a2Hint', v.hint); this.lastCmdTxt = '힌트 ' + ({ none: '없음', num: '순서 번호', ans: '정답 강조' })[v.hint]; }
 if (v.dly && [4000, 6000, 8000].includes(Number(v.dly))) { Settings.set('daHint', String(v.dly)); this.lastCmdTxt = `시각힌트 ${v.dly / 1000}초`; }
+if (['place', 'num', 'shape', 'color'].includes(v.kind)) { setStuKind(P, this.sid, v.kind); this.lastCmdTxt = '종류 ' + KIND_TXT[v.kind]; }
 if (v.help === 'on' || v.help === 'off') { const sub = Object.assign({}, Settings.data[P + 'Subs']); if (v.help === 'on') sub[this.sid] = '다-2'; else delete sub[this.sid]; Settings.set(P + 'Subs', sub); this.lastCmdTxt = '도움 ' + v.help; }
 setTimeout(() => this.push(), 300);
 },
@@ -2984,7 +3106,7 @@ Screens.monitor = {
 timers: [], data: {},
 mount(root) {
 this.root = root; this.data = {}; this.seen = {};
-root.innerHTML = `<div id="monitor"><header><h1>🍂 우리 반 감나무 갤러리 <small>실시간 모니터 · 5까지의 수</small></h1><button class="tb" id="monBack">⌂ 처음으로</button><button class="tb live" id="monCfg">● 실시간 연결 설정</button></header><div class="mgrid" id="monGrid"></div></div>`;
+root.innerHTML = `<div id="monitor"><header><h1>🍂 우리 반 감나무 갤러리 <small>실시간 모니터 · 5까지의 수</small></h1><span id="monAll" class="alldone" style="display:none">🎉 모두 끝났어요</span><button class="tb" id="monBack">⌂ 처음으로</button><button class="tb live" id="monCfg">● 실시간 연결 설정</button></header><div class="mgrid" id="monGrid"></div></div>`;
 root.querySelector('#monBack').onclick = () => { Sfx.unlock(); Router.go('intro'); };
 root.querySelector('#monCfg').onclick = () => this.cfgModal();
 this.draw(); this.note();
@@ -3000,8 +3122,8 @@ this.draw();
 unmount() { this.timers.forEach(clearInterval); this.timers = []; Live.unwatch(); },
 draw() {
 const g = document.getElementById('monGrid'); if (!g) return;
-const now = Date.now(); let h = '';
-const ST = [['다', '색 짝짓기', '#E3A82B', '#3b2a10'], ['다', '모양 짝짓기', '#E58A2E', '#fff'], ['나', '1~2개 세어 보기', '#DB6A2C', '#fff'], ['나', '3개 세어 보기', '#C84B31', '#fff'], ['가', '4~5개 세어 보기', '#A33C4C', '#fff'], ['가', '세어 숫자 찾기 1~5', '#6E3F8F', '#fff']];
+const now = Date.now(); let h = '', onN = 0, doneN = 0;
+const ST = [['다', '같은 색 찾기', '#E3A82B', '#3b2a10'], ['다', '같은 모양 찾기', '#E58A2E', '#fff'], ['나', '1~2개 세어 보기', '#DB6A2C', '#fff'], ['나', '3개 세어 보기', '#C84B31', '#fff'], ['가', '4~5개 세어 보기', '#A33C4C', '#fff'], ['가', '세어 숫자 찾기 1~5', '#6E3F8F', '#fff']];
 const stg = d => { if (!d) return 0; const L = d.level; if (Number(L) >= 1 && Number(L) <= 6) return Number(L); return { '다-2': 1, '다-1': 2, '다': 3, '나': 4, '가': 6 }[L] || 0; };
 /* 도움 단계(최근 도움 점): 0=독립, 1=힌트 사용(순서 번호·정답 강조·시각힌트)·방금 오답, 2=오답 후 정답(·손힌트), 3=신체촉진(함께) */
 const HELP = { '독립': 0, '힌트 사용': 1, '시각힌트': 1, '오답': 1, '연습': 1, '오답 후 정답': 2, '손힌트': 2, '신체촉진': 3 }, helpLv = p => (HELP[p] != null ? HELP[p] : 0);
@@ -3009,7 +3131,7 @@ const pers = (x, y, full) => full ? `<g transform="translate(${x},${y})"><ellips
 for (let i = 1; i <= MAX_STUDENTS; i++) {
 const st = (state.students || []).find(x => Number(x.id) === i), d = this.data[i] || this.data[String(i)];
 const sn = this.seen[i] || this.seen[String(i)], on = !!(d && d.ts && sn && now - sn.at <= 15000), s = stg(d), has = s >= 1;
-const ok = d && d.acc >= 0 ? Math.round(d.acc * d.n / 100) : 0, hl = d ? helpLv(d.prompt) : 0;
+const ok = d && d.acc >= 0 ? Math.round(d.acc * d.n / 100) : 0, hl = d ? helpLv(d.prompt) : 0, dn = !!(d && d.done && d.order && d.order.cards); if (on) { onN++; if (dn) doneN++; }
 const img = st ? `<img alt="" src="${st.photo || initialAvatar(st.name, st.id)}">` : '';
 let tw = `<svg width="268" height="64" viewBox="0 0 330 80"><path d="M0 14 Q80 4 165 12 T330 8" stroke="#7a4a1f" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M0 52 Q80 42 165 50 T330 46" stroke="#7a4a1f" stroke-width="9" fill="none" stroke-linecap="round"/>`;
 for (let k = 0; k < 10; k++) { const r = k < 5 ? 0 : 1, c2 = k % 5; tw += pers(34 + c2 * 65, (r ? 40 : 2) + (c2 % 2 ? 4 : 0) + 16, k < ok); }
@@ -3017,17 +3139,27 @@ tw += '</svg>';
 const trk = ST.map((x, k) => `<div class="nd ${k + 1 === s ? 'cur' : k + 1 < s ? 'dn' : ''}" style="--c:${x[2]};--t:${x[3]}"><div class="gl">${x[0]}</div><b>${k + 1}</b></div>`).join('');
 const dots = [1, 2, 3].map(q => `<span class="dot ${q <= hl ? 'f' : ''}"></span>`).join('');
 const hint = d && d.hint ? ((/시각/.test(d.hint) ? '☝ ' : '') + d.hint) : (d ? '힌트 없음' : '');
-const cur = has ? ST[s - 1] : ['-', '접속 없음', '#999', '#fff'];
-h += `<div class="mz ${on ? 'on' : 'off'}" data-i="${i}"><div class="top"><div class="av">${img}</div><div class="mn"></div><span class="mname"></span><div class="chip ${on ? 'on' : 'offc'}"><i></i>${on ? '온라인' : (d ? '오프라인' : '접속 없음')}</div>${hint ? `<span class="hint">${hint}</span>` : ''}</div><div class="cc" style="--c:${cur[2]}"><div class="cct">${cur[0]}<em>${has ? s : ''}</em></div><div class="ccn">${cur[1]}${d ? ' · 활동' + d.act : ''}</div></div><div class="track">${trk}</div><div class="tl"><span>쉬움 ▸ 1 색 짝짓기</span><span>6 세어 숫자 찾기 ◂ 어려움</span></div><div class="mid">${tw}<div class="sc">${d && d.acc >= 0 ? ok : '-'}<small>/10 정답${d && d.acc >= 0 ? ' · ' + d.acc + '%' : ''}</small></div></div><div class="help">최근 도움 ${dots} <span>${d && d.prompt ? d.prompt + ' ' : ''}${hl}단계</span></div><div class="btns"><button class="btn mup" ${on && has && s < 6 && Live.db ? '' : 'disabled'}>▲ 단계 올리기</button><button class="btn mdn" ${on && has && s > 1 && Live.db ? '' : 'disabled'}>▼ 내리기</button></div></div>`;
+const cur = has ? ST[s - 1].slice() : ['-', '접속 없음', '#999', '#fff']; if (has && s === 3 && d.kind && d.kind !== '') cur[1] = { num: '다 · 같은 숫자 찾기', place: '다 · 점선 원 누르기' }[d.kind] || cur[1];
+h += `<div class="mz ${on ? 'on' : 'off'}" data-i="${i}"><div class="top"><div class="av">${img}</div><div class="mn"></div><span class="mname"></span><div class="chip ${on ? 'on' : 'offc'}"><i></i>${on ? '온라인' : (d ? '오프라인' : '접속 없음')}</div>${hint ? `<span class="hint">${hint}</span>` : ''}</div><div class="cc" style="--c:${cur[2]}"><div class="cct">${cur[0]}<em>${has ? s : ''}</em></div><div class="ccn">${cur[1]}${d ? ' · 활동' + d.act : ''}</div></div><div class="track">${trk}</div><div class="tl"><span>쉬움 ▸ 1 같은 색 찾기</span><span>6 세어 숫자 찾기 ◂ 어려움</span></div><div class="mid">${tw}<div class="sc">${d && d.acc >= 0 ? ok : '-'}<small>/10 정답${d && d.acc >= 0 ? ' · ' + d.acc + '%' : ''}</small></div><div class="ord" style="${dn ? '' : 'visibility:hidden'}"><button class="btn ordBtn" type="button" ${dn ? '' : 'disabled'}>🧾 주문 카드 보기</button></div></div><div class="help">최근 도움 ${dots} <span>${d && d.prompt ? d.prompt + ' ' : ''}${hl}단계</span><span class="ordTxt" style="margin-left:auto">${dn ? `✔ 활동 끝 · ${A2_ITEM[d.order.item] ? A2_ITEM[d.order.item].name : '감'} ${d.order.n}${A2_ITEM[d.order.item] ? A2_ITEM[d.order.item].unit : '개'}` : ''}</span></div><div class="btns"><button class="btn mup" ${on && has && s < 6 && Live.db ? '' : 'disabled'}>▲ 단계 올리기</button><button class="btn mdn" ${on && has && s > 1 && Live.db ? '' : 'disabled'}>▼ 내리기</button></div></div>`;
 }
-g.innerHTML = h;
+g.innerHTML = h; const al = document.getElementById('monAll'); if (al) al.style.display = (onN > 0 && onN === doneN) ? '' : 'none';
 g.querySelectorAll('.mz').forEach(z => {
 const i = Number(z.dataset.i), st = (state.students || []).find(x => Number(x.id) === i), d = this.data[i] || this.data[String(i)];
 z.querySelector('.mn').textContent = `${i}번`; z.querySelector('.mname').textContent = st ? st.name : '';
 const mv = dir => { if (!d) return; const s = stg(d); if (!s) return; const nx = Math.max(1, Math.min(6, s + dir)); if (nx !== s) Live.sendLevel(i, nx); };
+const ob = z.querySelector('.ordBtn'); if (ob) ob.onclick = () => { if (d && d.order) this.orderPop(i, d.order); };
 z.querySelector('.mup').onclick = () => mv(1); z.querySelector('.mdn').onclick = () => mv(-1);
 const hp = z.querySelector('.hint'); if (hp && d) { hp.classList.add('tap'); hp.onclick = () => this.hintPop(i, z, d, !!(this.seen[i] && Date.now() - this.seen[i].at <= 15000)); }
 });
+},
+orderPop(i, o) {
+const mon = this.root.querySelector('#monitor'); const old = mon.querySelector('#ordModal'); if (old) old.remove();
+const m = document.createElement('div'); m.id = 'ordModal';
+const cards = (o.cards && o.cards.length ? o.cards : [{ item: o.item, n: o.n }]);
+m.innerHTML = `<div class="obox"><div class="ot">${i}번 주문 카드</div><div class="ocs">${cards.map((c, j) => { const it = A2_ITEM[c.item] || A2_ITEM.persimmon; return `<div class="oc" data-j="${j}"><div class="a2row">${Array.from({ length: c.n }, (_, k) => `<svg viewBox="-26 -28 52 56">${a2Glyph(c.item, k)}</svg>`).join('')}</div><h2>${i}번 ${it.name} <em>${c.n}${it.unit}</em> 주세요</h2><div class="osay">${(o.said || 0) > j ? '✔ 말했어요' : '아직 말하기 전이에요'}</div><button class="btn ohear" type="button" data-j="${j}">🔊 들어 보기</button></div>`; }).join('')}</div><button class="btn oclose" id="ordX" type="button">닫기</button></div>`;
+mon.appendChild(m);
+m.querySelectorAll('.ohear').forEach(b => b.onclick = () => { const c = cards[Number(b.dataset.j)]; Sfx.unlock(); Speech.say(`${a2Say(c.item, c.n)} 주세요`); });
+m.querySelector('#ordX').onclick = () => { Speech.stop(); m.remove(); };
 },
 hintPop(i, z, d, on) {
 const mon = this.root.querySelector('#monitor'); const old = mon.querySelector('.hpop'); if (old) old.remove();
@@ -3066,6 +3198,57 @@ Live.unwatch(); Live.saveCfg(c); m.remove(); this.data = {}; this.draw(); this.n
 };
 Router.register('monitor', Screens.monitor);
 
+/* ---------- 수준 칩(우상단 주황색) + 「수준 설정」 팝업 ---------- */
+const LvChip = {
+act() { return Router.cur === 'act2' ? 'a2' : 'a1'; },
+label(P) {
+const m = daMode(P);
+if (m) return `다 · ${KIND_LBL[kindFor(P, a2Sid())]} · ${m === '다-2' ? '함께' : '혼자'}`;
+const r = P === 'a2' ? a2Range() : a1RangeNow(), lv = P === 'a1' ? a1Level() : a2Level();
+return `${lv} · ${r[0]}~${r[1]} ${P === 'a1' ? '점 찍기' : '숫자 찾기'}`;
+},
+refresh() {
+const b = document.getElementById('lvChip'); if (!b) return;
+const show = ['activity1', 'a1da', 'act2'].includes(state.screen);
+b.style.display = show ? 'flex' : 'none'; if (!show) return;
+b.textContent = `${this.label(this.act())} ▼`; b.dataset.act = this.act();
+},
+init() { const b = document.getElementById('lvChip'); b.onclick = () => { Sfx.unlock(); LvPop.open(this.act()); }; }
+};
+const LvPop = {
+act: 'a1',
+open(act) { this.act = act || LvChip.act(); this.render(); document.getElementById('lvModal').classList.add('open'); Scan.pause(); },
+close() { document.getElementById('lvModal').classList.remove('open'); Scan.resume(); },
+stuTxt(P, i) { const d = Settings.data, sub = (d[P + 'Subs'] || {})[i], lv = (d[P + 'Levels'] || {})[i]; return sub ? (sub === '다-2' ? '다·함께' : '다') : (lv || '자동'); },
+render() {
+const P = this.act, sid = a2Sid(), A = P === 'a1', d = Settings.data, card = document.getElementById('lvCard');
+const m = daMode(P), cur = m ? '다' : (A ? a1Level() : a2Level()), kind = kindFor(P, sid), who = (m === '다-2') ? 'help' : 'solo';
+const lvs = [['가', A ? '1~5 세어 점 찍기' : '1~5 세어 숫자 찾기'], ['나', A ? '1~3 세어 점 찍기' : '1~3 세어 숫자 찾기'], ['다', A ? '점선 원을 한 번씩 누르기' : '같은 숫자·모양·색 찾기']];
+const who1 = sid != null ? `${sid}번 학생` : '모두(기본)';
+let h = `<h3>수준 설정</h3><div class="lvTabs">${['a1', 'a2'].map(p => `<button class="sb ${p === P ? 'on' : ''}" data-tab="${p}">${p === 'a1' ? '활동 1' : '활동 2'}</button>`).join('')}<span class="lvWho">${who1}</span></div>`;
+h += `<div class="lvSum">지금은 「${LvChip.label(P)}」예요</div>`;
+h += `<div class="lvBigRow">${lvs.map(([v, t]) => `<button class="lvBig ${cur === v ? 'on' : ''}" data-lv="${v}"><b>${v}</b><span>${t}</span></button>`).join('')}</div>`;
+if (cur === '다') {
+h += `<h4 class="osec">${A ? '무엇을 할까요?' : '무엇을 찾을까요?'}</h4><div class="lvRow3 ${A ? 'four' : ''}">${(A ? [['place', '👆', '점선 원 누르기']] : []).concat([['num', '🔢', '같은 숫자'], ['shape', '🔷', '같은 모양'], ['color', '🎨', '같은 색']]).map(([k, ic, t]) => `<button class="lvOpt ${kind === k ? 'on' : ''}" data-kind="${k}"><i>${ic}</i>${t}</button>`).join('')}</div>`;
+h += `<h4 class="osec">누가 해요?</h4><div class="lvRow3 two">${[['solo', '🙂', '혼자 해요', '다-1'], ['help', '🤝', '도움 받아요', '다-2']].map(([k, ic, t, c]) => `<button class="lvOpt ${who === k ? 'on' : ''}" data-who="${k}"><i>${ic}</i>${t}<small>${c}</small></button>`).join('')}</div>`;
+}
+h += `<h4 class="osec">학생별 수준 <small>누르면 자동 → 가 → 나 → 다</small></h4><div class="lvStu">${[1, 2, 3, 4, 5, 6].map(i => `<button class="sb" data-slv="${i}">${i}번 ${this.stuTxt(P, i)}</button>`).join('')}</div>`;
+h += `<div class="sfoot"><span></span><button class="sb on" id="lvClose" style="min-width:calc(var(--u)*20);font-size:calc(var(--u)*2.6)">닫기</button></div>`;
+card.innerHTML = h;
+card.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { this.act = b.dataset.tab; this.render(); });
+card.querySelectorAll('[data-lv]').forEach(b => b.onclick = () => { const v = b.dataset.lv; if (sid != null) setStuLevel(P, sid, v); else Settings.set(P + 'Level', v); this.render(); });
+card.querySelectorAll('[data-kind]').forEach(b => b.onclick = () => { if (sid != null) setStuKind(P, sid, b.dataset.kind); else Settings.set(P + 'Kind', b.dataset.kind); this.render(); });
+card.querySelectorAll('[data-who]').forEach(b => b.onclick = () => { if (sid != null) setStuWho(P, sid, b.dataset.who); else Settings.set(P + 'Sub', b.dataset.who === 'help' ? '다-2' : '다-1'); this.render(); });
+card.querySelectorAll('[data-slv]').forEach(b => b.onclick = () => {
+const i = b.dataset.slv, o = ['', '가', '나', '다'], sub = (d[P + 'Subs'] || {})[i], c = sub ? '다' : ((d[P + 'Levels'] || {})[i] || ''), nx = o[(o.indexOf(c) + 1) % 4];
+if (nx) setStuLevel(P, i, nx); else { const l = Object.assign({}, d[P + 'Levels']), sb = Object.assign({}, d[P + 'Subs']); delete l[i]; delete sb[i]; Settings.set(P + 'Subs', sb); Settings.set(P + 'Levels', l); }
+this.render();
+});
+card.querySelector('#lvClose').onclick = () => this.close();
+},
+init() { const m = document.getElementById('lvModal'); m.onclick = e => { if (e.target === m) this.close(); }; }
+};
+
 /* ---------- 옵션 패널 (보이는 「옵션」 버튼 + 교사 숨은 설정 3초 길게 누르기) ---------- */
 const Options = {
 timer: null, armed: false, adv: false,
@@ -3097,43 +3280,31 @@ const row = (label, ctl, cls) => `<div class="srow ${cls || ''}"><span>${label}<
 const act = this.act || 'a1', A = act === 'a1';
 const opt = (label, key, list, wide) => row(label, list.map(([v, l]) => `<button class="sb ${String(d[key]) === String(v) ? 'on' : ''}" data-a2="${key}" data-v="${v}">${l}</button>`).join(''), wide ? 'wide' : '');
 const onoff = [['off', '끄기'], ['on', '켜기']];
-let h = `<h3>${A ? '활동1 옵션' : '활동2 옵션'}${this.adv ? '<small>교사 고급 설정</small>' : ''}</h3><div class="grid">`;
-if (A) {
-h += row('활동1 문제 수', steps('a1Total', [[3, '3'], [5, '5'], [7, '7'], [10, '10']]))
-+ row('콕콕 찍을 때 하나·둘·셋 말하기', sw('speakCount'))
-+ row('땅에 점선 동그라미 보이기', sw('showCircles'))
+const sec = t => `<h4 class="osec">${t}</h4>`;
+const sec2 = [['3', '3'], ['5', '5'], ['7', '7'], ['10', '10']];
+let h = `<h3>${A ? '활동1 옵션' : '활동2 옵션'}<small>수준은 오른쪽 위 주황 칩에서 바꿔요</small></h3><div class="grid">`;
+h += row('문제 수', steps(A ? 'a1Total' : 'a2Total', [[3, '3'], [5, '5'], [7, '7'], [10, '10']]), 'wide');
+h += sec('도움 (촉구)');
+if (!A) h += opt('힌트 도움', 'a2Hint', [['none', '없음'], ['num', '순서 번호 보이기'], ['ans', '정답 반짝이기']], true);
+h += opt('도움 신호가 나오기까지', 'daHint', [['4000', '4초'], ['6000', '6초'], ['8000', '8초']])
++ opt('친구가 먼저 해 보기', 'daFriend', [['off', '안 해요'], ['on', '해요']]);
+h += sec('화면 표시');
+if (A) h += row('점 크기', steps('dotPct', [[-20, '작게'], [0, '보통'], [20, '크게']]))
++ row('숫자 고정', steps('fixed', [[0, '무작위'], [1, '1'], [2, '2'], [3, '3'], [4, '4'], [5, '5']]), 'wide')
 + row('점 위에 숫자 보이기', sw('showNumbers'))
 + row('틀리면 점 자동 지우기', sw('autoClear'))
-+ row('점 크기', steps('dotPct', [[-20, '작게'], [0, '보통'], [20, '크게']]))
-+ row('숫자 고정', steps('fixed', [[0, '무작위'], [1, '1'], [2, '2'], [3, '3'], [4, '4'], [5, '5']]), 'wide')
-+ opt('활동1 수준(기본)', 'a1Level', ['가', '나', '다'].map(v => [v, v]))
-+ opt('다 수준 전용 활동(다 학생)', 'a1DaOn', onoff)
-+ opt('다 세분(기본)', 'a1Sub', [['다-1', '다-1 독립'], ['다-2', '다-2 함께']]);
-} else {
-h += row('활동2 문제 수', steps('a2Total', [[3, '3'], [5, '5'], [7, '7'], [10, '10']]))
-+ opt('활동2 수준(기본)', 'a2Level', ['가', '나', '다'].map(v => [v, `${v} (${A2_LEVELS[v][0]}~${A2_LEVELS[v][1]})`]))
-+ opt('활동2 힌트 도움', 'a2Hint', [['none', '없음'], ['num', '순서 번호 표시'], ['ans', '정답 숫자 강조']], true)
-+ opt('활동2 물건', 'a2Item', [['both', '둘 다'], ['persimmon', '감만'], ['leaf', '나뭇잎만']])
-+ row('담을 때 하나·둘·셋 말하기', sw('a2SpeakCount'))
-+ row('바구니 위에 숫자 보이기', sw('a2ShowCount'))
-+ row('연습 단계에도 세기 적용', sw('a2PracticeCount'))
-+ opt('다 수준 전용 활동(다 학생)', 'daOn', onoff)
-+ opt('다 세분(기본)', 'a2Sub', [['다-1', '다-1 독립'], ['다-2', '다-2 함께']]);
-}
-h += opt('스위치 스캔(Space/Enter)', 'daScan', onoff)
-+ opt('스캔 속도', 'daScanMs', [['1000', '빠름 1초'], ['1500', '보통 1.5초'], ['2500', '느림 2.5초']], true)
-+ opt('다-1 선택지 수', 'daChoices1', [['2', '2'], ['3', '3']])
-+ opt('다-2 선택지 수', 'daChoices2', [['1', '1(정답만)'], ['2', '2']])
-+ opt('힌트 지연(다-2)', 'daHint', [['4000', '4초'], ['6000', '6초'], ['8000', '8초']])
-+ opt('친구 시범(다-2)', 'daFriend', onoff)
++ row('땅에 점선 원 보이기', sw('showCircles'));
+else h += opt('물건', 'a2Item', [['both', '둘 다'], ['persimmon', '감만'], ['leaf', '나뭇잎만']])
++ row('바구니 위에 숫자 보이기', sw('a2ShowCount'));
+h += opt('고르는 카드 수 (혼자)', 'daChoices1', [['2', '2장'], ['3', '3장']])
++ opt('고르는 카드 수 (도움 받을 때)', 'daChoices2', [['1', '1장(정답만)'], ['2', '2장']]);
+h += sec('소리 · 말하기');
+if (A) h += row('콕콕 찍을 때 하나·둘·셋 말하기', sw('speakCount'));
+else h += row('담을 때 하나·둘·셋 말하기', sw('a2SpeakCount')) + row('연습할 때도 세어 말하기', sw('a2PracticeCount'));
+h += sec('스위치');
+h += opt('스위치로 누르기 (Space/Enter)', 'daScan', [['off', '끄기'], ['on', '켜기']])
++ opt('스위치 훑는 속도', 'daScanMs', [['1000', '빠름 1초'], ['1500', '보통 1.5초'], ['2500', '느림 2.5초']], true)
 + '</div>';
-if (this.adv) {
-const P = A ? 'a1' : 'a2';
-h += '<div class="grid">'
-+ row(`${A ? '활동1' : '활동2'} 학생별 수준(눌러서 가→나→다)`, [1, 2, 3, 4, 5, 6].map(i => `<button class="sb" data-lvs="${P}|${i}">${i}번 ${(d[P + 'Levels'] && d[P + 'Levels'][i]) || '자동'}</button>`).join(''), 'wide')
-+ row(`${A ? '활동1' : '활동2'} 다 세분 학생별(자동→다-1→다-2)`, [1, 2, 3, 4, 5, 6].map(i => `<button class="sb" data-subs="${P}|${i}">${i}번 ${(d[P + 'Subs'] && d[P + 'Subs'][i]) || '자동'}</button>`).join(''), 'wide')
-+ '</div>';
-}
 h += `<details class="scom" ${this.comOpen ? 'open' : ''}><summary>공통 설정 (양쪽 활동에 같이 적용)</summary><div class="grid">`
 + row('음성 속도', steps('rate', [[0.7, '느리게'], [0.85, '보통'], [1.0, '빠르게']]))
 + row('효과음 크기', steps('sfxVol', [[0.15, '작게'], [0.35, '보통'], [0.6, '크게']]))
@@ -3167,6 +3338,7 @@ Settings.load();
 Speech.init();
 Router.init();
 Options.init();
+LvChip.init(); LvPop.init();
 Photo.init();
 StageBadge.init();
 { const d = document.createElement('div'); d.id = 'liveDiag'; document.getElementById('stage').appendChild(d); }
@@ -3199,6 +3371,7 @@ state.fragName = fnm; state.photoAskKey = `gamnamu.photoAsked.${sNum}.${fnm}`;
 const L = ['가', '나', '다', '다-1', '다-2'], l1 = fh.get('l1'), l2 = fh.get('l2'), hh = fh.get('h');
 if (L.includes(l1)) setStuLevel('a1', sNum, l1); if (L.includes(l2)) setStuLevel('a2', sNum, l2);
 if (['none', 'num', 'ans'].includes(hh)) Settings.set('a2Hint', hh);
+[['a1', 'k1', 'w1', l1], ['a2', 'k2', 'w2', l2]].forEach(([P, kq, wq, lq]) => { const kv = fh.get(kq), wv = fh.get(wq); if (['place', 'num', 'shape', 'color'].includes(kv)) setStuKind(P, sNum, kv); if (wv === 'help' && ['다', '다-1', '다-2'].includes(lq)) setStuWho(P, sNum, 'help'); });
 }
 const act = params.get('a'), room = params.get('r');
 if (room && /^\d{4}$/.test(room)) { Live.homeAct = act === '2' ? '2' : '1'; Live.startStudent(sNum, FB_DEFAULT, room); }
